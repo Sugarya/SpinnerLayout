@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.sugarya.MainActivity"
+    >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        />
+
+    <com.sugarya.SpinnerLayout
+        android:id="@+id/spinnerLayout3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="240dp"
+        app:spinnerHeight="45dp"
+        app:firstText="状态"
+        app:secondText="标签"
+        app:thirdText="选择日期"
+        >
+
+        <com.sugarya.footer.SpinnerLinearFooter
+            android:id="@+id/linearFooter3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:linearItemHeight="40dp"
+            android:background="@color/bg_light_gray_footer"
+            />
+
+        <com.sugarya.footer.SpinnerGridFooter
+            android:id="@+id/gridFooter3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="7.5dp"
+            android:paddingBottom="7.5dp"
+            android:background="@color/bg_light_gray_footer"
+            app:gridSpanCount="4"
+            app:gridItemHeight="45dp"
+            />
+
+        <com.sugarya.footer.SpinnerDateFooter
+            android:id="@+id/dateFooter3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/bg_light_gray_footer"
+            />
+
+    </com.sugarya.SpinnerLayout>
+
+    <com.sugarya.SpinnerLayout
+        android:id="@+id/spinnerLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="160dp"
+        app:spinnerHeight="45dp"
+        app:firstText="状态"
+        app:secondText="标签"
+        >
+
+        <com.sugarya.footer.SpinnerLinearFooter
+            android:id="@+id/linearFooter2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:linearItemHeight="40dp"
+            android:background="@color/bg_light_gray_footer"
+            />
+
+        <com.sugarya.footer.SpinnerGridFooter
+            android:id="@+id/gridFooter2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="7.5dp"
+            android:paddingBottom="7.5dp"
+            android:background="@color/bg_light_gray_footer"
+            app:gridSpanCount="4"
+            app:gridItemHeight="45dp"
+            />
+
+
+    </com.sugarya.SpinnerLayout>
+
+    <com.sugarya.SpinnerLayout
+        android:id="@+id/spinnerLayout1_2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:spinnerHeight="45dp"
+        app:firstText="状态"
+        app:spinnerGravity="start"
+        android:paddingLeft="15dp"
+        android:layout_marginTop="80dp"
+        >
+
+        <com.sugarya.footer.SpinnerLinearFooter
+            android:id="@+id/linearFooter1_2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:linearItemHeight="40dp"
+            android:background="@color/bg_light_gray_footer"
+            />
+
+    </com.sugarya.SpinnerLayout>
+
+    <com.sugarya.SpinnerLayout
+        android:id="@+id/spinnerLayout1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:spinnerHeight="45dp"
+        app:firstText="状态"
+        >
+
+        <com.sugarya.footer.SpinnerLinearFooter
+            android:id="@+id/linearFooter1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:linearItemHeight="40dp"
+            android:background="@color/bg_light_gray_footer"
+            />
+
+
+    </com.sugarya.SpinnerLayout>
+
+
+
+
+
+
+
+
+</RelativeLayout>

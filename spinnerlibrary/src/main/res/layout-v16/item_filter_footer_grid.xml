@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:id="@+id/containerItemGridFooter"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tvItemFooterGrid"
+            android:layout_width="75dp"
+            android:layout_height="30dp"
+            android:layout_centerInParent="true"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:lines="1"
+            android:paddingLeft="4dp"
+            android:paddingRight="4dp"
+            android:textSize="@dimen/font_little"
+            android:layout_marginLeft="1dp"
+            android:layout_marginRight="1dp"
+            />
+
+    </RelativeLayout>
+
+</FrameLayout>

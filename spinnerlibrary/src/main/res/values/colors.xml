@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    //设计风格字体颜色汇总
+    <color name="font_black">#333333</color>
+    <color name="font_black_light">#666666</color>
+    <color name="font_gray">#999999</color>
+    <color name="font_blue">#1C8BEC</color>
+    <color name="font_red">#F25A49</color>
+    <color name="font_dark_red">#D0021B</color>
+    <color name="font_orange">#F49A2B</color>
+    <color name="font_transwhite">#66FFFFFF</color>
+    <color name="font_white">#ffffff</color>
+    <color name="font_gray_gray">#cccccc</color>
+    <color name="font_blue_light">#B5E7FF</color>
+
+    <color name="line_color">#f0f0f0</color>
+    <color name="line_gray">#D7D7D7</color>
+    <color name="line_dialog_gray">#979797</color>
+    <color name="line_light_gray">#C7C7CC</color>
+
+    <color name="bg_window">#f1f1f1</color>
+    <color name="bg_light_blue">#4CD3E8FF</color>
+    <color name="bg_light_blue_2">#D3E8FF</color>
+    <color name="bg_light_blue_3">#E5F3FF</color>
+    <color name="bg_item_date">#7FC7C7CC</color>
+    <color name="bg_orange">#F49A2B</color>
+    <color name="bg_window_2">#F6F6F6</color>
+    <color name="bg_vendor_sku">#F8F8F8</color>
+    <color name="bg_light_gray_footer">#F8F8F8</color>
+    <color name="bg_light_gray">#F0F0F0</color>
+    <color name="bg_white">#F8F7F7</color>
+    <color name="bg_white2">#efeff4</color>
+    <color name="bg_yellow">#FFFCE0</color>
+    <color name="bg_gray">#aaaaaa</color>
+    <color name="bg_light_gray_2">#E6E8E9</color>
+    <color name="bg_white_light">#F8F9F8</color>
+    <color name="bg_blue">#00A7F8</color>
+
+    <color name="colorPrimaryDark">#00a7f8</color>
+    <color name="colorPrimary">#00a7f8</color>
+    <color name="colorAccent">#ff3b30</color>
+
+    <color name="blue">#268DE9</color>
+    <color name="global_blue">#00a7f8</color>
+    <color name="divider1">#e0e0e0</color>
+    <color name="divider2">#f2f2f2</color>
+    <color name="red">#f15353</color>
+    <color name="red_light">#ffcccc</color>
+    <color name="yellow">#ffc555</color>
+    <color name="gray">#999999</color>
+    <color name="black">#000000</color>
+    <color name="white">#ffffff</color>
+    <color name="dark_gray">#333333</color>
+    <color name="gray2">#666666</color>
+    <color name="gray3">#efeff4</color>
+    <color name="blue_dark">#1183ba</color>
+    <color name="blue_deep">#0176AF</color>
+
+    <color name="transparent">#00000000</color>
+
+
+
+
+
+
+</resources>

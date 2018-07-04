@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/rootFooterDate"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/footer_date_height"
+    android:orientation="vertical"
+    >
+
+    <RelativeLayout
+        android:id="@+id/containerFooterStartTime"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:paddingLeft="32dp"
+        android:paddingRight="32dp"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:text="开始日期"
+            android:textColor="@color/font_black_light"
+            android:textSize="14sp"
+            />
+
+        <TextView
+            android:id="@+id/tvFooterStartTime"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:text="请选择..."
+            android:textColor="@color/font_gray"
+            android:textSize="14sp"
+            />
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/divider1"
+        />
+
+    <RelativeLayout
+        android:id="@+id/containerFooterEndTime"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:paddingLeft="32dp"
+        android:paddingRight="32dp"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:text="结束日期"
+            android:textColor="@color/font_black_light"
+            android:textSize="14sp"
+            />
+
+        <TextView
+            android:id="@+id/tvFooterEndTime"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:text="请选择..."
+            android:textColor="@color/font_gray"
+            android:textSize="14sp"
+            />
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tvFooterDateConfirm"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@drawable/bg_click_confirm"
+        android:enabled="false"
+        android:gravity="center"
+        android:text="确认"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        />
+
+</LinearLayout>

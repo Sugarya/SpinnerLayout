@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="SpinnerLayout">
+        <attr name="firstText" format="string"/>
+        <attr name="secondText" format="string"/>
+        <attr name="thirdText" format="string"/>
+        <attr name="fourthText" format="string"/>
+        <attr name="fifthText" format="string"/>
+        <attr name="textColor" format="color"/>
+        <attr name="textSize" format="dimension"/>
+        <attr name="textColorSelected" format="color"/>
+        <attr name="spinnerBackground" format="color"/>
+        <attr name="spinnerHeight" format="dimension"/>
+        <attr name="coverColor" format="color"/>
+        <attr name="icon" format="reference"/>
+        <attr name="iconSelected" format="reference"/>
+        <attr name="touchOutsideCanceled" format="boolean"/>
+        <attr name="footerMode" format="enum">
+            <enum name="translate" value="0"/>
+            <enum name="expand" value="1"/>
+        </attr>
+        <attr name="spinnerGravity" format="enum">
+            <enum name="center" value="0"/>
+            <enum name="start" value="1"/>
+            <enum name="end" value="2"/>
+        </attr>
+    </declare-styleable>
+
+    <declare-styleable name="SpinnerLinearFooter">
+        <attr name="linearFooterMode" format="enum">
+            <enum name="translate" value="0"/>
+            <enum name="expand" value="1"/>
+        </attr>
+        <attr name="linearItemHeight" format="dimension"/>
+    </declare-styleable>
+
+    <declare-styleable name="SpinnerDateFooter">
+        <attr name="dateFooterMode" format="enum">
+            <enum name="translate" value="0"/>
+            <enum name="expand" value="1"/>
+        </attr>
+    </declare-styleable>
+
+    <declare-styleable name="SpinnerGridFooter">
+        <attr name="gridFooterMode" format="enum">
+            <enum name="translate" value="0"/>
+            <enum name="expand" value="1"/>
+        </attr>
+        <attr name="gridItemHeight" format="dimension"/>
+        <attr name="gridSpanCount" format="integer"/>
+    </declare-styleable>
+
+
+
+
+
+
+
+</resources>
