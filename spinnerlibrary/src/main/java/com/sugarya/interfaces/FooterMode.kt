@@ -1,4 +1,4 @@
-package  com.sugarya.interfaces
+package com.sugarya.interfaces
 /**
  * Created by Ethan Ruan 2018/06/14
  */
