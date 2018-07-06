@@ -46,11 +46,11 @@ class MainActivity : AppCompatActivity() {
 
 
     fun mockStatusFooter(spinnerLinearFooter: SpinnerLinearFooter, spinnerLayout: SpinnerLayout){
-        val statusList = arrayListOf(StatusModel("11", "状态1"),
-                StatusModel("12", "状态2"),
-                StatusModel("13", "状态3"),
-                StatusModel("14", "状态4"),
-                StatusModel("15", "状态5"))
+        val statusList = arrayListOf(StatusModel("11", "status1"),
+                StatusModel("12", "status2"),
+                StatusModel("13", "status3"),
+                StatusModel("14", "status4"),
+                StatusModel("15", "status5"))
         spinnerLinearFooter.setNewData(statusList)
         spinnerLinearFooter.setOnFooterItemClickListener(object : OnFooterItemClickListener{
             override fun onClick(iFooterItem: IFooterItem) {
@@ -62,13 +62,13 @@ class MainActivity : AppCompatActivity() {
 
     fun mockLabelFooter(spinnerGridFooter: SpinnerGridFooter, spinnerLayout: SpinnerLayout){
         val labelList = arrayListOf(
-                LabelModel("21","标签1"),
-                LabelModel("22","标签2"),
-                LabelModel("23","标签3"),
-                LabelModel("24","标签4"),
-                LabelModel("25","标签5"),
-                LabelModel("26","标签6"),
-                LabelModel("27","标签7")
+                LabelModel("21","label1"),
+                LabelModel("22","label2"),
+                LabelModel("23","label3"),
+                LabelModel("24","label4"),
+                LabelModel("25","label5"),
+                LabelModel("26","label6"),
+                LabelModel("27","label7")
         )
         spinnerGridFooter.setNewData(labelList)
         spinnerGridFooter.setOnFooterItemClickListener(object : OnFooterItemClickListener{
