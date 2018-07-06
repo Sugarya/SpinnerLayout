@@ -1,10 +1,10 @@
 # SpinnerLayout
 
-##Description
+## Description
 This is a custom library called SpinnerLayout in Android Application
 
 
-##Adding to project
+## Adding to project
 
 ```
 allprojects {
@@ -20,7 +20,7 @@ dependencies {
 }
 ```
 
-##Simple usage
+## Simple usage
 How to use it with kotlin
 
 ```
@@ -73,6 +73,6 @@ How to use it with kotlin
         })
 ```
 
-##License
+## License
 Apache-2.0
 
