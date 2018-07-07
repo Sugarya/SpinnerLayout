@@ -7,14 +7,6 @@ This is a custom library called SpinnerLayout in Android Application
 ## Adding to project
 
 ```
-allprojects {
-    repositories {
-        maven { url 'https://dl.bintray.com/sugarya/maven' }
-    }
-}
-```
-
-```
 dependencies {
     implementation 'com.sugarya:spinnerlayout:0.1.1'
 }
