@@ -17,6 +17,7 @@ class AnimatorOperatorManager {
 
         private var sINSTANCE: AnimatorOperatorManager? = null
 
+        @JvmStatic
         fun getInstance(): AnimatorOperatorManager {
             if (sINSTANCE == null) {
                 synchronized(AnimatorOperatorManager::class.java) {
