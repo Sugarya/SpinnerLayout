@@ -4,7 +4,7 @@ import android.view.View
 
 /**
  * Create by Ethan Ruan 2018/07/10
- * 动画操作的管理类
+ * 管理类
  */
 class AnimatorOperatorManager {
 
