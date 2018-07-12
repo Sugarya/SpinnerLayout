@@ -50,7 +50,7 @@ class FlexibleOperator(var operatorUnit: OperatorUnit) {
     fun isExpand(): Boolean = isExpand
 
     /**
-     * 展开
+     * 下拉
      */
     fun expand(newViewHeight: Int) {
         if (!isExpand) {
@@ -73,7 +73,7 @@ class FlexibleOperator(var operatorUnit: OperatorUnit) {
     }
 
     /**
-     * 收缩
+     * 收起
      */
     fun collapse() {
         if (isExpand) {

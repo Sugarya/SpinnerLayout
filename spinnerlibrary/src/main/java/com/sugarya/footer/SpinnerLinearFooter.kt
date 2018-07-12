@@ -58,6 +58,13 @@ class SpinnerLinearFooter : BaseSpinnerFooter {
         recyclerView.adapter = mAdapter
         mAdapter?.mOnItemContainerClickListener = object : OnItemContainerClickListener {
             override fun onItemClick(list: MutableList<IFooterItem>, position: Int) {
+                for(item in list){
+                    item.isSelected = false
+                }
+                val footerItem = list[position]
+                footerItem.isSelected = true
+                mAdapter?.notifyDataSetChanged()
+
                 mOnFooterItemClickListener?.onClick(list[position])
             }
         }
