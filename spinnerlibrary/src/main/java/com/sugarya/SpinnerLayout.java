@@ -1,6 +1,5 @@
 package com.sugarya;
 
-import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
@@ -17,18 +16,19 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
-import android.view.animation.AccelerateInterpolator;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.DecelerateInterpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
+import com.sugarya.animateoperator.AnimateOperatorManager;
+import com.sugarya.animateoperator.operator.FlexibleOperator;
+import com.sugarya.animateoperator.operator.TransitionOperator;
 import com.sugarya.footer.interfaces.FooterMode;
 import com.sugarya.footer.interfaces.IFooterMode;
+import com.sugarya.footer.model.SpinnerUnitEntity;
 import com.sugarya.spinnerlibrary.R;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -52,8 +52,7 @@ public class SpinnerLayout extends RelativeLayout {
     private static final String TAG = SpinnerLayout.class.getSimpleName();
 
     private static final float DEFAULT_LINE_SCALE = 0.3f;
-    private static final int OPEN_FOOTER_ANIMATION_DURATION = 260;
-    private static final int CLOSE_FOOTER_ANIMATION_DURATION = 260;
+    private static final int FOOTER_ANIMATION_DURATION = 260;
 
     private static final int DEFAULT_FILTER_BAR_UNIT_HEIGHT = 135;
     private static final int DEFAULT_FILTER_COVER_COLOR = Color.parseColor("#55000000");
@@ -62,7 +61,7 @@ public class SpinnerLayout extends RelativeLayout {
     private static final int DEFAULT_FILTER_TITLE_SELECTED_COLOR = Color.parseColor("#00a7f8");
     private static final int DEFAULT_FILTER_TITLE_SIZE_DP = 14;
     private static final int DEFAULT_LINE_COLOR = Color.parseColor("#e0e0e0");
-    private static final int ORIGIN_HEIGHT = 1;
+    private static final int ORIGIN_HEIGHT = 0;
 
     private int mSpinnerBarHeight = DEFAULT_FILTER_BAR_UNIT_HEIGHT;
     /**
@@ -163,8 +162,13 @@ public class SpinnerLayout extends RelativeLayout {
         mSpinnerGravitySparse.put(2, Gravity.END);
     }
 
+    /**
+     * 下拉动画执行类
+     */
+    private FlexibleOperator mFlexibleOperator;
+    private TransitionOperator mTransitionOperator;
 
-
+    private long mLastClickTime = -1;
 
     public SpinnerLayout(Context context) {
         super(context);
@@ -200,13 +204,13 @@ public class SpinnerLayout extends RelativeLayout {
         mSpinnerTitleSelectedColor = typedArray.getColor(R.styleable.SpinnerLayout_textColorSelected, DEFAULT_FILTER_TITLE_SELECTED_COLOR);
         mSpinnerCoverColor = typedArray.getColor(R.styleable.SpinnerLayout_coverColor, DEFAULT_FILTER_COVER_COLOR);
 
-        mUnitIcon = typedArray.getDrawable(R.styleable.SpinnerLayout_icon) != null?
+        mUnitIcon = typedArray.getDrawable(R.styleable.SpinnerLayout_icon) != null ?
                 typedArray.getDrawable(R.styleable.SpinnerLayout_icon) : getResources().getDrawable(R.drawable.footer_triangle_down_black);
-        mUnitSelectedIcon = typedArray.getDrawable(R.styleable.SpinnerLayout_iconSelected) != null?
+        mUnitSelectedIcon = typedArray.getDrawable(R.styleable.SpinnerLayout_iconSelected) != null ?
                 typedArray.getDrawable(R.styleable.SpinnerLayout_iconSelected) : getResources().getDrawable(R.drawable.footer_triangle_up_blue);
         mGlobalIsTouchOutsideCanceled = typedArray.getBoolean(R.styleable.SpinnerLayout_touchOutsideCanceled, true);
 
-        mLineScale =typedArray.getFloat(R.styleable.SpinnerLayout_lineScale, DEFAULT_LINE_SCALE);
+        mLineScale = typedArray.getFloat(R.styleable.SpinnerLayout_lineScale, DEFAULT_LINE_SCALE);
         mSpinnerBarBackground = typedArray.getColor(R.styleable.SpinnerLayout_spinnerBackground, DEFAULT_INDICATOR_BACKGROUND);
         mGlobalFooterMode = mFooterModeSparse.get(typedArray.getInt(R.styleable.SpinnerLayout_footerMode, 1));
         mGravityMode = mSpinnerGravitySparse.get(typedArray.getInt(R.styleable.SpinnerLayout_spinnerGravity, 0));
@@ -311,7 +315,7 @@ public class SpinnerLayout extends RelativeLayout {
      */
     private void exchangeChildView() {
         int childCount = getChildCount();
-        if (childCount > 1 ) {
+        if (childCount > 1) {
             List<View> childViewList = new LinkedList<>();
             for (int i = 1; i < childCount; i++) {
                 childViewList.add(getChildAt(i));
@@ -344,7 +348,7 @@ public class SpinnerLayout extends RelativeLayout {
     /**
      * 把FilterLayout控件的Padding转到FilterBarLayout的Padding上
      */
-    private void switchPaddingToFilterBarLayout(){
+    private void switchPaddingToFilterBarLayout() {
         mSpinnerLayoutPaddingRect.left = getPaddingLeft();
         mSpinnerLayoutPaddingRect.top = getPaddingTop();
         mSpinnerLayoutPaddingRect.right = getPaddingRight();
@@ -362,12 +366,12 @@ public class SpinnerLayout extends RelativeLayout {
         View lineView = new View(context);
         lineView.setBackgroundColor(DEFAULT_LINE_COLOR);
 
-        if(mLineScale <= 0){
+        if (mLineScale <= 0) {
             mLineScale = 0.1f;
-        }else if(mLineScale > 1){
+        } else if (mLineScale > 1) {
             mLineScale = 1f;
         }
-        LinearLayout.LayoutParams lineLayoutParams = new LinearLayout.LayoutParams(2, (int)(mSpinnerBarHeight * mLineScale));
+        LinearLayout.LayoutParams lineLayoutParams = new LinearLayout.LayoutParams(2, (int) (mSpinnerBarHeight * mLineScale));
 
         lineLayoutParams.gravity = Gravity.CENTER_VERTICAL;
         lineView.setLayoutParams(lineLayoutParams);
@@ -422,6 +426,11 @@ public class SpinnerLayout extends RelativeLayout {
         spinnerUnitLayout.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
+                long currentTimeMillis = System.currentTimeMillis();
+                if(mLastClickTime > 0 && currentTimeMillis - mLastClickTime <= FOOTER_ANIMATION_DURATION){
+                    return;
+                }
+
                 if (!spinnerUnitEntity.isExpanded()) {
                     mSelectedIndex = index;
                     if (mOnSpinnerLayoutClickListener != null) {
@@ -453,6 +462,8 @@ public class SpinnerLayout extends RelativeLayout {
                 }
 
                 spinnerUnitEntity.setExpanded(!spinnerUnitEntity.isExpanded());
+
+                mLastClickTime = currentTimeMillis;
             }
         });
     }
@@ -506,6 +517,78 @@ public class SpinnerLayout extends RelativeLayout {
     }
 
     /**
+     * 添加下拉视图
+     *
+     * @param index      序号
+     * @param childView  下拉视图
+     * @param footerMode 视图展开方式
+     */
+    public void addFooterView(int index, View childView, FooterMode footerMode) {
+        if (childView == null) {
+            return;
+        }
+
+        int size = mSpinnerUnitEntityList.size();
+        if (index >= size) {
+            Log.d(TAG, "The index value should be less than the count of indicator unit");
+            return;
+        }
+        SpinnerUnitEntity spinnerUnitEntity = mSpinnerUnitEntityList.get(index);
+        if (spinnerUnitEntity == null) {
+            return;
+        }
+
+        ViewGroup cacheFooterViewContainer = spinnerUnitEntity.getFooterViewContainer();
+        if (cacheFooterViewContainer != null && childView == cacheFooterViewContainer) {
+            return;
+        }
+
+        ViewGroup.LayoutParams childViewLayoutParams = childView.getLayoutParams();
+        if (childViewLayoutParams == null) {
+            throw new RuntimeException("The LayoutParams of this footer view is null, You need to create a layout params");
+        }
+
+        spinnerUnitEntity.setCanceledOnTouchOutside(mGlobalIsTouchOutsideCanceled);
+
+        FrameLayout footerViewContainer = new FrameLayout(getContext());
+        footerViewContainer.addView(childView);
+
+        FrameLayout.LayoutParams footerViewContainerLayoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        Object tag = childView.getTag(R.id.footer_view_height);
+        if (tag instanceof Integer) {
+            spinnerUnitEntity.setFooterViewOriginHeight((Integer) tag);
+        } else {
+            spinnerUnitEntity.setFooterViewOriginHeight(childViewLayoutParams.height);
+        }
+
+        Integer originHeight = spinnerUnitEntity.getFooterViewOriginHeight();
+        if (footerMode == FooterMode.MODE_EXPAND) {
+            Log.d(TAG, "MODE_EXPAND addFooterView: originHeight = " + originHeight);
+            childView.setTag(R.id.footer_view_height, originHeight);
+
+            footerViewContainerLayoutParams.height = ORIGIN_HEIGHT;
+            footerViewContainerLayoutParams.topMargin = 0;
+        } else if (footerMode == FooterMode.MODE_TRANSLATE) {
+            //当FilterView高度是wrap_content或match_parent，同时下拉动画模式选择MODE_TRANSLATE时，强制把下拉模式改成MODE_EXPAND
+            if (originHeight <= 0) {
+                footerMode = FooterMode.MODE_EXPAND;
+                childView.setTag(R.id.footer_view_height, originHeight);
+
+                footerViewContainerLayoutParams.height = ORIGIN_HEIGHT;
+                footerViewContainerLayoutParams.topMargin = 0;
+            } else {
+                footerViewContainerLayoutParams.height = originHeight;
+                footerViewContainerLayoutParams.topMargin = -footerViewContainerLayoutParams.height;
+            }
+        }
+        footerViewContainer.setLayoutParams(footerViewContainerLayoutParams);
+        spinnerUnitEntity.setFooterMode(footerMode);
+
+        spinnerUnitEntity.setFooterViewContainer(footerViewContainer);
+        mFooterViewRoot.addView(footerViewContainer);
+    }
+
+    /**
      * 伸展下拉视图
      * 根据数值开启下拉动画，数值的计算逻辑不能在此方法里处理
      *
@@ -519,12 +602,19 @@ public class SpinnerLayout extends RelativeLayout {
 
         int childCount = footerViewContainer.getChildCount();
         Log.d(TAG, "expandFooter: footerViewContainer childCount = " + childCount);
-        if(childCount <= 0){
+        if (childCount <= 0) {
             return;
         }
         View footerView = footerViewContainer.getChildAt(0);
-        ValueAnimator valueAnimator;
+
         if (spinnerUnitEntity.getFooterMode() == FooterMode.MODE_EXPAND) {
+            ViewGroup.LayoutParams lp = footerViewContainer.getLayoutParams();
+            if (lp != null && lp instanceof FrameLayout.LayoutParams) {
+                FrameLayout.LayoutParams footerViewContainerLayoutParams = (FrameLayout.LayoutParams) lp;
+                footerViewContainerLayoutParams.height = ORIGIN_HEIGHT;
+                footerViewContainer.setLayoutParams(footerViewContainerLayoutParams);
+            }
+
             int height;
             if (footerView.getTag(R.id.footer_view_height) instanceof Integer) {
                 height = (int) footerView.getTag(R.id.footer_view_height);
@@ -532,38 +622,28 @@ public class SpinnerLayout extends RelativeLayout {
                 height = ViewGroup.LayoutParams.WRAP_CONTENT;
             }
             Log.d(TAG, "MODE_EXPAND expandFooter: ORIGIN_HEIGHT = " + ORIGIN_HEIGHT + " height = " + height);
-            valueAnimator = ValueAnimator.ofInt(ORIGIN_HEIGHT, height);
+
+            mFlexibleOperator = AnimateOperatorManager.getInstance()
+                    .flexibleBuilder(footerViewContainer)
+                    .setDuration(FOOTER_ANIMATION_DURATION)
+                    .setHeight(TypedValue.COMPLEX_UNIT_PX, height)
+                    .create();
+            mFlexibleOperator.expand();
         } else {
-            int height = footerView.getHeight();
+            float height = footerView.getHeight();
             Log.d(TAG, "MODE_TRANSLATE expandFooter: height = " + height + " mSpinnerBarHeight = " + mSpinnerBarHeight);
-            valueAnimator = ValueAnimator.ofInt(-height, ORIGIN_HEIGHT);
+            mTransitionOperator = AnimateOperatorManager.getInstance()
+                    .transitionBuild(footerViewContainer)
+                    .setDuration(FOOTER_ANIMATION_DURATION)
+                    .setStartMarginTop(TypedValue.COMPLEX_UNIT_PX, -height)
+                    .setEndMarginTop(ORIGIN_HEIGHT)
+                    .create();
+            mTransitionOperator.expand();
         }
 
-        valueAnimator.setDuration(OPEN_FOOTER_ANIMATION_DURATION);
-        valueAnimator.setInterpolator(new AccelerateInterpolator());
-        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                ViewGroup.LayoutParams lp = footerViewContainer.getLayoutParams();
-                if (lp != null && lp instanceof FrameLayout.LayoutParams) {
-                    FrameLayout.LayoutParams footerViewContainerLayoutParams = (FrameLayout.LayoutParams) lp;
-                    int value = (int) valueAnimator.getAnimatedValue();
-                    if (spinnerUnitEntity.getFooterMode() == FooterMode.MODE_EXPAND) {
-                        footerViewContainerLayoutParams.height = value;
-                        footerViewContainerLayoutParams.topMargin = ORIGIN_HEIGHT;
-                    } else {
-                        footerViewContainerLayoutParams.topMargin = value;
-                    }
-                    footerViewContainer.setLayoutParams(footerViewContainerLayoutParams);
-                }
-            }
-        });
-
-        AlphaAnimation alphaAnimation = new AlphaAnimation(0.3f, 1);
-        alphaAnimation.setDuration(OPEN_FOOTER_ANIMATION_DURATION);
-
-        valueAnimator.start();
-        footerViewContainer.startAnimation(alphaAnimation);
+//        AlphaAnimation alphaAnimation = new AlphaAnimation(0.3f, 1);
+//        alphaAnimation.setDuration(FOOTER_ANIMATION_DURATION);
+//        footerViewContainer.startAnimation(alphaAnimation);
     }
 
     /**
@@ -576,51 +656,15 @@ public class SpinnerLayout extends RelativeLayout {
         if (footerViewContainer == null) {
             return;
         }
-        int childCount = footerViewContainer.getChildCount();
-        Log.d(TAG, "expandFooter: footerViewContainer childCount = " + childCount);
-        if(childCount <= 0){
-            return;
-        }
-
-        View footerView = footerViewContainer.getChildAt(0);
-        ValueAnimator valueAnimator;
         if (spinnerUnitEntity.getFooterMode() == FooterMode.MODE_EXPAND) {
-            int height;
-            if (footerView.getTag(R.id.footer_view_height) instanceof Integer) {
-                height = (int) footerView.getTag(R.id.footer_view_height);
-            } else {
-                height = ViewGroup.LayoutParams.WRAP_CONTENT;
-            }
-            valueAnimator = ValueAnimator.ofInt(height, ORIGIN_HEIGHT);
+            mFlexibleOperator.collapse();
         } else {
-            int height = footerViewContainer.getHeight();
-            valueAnimator = ValueAnimator.ofInt(ORIGIN_HEIGHT, -height);
+            mTransitionOperator.collapse();
         }
-
-        valueAnimator.setDuration(CLOSE_FOOTER_ANIMATION_DURATION);
-        valueAnimator.setInterpolator(new DecelerateInterpolator());
-        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                ViewGroup.LayoutParams lp = footerViewContainer.getLayoutParams();
-                if (lp != null && lp instanceof FrameLayout.LayoutParams) {
-                    FrameLayout.LayoutParams footerViewContainerLayoutParams = (FrameLayout.LayoutParams) lp;
-                    int value = (int) valueAnimator.getAnimatedValue();
-                    if (spinnerUnitEntity.getFooterMode() == FooterMode.MODE_EXPAND) {
-                        footerViewContainerLayoutParams.height = value;
-                    } else {
-                        footerViewContainerLayoutParams.topMargin = value;
-                    }
-                    footerViewContainer.setLayoutParams(footerViewContainerLayoutParams);
-                }
-            }
-        });
-
-        AlphaAnimation alphaAnimation = new AlphaAnimation(1, 0.3f);
-        alphaAnimation.setDuration(CLOSE_FOOTER_ANIMATION_DURATION);
-
-        valueAnimator.start();
-        footerViewContainer.startAnimation(alphaAnimation);
+//
+//        AlphaAnimation alphaAnimation = new AlphaAnimation(1, 0.3f);
+//        alphaAnimation.setDuration(FOOTER_ANIMATION_DURATION);
+//        footerViewContainer.startAnimation(alphaAnimation);
     }
 
     /**
@@ -765,77 +809,6 @@ public class SpinnerLayout extends RelativeLayout {
         addFooterView(index, view, mGlobalFooterMode);
     }
 
-    /**
-     * 添加下拉视图
-     *
-     * @param index      序号
-     * @param childView 下拉视图
-     * @param footerMode 视图展开方式
-     */
-    public void addFooterView(int index, View childView, FooterMode footerMode) {
-        if (childView == null) {
-            return;
-        }
-
-        int size = mSpinnerUnitEntityList.size();
-        if (index >= size) {
-            Log.d(TAG, "The index value should be less than the count of indicator unit");
-            return;
-        }
-        SpinnerUnitEntity spinnerUnitEntity = mSpinnerUnitEntityList.get(index);
-        if (spinnerUnitEntity == null) {
-            return;
-        }
-
-        ViewGroup cacheFooterViewContainer = spinnerUnitEntity.getFooterViewContainer();
-        if(cacheFooterViewContainer != null && childView == cacheFooterViewContainer){
-            return;
-        }
-
-        ViewGroup.LayoutParams childViewLayoutParams = childView.getLayoutParams();
-        if (childViewLayoutParams == null) {
-            throw new RuntimeException("The LayoutParams of this footer view is null, You need to create a layout params");
-        }
-
-        spinnerUnitEntity.setCanceledOnTouchOutside(mGlobalIsTouchOutsideCanceled);
-
-        FrameLayout footerViewContainer = new FrameLayout(getContext());
-        footerViewContainer.addView(childView);
-
-        FrameLayout.LayoutParams footerViewContainerLayoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        Object tag = childView.getTag(R.id.footer_view_height);
-        if(tag instanceof Integer){
-            spinnerUnitEntity.setFooterViewOriginHeight((Integer) tag);
-        }else{
-            spinnerUnitEntity.setFooterViewOriginHeight(childViewLayoutParams.height);
-        }
-
-        Integer originHeight = spinnerUnitEntity.getFooterViewOriginHeight();
-        if (footerMode == FooterMode.MODE_EXPAND) {
-            Log.d(TAG, "MODE_EXPAND addFooterView: originHeight = " + originHeight);
-            childView.setTag(R.id.footer_view_height, originHeight);
-
-            footerViewContainerLayoutParams.height = ORIGIN_HEIGHT;
-            footerViewContainerLayoutParams.topMargin = 0;
-        } else {
-            //当FilterView高度是wrap_content或match_parent，同时下拉动画模式选择MODE_TRANSLATE时，强制把下拉模式改成MODE_EXPAND
-            if(originHeight <= 0){
-                footerMode = FooterMode.MODE_EXPAND;
-                childView.setTag(R.id.footer_view_height, originHeight);
-
-                footerViewContainerLayoutParams.height = ORIGIN_HEIGHT;
-                footerViewContainerLayoutParams.topMargin = 0;
-            }else{
-                footerViewContainerLayoutParams.height = originHeight;
-                footerViewContainerLayoutParams.topMargin = -footerViewContainerLayoutParams.height;
-            }
-        }
-        footerViewContainer.setLayoutParams(footerViewContainerLayoutParams);
-        spinnerUnitEntity.setFooterMode(footerMode);
-
-        spinnerUnitEntity.setFooterViewContainer(footerViewContainer);
-        mFooterViewRoot.addView(footerViewContainer);
-    }
 
     /**
      * 是否已添加过footerView到筛选条
@@ -929,6 +902,7 @@ public class SpinnerLayout extends RelativeLayout {
 
     /**
      * 设置所有的下拉列表
+     *
      * @param enable
      */
     public void setCanceledOnTouchOutside(boolean enable) {
@@ -940,6 +914,7 @@ public class SpinnerLayout extends RelativeLayout {
 
     /**
      * 设置某个序号的下拉列表
+     *
      * @param index
      * @param enable
      */
@@ -978,151 +953,6 @@ public class SpinnerLayout extends RelativeLayout {
         return mGlobalFooterMode;
     }
 
-    /**
-     * 筛选条单元实体类
-     */
-    public static class SpinnerUnitEntity {
-        /**
-         * 各个筛选单元的标题
-         */
-        private String unitTitle;
-        /**
-         * 打开下拉视图时，是否需要暗色屏幕显示
-         */
-        private boolean screenDimAvailable;
-        /**
-         * 下拉视图动画模式 1.平移  2.折叠
-         */
-        private FooterMode footerMode;
-
-        /**
-         * 筛选条单元视图
-         */
-        private View FilterUnitLayout;
-        /**
-         * 筛选标题控件
-         */
-        private TextView tvUnit;
-        /**
-         * 筛选单元 图片
-         */
-        private ImageView imgUnitIcon;
-        /**
-         * 是否处在下拉状态
-         */
-        private boolean isExpanded = false;
-
-        /**
-         * 触摸筛选条外部是，是否可以关闭筛选条的标示
-         */
-        private boolean isCanceledOnTouchOutside = false;
-
-        private ViewGroup footerViewContainer;
-
-        /**
-         * footerView最初的高度
-         */
-        private Integer footerViewOriginHeight;
-
-        public Integer getFooterViewOriginHeight() {
-            return footerViewOriginHeight;
-        }
-
-        public void setFooterViewOriginHeight(int footerViewOriginHeight) {
-            if (this.footerViewOriginHeight == null) {
-                this.footerViewOriginHeight = footerViewOriginHeight;
-            }
-        }
-
-        SpinnerUnitEntity(String unitTitle, boolean screenDimAvailable) {
-            this.unitTitle = unitTitle;
-            this.screenDimAvailable = screenDimAvailable;
-        }
-
-        public SpinnerUnitEntity(String unitTitle, boolean screenDimAvailable, FooterMode footerMode, View FilterUnitLayout, TextView tvUnit, ImageView imgUnitIcon, boolean isExpanded, boolean isCanceledOnTouchOutside, ViewGroup footerViewContainer) {
-            this.unitTitle = unitTitle;
-            this.screenDimAvailable = screenDimAvailable;
-            this.footerMode = footerMode;
-            this.FilterUnitLayout = FilterUnitLayout;
-            this.tvUnit = tvUnit;
-            this.imgUnitIcon = imgUnitIcon;
-            this.isExpanded = isExpanded;
-            this.isCanceledOnTouchOutside = isCanceledOnTouchOutside;
-            this.footerViewContainer = footerViewContainer;
-        }
-
-        String getUnitTitle() {
-            return unitTitle;
-        }
-
-        public void setUnitTitle(String unitTitle) {
-            this.unitTitle = unitTitle;
-        }
-
-        boolean isScreenDimAvailable() {
-            return screenDimAvailable;
-        }
-
-        void setScreenDimAvailable(boolean screenDimAvailable) {
-            this.screenDimAvailable = screenDimAvailable;
-        }
-
-        FooterMode getFooterMode() {
-            return footerMode;
-        }
-
-        void setFooterMode(FooterMode footerMode) {
-            this.footerMode = footerMode;
-        }
-
-        View getFilterUnitLayout() {
-            return FilterUnitLayout;
-        }
-
-        void setFilterUnitLayout(View filterUnitLayout) {
-            this.FilterUnitLayout = filterUnitLayout;
-        }
-
-        TextView getTvUnit() {
-            return tvUnit;
-        }
-
-        void setTvUnit(TextView tvUnit) {
-            this.tvUnit = tvUnit;
-        }
-
-        ImageView getImgUnitIcon() {
-            return imgUnitIcon;
-        }
-
-        void setImgUnitIcon(ImageView imgUnitIcon) {
-            this.imgUnitIcon = imgUnitIcon;
-        }
-
-        boolean isExpanded() {
-            return isExpanded;
-        }
-
-        void setExpanded(boolean expanded) {
-            isExpanded = expanded;
-        }
-
-        public ViewGroup getFooterViewContainer() {
-            return footerViewContainer;
-        }
-
-        public void setFooterViewContainer(ViewGroup footerViewContainer) {
-            this.footerViewContainer = footerViewContainer;
-        }
-
-        boolean isCanceledOnTouchOutside() {
-            return isCanceledOnTouchOutside;
-        }
-
-        void setCanceledOnTouchOutside(boolean canceledOnTouchOutside) {
-            isCanceledOnTouchOutside = canceledOnTouchOutside;
-        }
-    }
 
 
     public interface OnSpinnerLayoutClickListener {

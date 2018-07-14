@@ -66,7 +66,6 @@ class FlexibleOperator(flexibleOperatorParams: FlexibleOperatorParams) : BaseOpe
 
     override fun startOperateAnimator(startValue: Int, endValue: Int) {
         val animator = generateAnimator(startValue, endValue)
-
         animator.addUpdateListener {
             val animatedValue = it.animatedValue as Int
             operatorParams.targetView.layoutParams = (operatorParams.targetView.layoutParams
