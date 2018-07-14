@@ -17,29 +17,29 @@ abstract class BaseSpinnerFooter : RelativeLayout, IFooterMode {
     constructor(context: Context, attributeSet: AttributeSet) : super(context, attributeSet)
 
     protected fun setupFooterHeight(needHeight: Int) {
-        val filterLayout = (parent as ViewGroup).parent as SpinnerLayout
-        val lp = RelativeLayout.LayoutParams(layoutParams)
-        if (mFooterMode == null) {
-            if (filterLayout.globalFilterMode != null) {
-                if (filterLayout.globalFilterMode == FooterMode.MODE_TRANSLATE) {
-                    lp.height = needHeight
-                    lp.topMargin = -needHeight
-                } else {
-                    lp.height = 1
-                    lp.topMargin = filterLayout.spinnerBarHeight
-                }
-            }
-        } else {
-            if (mFooterMode == FooterMode.MODE_TRANSLATE) {
-                lp.height = needHeight
-                lp.topMargin = -needHeight
-            } else {
-                lp.height = 1
-                lp.topMargin = filterLayout.spinnerBarHeight
-            }
-        }
+//        val spinnerLayout = (parent as ViewGroup).parent as ViewGroup as SpinnerLayout
+//        val lp = RelativeLayout.LayoutParams(layoutParams)
+//        if (mFooterMode == null) {
+//            if (spinnerLayout.globalFilterMode != null) {
+//                if (spinnerLayout.globalFilterMode == FooterMode.MODE_TRANSLATE) {
+//                    lp.height = needHeight
+//                    lp.topMargin = -needHeight
+//                } else {
+//                    lp.height = 1
+//                    lp.topMargin = spinnerLayout.spinnerBarHeight
+//                }
+//            }
+//        } else {
+//            if (mFooterMode == FooterMode.MODE_TRANSLATE) {
+//                lp.height = needHeight
+//                lp.topMargin = -needHeight
+//            } else {
+//                lp.height = 1
+//                lp.topMargin = spinnerLayout.spinnerBarHeight
+//            }
+//        }
 
-        layoutParams = lp
+//        layoutParams = lp
         //放在layoutParams之后，这样值才能成功保存
         Log.d("BaseSpinnerFooter", "paddingTop = ${paddingTop} , paddingBottom = ${paddingBottom}")
         val showHeight = needHeight + paddingTop + paddingBottom
