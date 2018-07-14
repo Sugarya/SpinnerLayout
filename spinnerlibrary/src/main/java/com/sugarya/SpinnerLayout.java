@@ -42,9 +42,9 @@ import java.util.List;
  * 支持下拉列表动画两级协同控制（FooterView控制优先）
  * <p>
  * 名次解释：
- * Filter Bar 代表内部筛选条
- * Filter Unit 代表筛选条里的单元
- * Filter Footer 代表下拉列表
+ * Spinner Bar 代表内部筛选条
+ * Spinner Unit 代表筛选条里的单元
+ * Spinner Footer 代表下拉列表
  * unit Icon 代表筛选单元文字旁的图标
  */
 public class SpinnerLayout extends RelativeLayout {
@@ -334,7 +334,7 @@ public class SpinnerLayout extends RelativeLayout {
                 } else {
                     footerMode = mGlobalFooterMode;
                 }
-                addFooterView2(j, childView, footerMode);
+                addFooterView(j, childView, footerMode);
             }
             childViewList.clear();
         }
@@ -512,11 +512,6 @@ public class SpinnerLayout extends RelativeLayout {
      * @param spinnerUnitEntity
      */
     private void expandFooter(final SpinnerUnitEntity spinnerUnitEntity) {
-        //让FilterBar在最上层
-//        if (mSpinnerBarLayout != null) {
-//            mSpinnerBarLayout.bringToFront();
-//        }
-
         final ViewGroup footerViewContainer = getFooterViewContainer(spinnerUnitEntity);
         if (footerViewContainer == null) {
             return;
@@ -733,7 +728,7 @@ public class SpinnerLayout extends RelativeLayout {
      *
      * @param unitTitle
      */
-    public void addFilterTitle(String unitTitle) {
+    public void addSpinnerTitle(String unitTitle) {
         if (unitTitle == null) {
             return;
         }
@@ -767,7 +762,7 @@ public class SpinnerLayout extends RelativeLayout {
      * @param view  下拉视图
      */
     public void addFooterView(int index, View view) {
-        addFooterView2(index, view, mGlobalFooterMode);
+        addFooterView(index, view, mGlobalFooterMode);
     }
 
     /**
@@ -777,7 +772,7 @@ public class SpinnerLayout extends RelativeLayout {
      * @param childView 下拉视图
      * @param footerMode 视图展开方式
      */
-    public void addFooterView2(int index, View childView, FooterMode footerMode) {
+    public void addFooterView(int index, View childView, FooterMode footerMode) {
         if (childView == null) {
             return;
         }
@@ -789,6 +784,11 @@ public class SpinnerLayout extends RelativeLayout {
         }
         SpinnerUnitEntity spinnerUnitEntity = mSpinnerUnitEntityList.get(index);
         if (spinnerUnitEntity == null) {
+            return;
+        }
+
+        ViewGroup cacheFooterViewContainer = spinnerUnitEntity.getFooterViewContainer();
+        if(cacheFooterViewContainer != null && childView == cacheFooterViewContainer){
             return;
         }
 
@@ -837,117 +837,8 @@ public class SpinnerLayout extends RelativeLayout {
         mFooterViewRoot.addView(footerViewContainer);
     }
 
-//    /**
-//     * 添加下拉视图
-//     *
-//     * @param index      序号
-//     * @param childView 下拉视图
-//     * @param footerMode 视图展开方式
-//     */
-//    public void addFooterView(int index, View childView, FooterMode footerMode) {
-//        if (childView == null) {
-//            return;
-//        }
-//
-////        checkAndRemoveDuplicateFooterView(footerViewContainer);
-//
-//        int size = mSpinnerUnitEntityList.size();
-//        if (index >= size) {
-//            Log.d(TAG, "The index value should be less than the count of indicator unit");
-//            return;
-//        }
-//        SpinnerUnitEntity spinnerUnitEntity = mSpinnerUnitEntityList.get(index);
-//        if (spinnerUnitEntity == null) {
-//            return;
-//        }
-//
-//        ViewGroup.LayoutParams layoutParams = childView.getLayoutParams();
-//        if (layoutParams == null) {
-//            throw new RuntimeException("The LayoutParams of this footer view is null, You need to create a layout params");
-//        }
-//
-//        spinnerUnitEntity.setCanceledOnTouchOutside(mGlobalIsTouchOutsideCanceled);
-//
-//        LayoutParams lp = new LayoutParams(layoutParams);
-////        if (lp.height == LayoutParams.WRAP_CONTENT
-////                || lp.height == LayoutParams.MATCH_PARENT) {
-////            Log.d(TAG, "If the height of layout param equals to match_parent or wrap_content, the foot mode value has to be MODE_EXPAND");
-////            footerMode = MODE_EXPAND;
-////        }
-//
-////        int heightResult = computeOriginHeight(footerViewContainer, lp.height);
-//
-//        Object tag = childView.getTag(R.id.footer_view_height);
-//        if(tag instanceof Integer){
-//            spinnerUnitEntity.setFooterViewOriginHeight((Integer) tag);
-//        }else{
-//            spinnerUnitEntity.setFooterViewOriginHeight(lp.height);
-//        }
-//
-//        Integer originHeight = spinnerUnitEntity.getFooterViewOriginHeight();
-//        if (footerMode == FooterMode.MODE_EXPAND) {
-//            Log.d(TAG, "MODE_EXPAND addFooterView: originHeight = " + originHeight);
-//            childView.setTag(R.id.footer_view_height, originHeight);
-//            lp.height = ORIGIN_HEIGHT;
-//            lp.topMargin = mSpinnerBarHeight;
-//        } else {
-//            //当FilterView高度是wrap_content或match_parent，同时下拉动画模式选择MODE_TRANSLATE时，强制把下拉模式改成MODE_EXPAND
-//            if(originHeight <= 0){
-//                footerMode = FooterMode.MODE_EXPAND;
-//                childView.setTag(R.id.footer_view_height, originHeight);
-//                lp.height = ORIGIN_HEIGHT;
-//                lp.topMargin = mSpinnerBarHeight;
-//            }else{
-//                lp.height = originHeight;
-//                lp.topMargin = -lp.height;
-//            }
-//        }
-//        childView.setLayoutParams(lp);
-//        spinnerUnitEntity.setFooterMode(footerMode);
-//
-//        View existFooterView = spinnerUnitEntity.getFooterViewContainer();
-//        if (childView == existFooterView) {
-//            return;
-//        }
-//
-//
-//
-//        spinnerUnitEntity.setFooterViewContainer(childView);
-////        boolean hasAddition = isFooterViewAddition(footerViewContainer);
-////        if (!hasAddition) {
-////            mSpinnerContainerLayout.addView(footerViewContainer);
-////        }
-//        mSpinnerContainerLayout.addView(childView);
-//
-//    }
-
-    private int computeOriginHeight(View footerView, int currentHeight){
-        int result;
-        if(currentHeight < 0){
-            if(footerView instanceof ViewGroup){
-                ViewGroup viewGroup = (ViewGroup)footerView;
-                int count = 0;
-                int childCount = getChildCount();
-                if(childCount > 0){
-                    for(int i = 0; i < childCount; i++){
-                        View childAt = viewGroup.getChildAt(i);
-                        count = count + childAt.getHeight();
-                    }
-                    result = count;
-                }else{
-                    result = count;
-                }
-            }else{
-                result = currentHeight;
-            }
-        }else{
-            result = currentHeight;
-        }
-        return result;
-    }
-
     /**
-     * 是否已添加过footerview到筛选条
+     * 是否已添加过footerView到筛选条
      *
      * @param footerView
      * @return
@@ -1059,15 +950,15 @@ public class SpinnerLayout extends RelativeLayout {
         }
     }
 
-    public void setFilterIconResource(@DrawableRes int resId) {
+    public void setSpinnerIconResource(@DrawableRes int resId) {
         mUnitIcon = getResources().getDrawable(resId);
     }
 
-    public void setFilterIconSelectedResource(@DrawableRes int resId) {
+    public void setSpinnerIconSelectedResource(@DrawableRes int resId) {
         mUnitSelectedIcon = getResources().getDrawable(resId);
     }
 
-    public void setFilterIconDrawable(Drawable filterIcon) {
+    public void setSpinnerIconDrawable(Drawable filterIcon) {
         mUnitIcon = filterIcon;
     }
 
