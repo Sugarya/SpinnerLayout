@@ -25,15 +25,15 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.sugarya.interfaces.FooterMode;
-import com.sugarya.interfaces.IFooterMode;
+import com.sugarya.footer.interfaces.FooterMode;
+import com.sugarya.footer.interfaces.IFooterMode;
 import com.sugarya.spinnerlibrary.R;
 import java.util.LinkedList;
 import java.util.List;
 
 
 /**
- * Created by Ethan on 2017/8/9. modified lately by 2018/06/14
+ * Created by Ethan on 2017/8/9.
  * 筛选条，支持代码和布局混合控制，
  * 支持五层筛选条件（可轻松拓展筛选数量）
  * 支持两种张开方式，支持高度wrap_content配置
@@ -50,6 +50,7 @@ public class SpinnerLayout extends RelativeLayout {
 
     private static final String TAG = SpinnerLayout.class.getSimpleName();
 
+    private static final float DEFAULT_LINE_SCALE = 0.3f;
     private static final int OPEN_FOOTER_ANIMATION_DURATION = 260;
     private static final int CLOSE_FOOTER_ANIMATION_DURATION = 260;
 
@@ -136,6 +137,8 @@ public class SpinnerLayout extends RelativeLayout {
      */
     private int mGravityMode = Gravity.CENTER;
 
+    private float mLineScale = DEFAULT_LINE_SCALE;
+
     /**
      * 存储FilterLayout Padding参数
      */
@@ -195,6 +198,7 @@ public class SpinnerLayout extends RelativeLayout {
                 typedArray.getDrawable(R.styleable.SpinnerLayout_iconSelected) : getResources().getDrawable(R.drawable.footer_triangle_up_blue);
         mGlobalIsTouchOutsideCanceled = typedArray.getBoolean(R.styleable.SpinnerLayout_touchOutsideCanceled, true);
 
+        mLineScale =typedArray.getFloat(R.styleable.SpinnerLayout_lineScale, DEFAULT_LINE_SCALE);
         mSpinnerBarBackground = typedArray.getColor(R.styleable.SpinnerLayout_spinnerBackground, DEFAULT_INDICATOR_BACKGROUND);
         mGlobalFooterMode = mFooterModeSparse.get(typedArray.getInt(R.styleable.SpinnerLayout_footerMode, 1));
         mGravityMode = mSpinnerGravitySparse.get(typedArray.getInt(R.styleable.SpinnerLayout_spinnerGravity, 0));
@@ -344,7 +348,14 @@ public class SpinnerLayout extends RelativeLayout {
     private void addFilterBarLine(Context context) {
         View lineView = new View(context);
         lineView.setBackgroundColor(DEFAULT_LINE_COLOR);
-        LinearLayout.LayoutParams lineLayoutParams = new LinearLayout.LayoutParams(2, mSpinnerBarHeight / 3);
+
+        if(mLineScale <= 0){
+            mLineScale = 0.1f;
+        }else if(mLineScale > 1){
+            mLineScale = 1f;
+        }
+        LinearLayout.LayoutParams lineLayoutParams = new LinearLayout.LayoutParams(2, (int)(mSpinnerBarHeight * mLineScale));
+
         lineLayoutParams.gravity = Gravity.CENTER_VERTICAL;
         lineView.setLayoutParams(lineLayoutParams);
         mSpinnerBarLayout.addView(lineView);

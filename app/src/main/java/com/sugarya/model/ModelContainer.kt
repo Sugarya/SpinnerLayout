@@ -1,6 +1,6 @@
 package com.sugarya.model
 
-import com.sugarya.interfaces.IFooterItem
+import com.sugarya.footer.interfaces.IFooterItem
 
 data class StatusModel(val statusId: String, val statusName: String): IFooterItem{
     override val titleName: String

@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/tvContainer"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="16dp"
+        android:background="#f0ffff"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tvTitleExpand"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="16dp"
+            android:text=" 展开 " />
+
+        <TextView
+            android:id="@+id/tvTitleCollapse"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="16dp"
+            android:layout_toRightOf="@id/tvTitleExpand"
+            android:text=" 收起 " />
+
+
+    </RelativeLayout>
+
+
+    <LinearLayout
+        android:id="@+id/containerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_alignLeft="@id/tvContainer"
+        android:layout_below="@id/tvContainer"
+        android:orientation="vertical">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <!--<TextView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="140dp"-->
+        <!--android:textSize="26sp"-->
+        <!--android:text="我是测试内容，我是测试内容我是测试内容，我是测试内容，我是测试内容，我是测试内容"-->
+        <!--/>-->
+
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        >
+
+
+        <RelativeLayout
+            android:id="@+id/tvContainer2"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="#f0ffff">
+
+            <TextView
+                android:id="@+id/tvTitleExpand2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="16dp"
+                android:text=" 展开 " />
+
+            <TextView
+                android:id="@+id/tvTitleCollapse2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="16dp"
+                android:layout_toRightOf="@id/tvTitleExpand2"
+                android:text=" 收起 " />
+
+
+        </RelativeLayout>
+
+
+        <LinearLayout
+            android:id="@+id/containerView2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/tvContainer2"
+            android:layout_below="@id/tvContainer2"
+            android:orientation="vertical"
+            >
+
+            <LinearLayout
+                android:id="@+id/containerFooter2"
+                android:layout_width="match_parent"
+                android:orientation="vertical"
+                android:layout_height="140dp"
+                android:layout_marginTop="-140dp"
+                >
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recyclerView2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    />
+
+            </LinearLayout>
+
+
+            <!--<TextView-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="140dp"-->
+            <!--android:textSize="26sp"-->
+            <!--android:text="我是测试内容，我是测试内容我是测试内容，我是测试内容，我是测试内容，我是测试内容"-->
+            <!--/>-->
+
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</LinearLayout>

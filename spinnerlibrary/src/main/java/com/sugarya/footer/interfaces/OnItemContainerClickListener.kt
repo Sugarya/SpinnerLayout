@@ -1,4 +1,4 @@
-package com.sugarya.interfaces
+package com.sugarya.footer.interfaces
 
 /**
  * Adapter里item点击响应

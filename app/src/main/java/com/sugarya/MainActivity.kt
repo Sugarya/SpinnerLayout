@@ -5,8 +5,8 @@ import android.os.Bundle
 import com.sugarya.footer.SpinnerDateFooter
 import com.sugarya.footer.SpinnerGridFooter
 import com.sugarya.footer.SpinnerLinearFooter
-import com.sugarya.interfaces.IFooterItem
-import com.sugarya.interfaces.OnFooterItemClickListener
+import com.sugarya.footer.interfaces.IFooterItem
+import com.sugarya.footer.interfaces.OnFooterItemClickListener
 import com.sugarya.model.LabelModel
 import com.sugarya.model.StatusModel
 import com.sugarya.spinnerlayout.R

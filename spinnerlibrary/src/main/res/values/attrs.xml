@@ -16,6 +16,8 @@
         <attr name="icon" format="reference"/>
         <attr name="iconSelected" format="reference"/>
         <attr name="touchOutsideCanceled" format="boolean"/>
+        <!-- 分割线相对spinnerHeight的比例  (0, 1] -->
+        <attr name="lineScale" format="float"/>
         <attr name="footerMode" format="enum">
             <enum name="translate" value="0"/>
             <enum name="expand" value="1"/>

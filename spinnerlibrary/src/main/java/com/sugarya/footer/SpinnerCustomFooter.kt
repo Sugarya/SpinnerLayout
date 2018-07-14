@@ -3,7 +3,7 @@ package com.sugarya.footer
 import android.content.Context
 import android.util.AttributeSet
 import com.sugarya.footer.base.BaseSpinnerFooter
-import com.sugarya.interfaces.FooterMode
+import com.sugarya.footer.interfaces.FooterMode
 
 /**
  * 自定义下拉列表

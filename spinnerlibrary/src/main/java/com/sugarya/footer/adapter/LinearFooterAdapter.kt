@@ -8,8 +8,8 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
-import com.sugarya.interfaces.IFooterItem
-import com.sugarya.interfaces.OnItemContainerClickListener
+import com.sugarya.footer.interfaces.IFooterItem
+import com.sugarya.footer.interfaces.OnItemContainerClickListener
 import com.sugarya.spinnerlibrary.R
 
 /**

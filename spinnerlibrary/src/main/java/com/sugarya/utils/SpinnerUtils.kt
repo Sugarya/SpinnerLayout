@@ -1,7 +1,7 @@
 package com.sugarya.utils
 
 import android.util.SparseArray
-import com.sugarya.interfaces.FooterMode
+import com.sugarya.footer.interfaces.FooterMode
 import java.text.SimpleDateFormat
 import java.util.*
 

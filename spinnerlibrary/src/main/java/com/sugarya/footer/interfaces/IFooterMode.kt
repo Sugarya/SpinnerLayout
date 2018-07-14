@@ -1,4 +1,4 @@
-package com.sugarya.interfaces
+package com.sugarya.footer.interfaces
 
 /**
  * Footer View 下拉筛选动画模式

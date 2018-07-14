@@ -6,9 +6,8 @@ import android.util.Log
 import android.view.ViewGroup
 import android.widget.RelativeLayout
 import com.sugarya.SpinnerLayout
-import com.sugarya.interfaces.FooterMode
-import com.sugarya.interfaces.IFooterMode
-import com.sugarya.interfaces.OnFooterItemClickListener
+import com.sugarya.footer.interfaces.FooterMode
+import com.sugarya.footer.interfaces.IFooterMode
 import com.sugarya.spinnerlibrary.R
 
 abstract class BaseSpinnerFooter : RelativeLayout, IFooterMode {

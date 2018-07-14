@@ -6,10 +6,10 @@ import android.support.v7.widget.RecyclerView
 import android.util.AttributeSet
 import com.sugarya.footer.adapter.LinearFooterAdapter
 import com.sugarya.footer.base.BaseSpinnerFooter
-import com.sugarya.interfaces.FooterMode
-import com.sugarya.interfaces.IFooterItem
-import com.sugarya.interfaces.OnFooterItemClickListener
-import com.sugarya.interfaces.OnItemContainerClickListener
+import com.sugarya.footer.interfaces.FooterMode
+import com.sugarya.footer.interfaces.IFooterItem
+import com.sugarya.footer.interfaces.OnFooterItemClickListener
+import com.sugarya.footer.interfaces.OnItemContainerClickListener
 import com.sugarya.utils.FOOTER_MODE_SPARSE
 import com.sugarya.spinnerlibrary.R
 

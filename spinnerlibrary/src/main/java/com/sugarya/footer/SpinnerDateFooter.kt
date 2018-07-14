@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import com.bigkoo.pickerview.builder.TimePickerBuilder
 import com.sugarya.footer.base.BaseSpinnerFooter
-import com.sugarya.interfaces.FooterMode
+import com.sugarya.footer.interfaces.FooterMode
 import com.sugarya.utils.FOOTER_MODE_SPARSE
 import com.sugarya.utils.formatDate
 import com.sugarya.spinnerlibrary.R
