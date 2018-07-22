@@ -2,20 +2,16 @@
 <resources>
 
     <declare-styleable name="SpinnerLayout">
-        <attr name="firstText" format="string"/>
-        <attr name="secondText" format="string"/>
-        <attr name="thirdText" format="string"/>
-        <attr name="fourthText" format="string"/>
-        <attr name="fifthText" format="string"/>
         <attr name="textColor" format="color"/>
         <attr name="textSize" format="dimension"/>
         <attr name="textColorSelected" format="color"/>
         <attr name="spinnerBackground" format="color"/>
         <attr name="spinnerHeight" format="dimension"/>
-        <attr name="backSurfaceColor" format="color"/>
         <attr name="icon" format="reference"/>
         <attr name="iconSelected" format="reference"/>
         <attr name="touchOutsideCanceled" format="boolean"/>
+        <attr name="backSurfaceColor" format="color"/>
+        <attr name="backSurfaceAvailable" format="boolean"/>
         <!-- 分割线相对spinnerHeight的比例  (0, 1] -->
         <attr name="lineScale" format="float"/>
         <attr name="footerMode" format="enum">
@@ -30,31 +26,63 @@
     </declare-styleable>
 
     <declare-styleable name="SpinnerLinearFooter">
-        <attr name="linearFooterMode" format="enum">
-            <enum name="translate" value="0"/>
-            <enum name="expand" value="1"/>
-        </attr>
-        <attr name="linearItemHeight" format="dimension"/>
-    </declare-styleable>
+        <attr name="textLinear" format="string"/>
+        <attr name="textColorLinear" format="color"/>
+        <attr name="textSizeLinear" format="dimension"/>
+        <attr name="textColorSelectedLinear" format="color"/>
 
-    <declare-styleable name="SpinnerDateFooter">
-        <attr name="dateFooterMode" format="enum">
+        <attr name="iconLinear" format="reference"/>
+        <attr name="iconSelectedLinear" format="reference"/>
+
+        <attr name="touchOutsideCanceledLinear" format="boolean"/>
+        <attr name="backSurfaceAvailableLinear" format="boolean"/>
+
+
+        <attr name="footerModeLinear" format="enum">
             <enum name="translate" value="0"/>
             <enum name="expand" value="1"/>
         </attr>
+        <attr name="itemHeightLinear" format="dimension"/>
     </declare-styleable>
 
     <declare-styleable name="SpinnerGridFooter">
-        <attr name="gridFooterMode" format="enum">
+        <attr name="textGrid" format="string"/>
+        <attr name="textColorGrid" format="color"/>
+        <attr name="textSizeGrid" format="dimension"/>
+        <attr name="textColorSelectedGrid" format="color"/>
+
+        <attr name="iconGrid" format="reference"/>
+        <attr name="iconSelectedGrid" format="reference"/>
+
+        <attr name="touchOutsideCanceledGrid" format="boolean"/>
+        <attr name="backSurfaceAvailableGrid" format="boolean"/>
+
+        <attr name="footerModeGrid" format="enum">
             <enum name="translate" value="0"/>
             <enum name="expand" value="1"/>
         </attr>
-        <attr name="gridItemHeight" format="dimension"/>
-        <attr name="gridSpanCount" format="integer"/>
+        <attr name="itemHeightGrid" format="dimension"/>
+        <attr name="spanCountGrid" format="integer"/>
     </declare-styleable>
 
+    <declare-styleable name="SpinnerDateFooter">
+        <attr name="textDate" format="string"/>
+        <attr name="textColorDate" format="color"/>
+        <attr name="textSizeDate" format="dimension"/>
+        <attr name="textColorSelectedDate" format="color"/>
+
+        <attr name="iconDate" format="reference"/>
+        <attr name="iconSelectedDate" format="reference"/>
+
+        <attr name="touchOutsideCanceledDate" format="boolean"/>
+        <attr name="backSurfaceAvailableDate" format="boolean"/>
 
 
+        <attr name="footerModeDate" format="enum">
+            <enum name="translate" value="0"/>
+            <enum name="expand" value="1"/>
+        </attr>
+    </declare-styleable>
 
 
 

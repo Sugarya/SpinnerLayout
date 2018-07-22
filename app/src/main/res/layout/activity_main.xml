@@ -20,9 +20,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="240dp"
         app:spinnerHeight="45dp"
-        app:firstText="状态"
-        app:secondText="标签"
-        app:thirdText="选择日期"
         app:touchOutsideCanceled="true"
         >
 
@@ -30,8 +27,9 @@
             android:id="@+id/linearFooter3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:linearItemHeight="40dp"
             android:background="@color/bg_light_gray_footer"
+            app:itemHeightLinear="40dp"
+            app:textLinear="状态"
             />
 
         <com.sugarya.footer.SpinnerGridFooter
@@ -41,8 +39,9 @@
             android:paddingTop="7.5dp"
             android:paddingBottom="7.5dp"
             android:background="@color/bg_light_gray_footer"
-            app:gridSpanCount="4"
-            app:gridItemHeight="45dp"
+            app:spanCountGrid="4"
+            app:itemHeightGrid="45dp"
+            app:textGrid="标签"
             />
 
         <com.sugarya.footer.SpinnerDateFooter
@@ -50,6 +49,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/bg_light_gray_footer"
+            app:textDate="选择日期"
             />
 
     </com.sugarya.SpinnerLayout>
@@ -60,16 +60,15 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="160dp"
         app:spinnerHeight="45dp"
-        app:firstText="状态"
-        app:secondText="标签"
         >
 
         <com.sugarya.footer.SpinnerLinearFooter
             android:id="@+id/linearFooter2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:linearItemHeight="40dp"
             android:background="@color/bg_light_gray_footer"
+            app:itemHeightLinear="40dp"
+            app:textLinear="状态"
             />
 
         <com.sugarya.footer.SpinnerGridFooter
@@ -79,8 +78,9 @@
             android:paddingTop="7.5dp"
             android:paddingBottom="7.5dp"
             android:background="@color/bg_light_gray_footer"
-            app:gridSpanCount="4"
-            app:gridItemHeight="45dp"
+            app:spanCountGrid="4"
+            app:itemHeightGrid="45dp"
+            app:textGrid="标签"
             />
 
 
@@ -90,19 +90,19 @@
         android:id="@+id/spinnerLayout1_2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:spinnerHeight="45dp"
-        app:firstText="状态"
-        app:spinnerGravity="start"
         android:paddingLeft="15dp"
         android:layout_marginTop="80dp"
+        app:spinnerHeight="45dp"
+        app:spinnerGravity="start"
         >
 
         <com.sugarya.footer.SpinnerLinearFooter
             android:id="@+id/linearFooter1_2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:linearItemHeight="40dp"
             android:background="@color/bg_light_gray_footer"
+            app:itemHeightLinear="40dp"
+            app:textLinear="状态"
             />
 
     </com.sugarya.SpinnerLayout>
@@ -112,16 +112,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:spinnerHeight="45dp"
-        app:firstText="状态"
         >
 
         <com.sugarya.footer.SpinnerLinearFooter
             android:id="@+id/linearFooter1"
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            app:linearItemHeight="40dp"
             android:background="@color/bg_light_gray_footer"
-            app:linearFooterMode="translate"
+            app:itemHeightLinear="40dp"
+            app:footerModeLinear="translate"
+            app:textLinear="状态"
             />
 
 

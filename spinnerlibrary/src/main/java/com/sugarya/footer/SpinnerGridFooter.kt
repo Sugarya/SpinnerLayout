@@ -4,13 +4,17 @@ import android.content.Context
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.AttributeSet
+import android.util.Log
+import android.util.TypedValue
 import android.widget.RelativeLayout
+import com.sugarya.SpinnerConfig
 import com.sugarya.footer.adapter.GridFooterAdapter
 import com.sugarya.footer.base.BaseSpinnerFooter
 import com.sugarya.footer.interfaces.FooterMode
 import com.sugarya.footer.interfaces.IFooterItem
 import com.sugarya.footer.interfaces.OnFooterItemClickListener
 import com.sugarya.footer.interfaces.OnFooterItemContainerClickListener
+import com.sugarya.footer.model.GridFooterProperty
 import com.sugarya.utils.FOOTER_MODE_SPARSE
 import com.sugarya.spinnerlibrary.R
 
@@ -18,19 +22,17 @@ import com.sugarya.spinnerlibrary.R
  * 多列下拉列表
  * Create by Ethan Ruan 2018/07/02
  */
-class SpinnerGridFooter : BaseSpinnerFooter {
+class SpinnerGridFooter : BaseSpinnerFooter<GridFooterProperty> {
 
     var mOnFooterItemClickListener: OnFooterItemClickListener? = null
 
     companion object {
         const val TAG: String = "SpinnerGridFooter"
-        private const val DEFAULT_SPAN_COUNT = 4
     }
 
-    override var mFooterMode: FooterMode? = null
-    private var mSpanCount = DEFAULT_SPAN_COUNT
-    private var mItemHeight: Float = 0f
     private var mAdapter: GridFooterAdapter? = null
+
+    override val mFooterViewProperty: GridFooterProperty = GridFooterProperty()
 
     constructor(context: Context) : super(context) {
         init()
@@ -38,9 +40,50 @@ class SpinnerGridFooter : BaseSpinnerFooter {
 
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
         val typedArray = context.obtainStyledAttributes(attrs, R.styleable.SpinnerGridFooter)
-        mFooterMode = FOOTER_MODE_SPARSE[typedArray.getInt(R.styleable.SpinnerGridFooter_gridFooterMode, -1)]
-        mSpanCount = typedArray.getInt(R.styleable.SpinnerGridFooter_gridSpanCount, DEFAULT_SPAN_COUNT)
-        mItemHeight = typedArray.getDimension(R.styleable.SpinnerGridFooter_gridItemHeight, 0f)
+        val footerMode = FOOTER_MODE_SPARSE[typedArray.getInt(R.styleable.SpinnerGridFooter_footerModeGrid, 1)]
+        mFooterViewProperty.footerMode = footerMode
+
+        val spanCount = typedArray.getInt(R.styleable.SpinnerGridFooter_spanCountGrid, SpinnerConfig.DEFAULT_GRID_FOOTER_SPAN_COUNT)
+        mFooterViewProperty.gridSpanCount = spanCount
+
+        val itemHeight = typedArray.getDimension(R.styleable.SpinnerGridFooter_itemHeightGrid, SpinnerConfig.ORIGIN_HEIGHT.toFloat())
+        mFooterViewProperty.gridItemHeight = itemHeight
+        Log.d(TAG, "constructor itemHeight = $itemHeight")
+
+        val text = typedArray.getString(R.styleable.SpinnerGridFooter_textGrid)
+        mFooterViewProperty.text = text
+
+        val textSize = typedArray.getDimension(R.styleable.SpinnerGridFooter_textSizeGrid,
+                TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, SpinnerConfig.DEFAULT_SPINNER_TITLE_SIZE_DP, resources.displayMetrics))
+        mFooterViewProperty.textSize = textSize
+
+        val textColor = typedArray.getColor(R.styleable.SpinnerGridFooter_textColorGrid, SpinnerConfig.DEFAULT_SPINNER_BACK_SURFACE_COLOR)
+        mFooterViewProperty.textColor = textColor
+
+        val textSelectedColor = typedArray.getColor(R.styleable.SpinnerGridFooter_textColorSelectedGrid, SpinnerConfig.DEFAULT_SPINNER_UNIT_TITLE_COLOR_SELECTED)
+        mFooterViewProperty.textSelectedColor = textSelectedColor
+
+        val unitIconDrawable = if (typedArray.getDrawable(R.styleable.SpinnerGridFooter_iconGrid) != null) {
+            typedArray.getDrawable(R.styleable.SpinnerLayout_icon)
+        } else {
+            resources.getDrawable(R.drawable.footer_triangle_down_black)
+        }
+        mFooterViewProperty.unitIcon = unitIconDrawable
+
+        val unitIconSelectedDrawable = if (typedArray.getDrawable(R.styleable.SpinnerGridFooter_iconSelectedGrid) != null) {
+            typedArray.getDrawable(R.styleable.SpinnerLayout_iconSelected)
+        } else {
+            resources.getDrawable(R.drawable.footer_triangle_up_blue)
+        }
+        mFooterViewProperty.unitIconSelected = unitIconSelectedDrawable
+
+        val backSurfaceAvailable = typedArray.getBoolean(R.styleable.SpinnerGridFooter_backSurfaceAvailableGrid, SpinnerConfig.DEFAULT_BACK_SURFACE_AVAILABLE)
+        mFooterViewProperty.backSurfaceAvailable = backSurfaceAvailable
+
+        val isTouchOutsideCanceled = typedArray.getBoolean(R.styleable.SpinnerGridFooter_touchOutsideCanceledGrid, SpinnerConfig.DEFAULT_TOUCH_OUTSIDE_CANCELED)
+        mFooterViewProperty.isTouchOutsideCanceled = isTouchOutsideCanceled
+
+
         typedArray.recycle()
 
         init()
@@ -57,11 +100,11 @@ class SpinnerGridFooter : BaseSpinnerFooter {
                     addRule(RelativeLayout.CENTER_VERTICAL)
                 }
 
-        recyclerView.layoutManager = GridLayoutManager(context, mSpanCount, GridLayoutManager.VERTICAL, false)
+        recyclerView.layoutManager = GridLayoutManager(context, mFooterViewProperty.gridSpanCount, GridLayoutManager.VERTICAL, false)
         removeAllViews()
         addView(recyclerView)
 
-        mAdapter = GridFooterAdapter(mItemHeight)
+        mAdapter = GridFooterAdapter(mFooterViewProperty.gridItemHeight)
         recyclerView.adapter = mAdapter
 
         mAdapter?.mOnFooterItemContainerClickListener = object : OnFooterItemContainerClickListener {
@@ -86,8 +129,9 @@ class SpinnerGridFooter : BaseSpinnerFooter {
      */
     fun setNewData(dataList: MutableList<out IFooterItem>) {
         val size = dataList.size
-        val rowCount = size / mSpanCount + 1
-        val needHeight = rowCount * mItemHeight
+        val rowCount = size / mFooterViewProperty.gridSpanCount + 1
+        val needHeight = rowCount * mFooterViewProperty.gridItemHeight
+        Log.d(TAG, "needHeight = ${needHeight}")
         setupFooterHeight(needHeight.toInt())
 
         mAdapter?.setNewData(dataList)
