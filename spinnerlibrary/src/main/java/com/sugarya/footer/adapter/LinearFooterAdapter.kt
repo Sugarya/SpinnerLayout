@@ -9,7 +9,7 @@ import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
 import com.sugarya.footer.interfaces.IFooterItem
-import com.sugarya.footer.interfaces.OnItemContainerClickListener
+import com.sugarya.footer.interfaces.OnFooterItemContainerClickListener
 import com.sugarya.spinnerlibrary.R
 
 /**
@@ -20,7 +20,7 @@ class LinearFooterAdapter(private val itemHeight: Float, val recyclerView: Recyc
 
     var mDataList: MutableList<IFooterItem> = arrayListOf()
 
-    var mOnItemContainerClickListener: OnItemContainerClickListener? = null
+    var mOnFooterItemContainerClickListener: OnFooterItemContainerClickListener? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LinearViewHolder {
         val inflateView = LayoutInflater.from(parent.context).inflate(R.layout.item_filter_footer_linear, null)
@@ -38,7 +38,7 @@ class LinearFooterAdapter(private val itemHeight: Float, val recyclerView: Recyc
         val item: IFooterItem? = mDataList[position]
         item?.let {
             holder.onBindView(it)
-            holder.setOnItemClickListener(mOnItemContainerClickListener, mDataList, position)
+            holder.setOnItemClickListener(mOnFooterItemContainerClickListener, mDataList, position)
         }
     }
 
@@ -73,10 +73,10 @@ class LinearFooterAdapter(private val itemHeight: Float, val recyclerView: Recyc
 
         }
 
-        fun setOnItemClickListener(onFooterItemClickLister: OnItemContainerClickListener?, list: MutableList<IFooterItem>, position: Int){
+        fun setOnItemClickListener(onFooterFooterItemClickLister: OnFooterItemContainerClickListener?, list: MutableList<IFooterItem>, position: Int){
             val itemContainer = inflateView.findViewById<RelativeLayout>(R.id.container_item_filter_footer_linear)
             itemContainer.setOnClickListener {
-                onFooterItemClickLister?.onItemClick(list, position)
+                onFooterFooterItemClickLister?.onItemClick(list, position)
             }
         }
 

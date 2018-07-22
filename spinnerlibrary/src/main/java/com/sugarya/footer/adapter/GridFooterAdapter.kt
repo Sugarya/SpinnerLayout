@@ -7,13 +7,13 @@ import android.widget.FrameLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
 import com.sugarya.footer.interfaces.IFooterItem
-import com.sugarya.footer.interfaces.OnItemContainerClickListener
+import com.sugarya.footer.interfaces.OnFooterItemContainerClickListener
 import com.sugarya.spinnerlibrary.R
 
 class GridFooterAdapter(private val itemHeight: Float) : RecyclerView.Adapter<GridFooterAdapter.GridViewHolder>() {
 
     private val mDataList: MutableList<IFooterItem> = arrayListOf()
-    var mOnItemContainerClickListener: OnItemContainerClickListener? = null
+    var mOnFooterItemContainerClickListener: OnFooterItemContainerClickListener? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GridViewHolder {
         val inflateView = View.inflate(parent.context, R.layout.item_filter_footer_grid, null)
@@ -28,7 +28,7 @@ class GridFooterAdapter(private val itemHeight: Float) : RecyclerView.Adapter<Gr
     override fun onBindViewHolder(holder: GridViewHolder, position: Int) {
         val item = mDataList[position]
         holder.onBindView(item)
-        holder.setOnItemClickListener(mOnItemContainerClickListener, mDataList, position)
+        holder.setOnItemClickListener(mOnFooterItemContainerClickListener, mDataList, position)
     }
 
     fun setNewData(sourceList: MutableList<out IFooterItem>){
@@ -52,10 +52,10 @@ class GridFooterAdapter(private val itemHeight: Float) : RecyclerView.Adapter<Gr
             }
         }
 
-        fun setOnItemClickListener(onFooterItemClickListener: OnItemContainerClickListener?, list: MutableList<IFooterItem>, position: Int){
+        fun setOnItemClickListener(onFooterFooterItemClickListener: OnFooterItemContainerClickListener?, list: MutableList<IFooterItem>, position: Int){
             val itemContainer = inflateView.findViewById<RelativeLayout>(R.id.containerItemGridFooter)
             itemContainer.setOnClickListener {
-                onFooterItemClickListener?.onItemClick(list, position)
+                onFooterFooterItemClickListener?.onItemClick(list, position)
             }
         }
 

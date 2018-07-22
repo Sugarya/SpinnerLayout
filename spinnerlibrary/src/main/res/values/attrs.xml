@@ -12,7 +12,7 @@
         <attr name="textColorSelected" format="color"/>
         <attr name="spinnerBackground" format="color"/>
         <attr name="spinnerHeight" format="dimension"/>
-        <attr name="coverColor" format="color"/>
+        <attr name="backSurfaceColor" format="color"/>
         <attr name="icon" format="reference"/>
         <attr name="iconSelected" format="reference"/>
         <attr name="touchOutsideCanceled" format="boolean"/>

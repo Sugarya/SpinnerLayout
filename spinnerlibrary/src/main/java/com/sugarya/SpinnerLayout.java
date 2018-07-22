@@ -68,12 +68,12 @@ public class SpinnerLayout extends RelativeLayout {
     /**
      * 筛选条打开时，背景覆盖物颜色
      */
-    private int mSpinnerCoverColor = DEFAULT_FILTER_COVER_COLOR;
+    private int mbackSurfaceColor = DEFAULT_FILTER_COVER_COLOR;
     private int mSpinnerBarBackground = DEFAULT_INDICATOR_BACKGROUND;
 
-    private float mSpinnerTitleSize = DEFAULT_FILTER_TITLE_SIZE_DP;
-    private int mSpinnerTitleColor = DEFAULT_FILTER_TITLE_COLOR;
-    private int mSpinnerTitleSelectedColor = DEFAULT_FILTER_TITLE_SELECTED_COLOR;
+    private float mSpinnerTextSize = DEFAULT_FILTER_TITLE_SIZE_DP;
+    private int mSpinnerTextColor = DEFAULT_FILTER_TITLE_COLOR;
+    private int mSpinnerTextSelectedColor = DEFAULT_FILTER_TITLE_SELECTED_COLOR;
 
     private String mFirstTitle;
     private String mSecondTitle;
@@ -85,7 +85,7 @@ public class SpinnerLayout extends RelativeLayout {
      * 筛选条单元文字旁的图标
      */
     private Drawable mUnitIcon;
-    private Drawable mUnitSelectedIcon;
+    private Drawable mUnitIconSelected;
 
 
     /**
@@ -141,7 +141,7 @@ public class SpinnerLayout extends RelativeLayout {
     /**
      * Filter Unit的位置
      */
-    private int mGravityMode = Gravity.CENTER;
+    private int mspinnerGravity = Gravity.CENTER;
 
     private float mLineScale = DEFAULT_LINE_SCALE;
 
@@ -200,28 +200,27 @@ public class SpinnerLayout extends RelativeLayout {
         mFifthTitle = typedArray.getString(R.styleable.SpinnerLayout_fifthText);
 
         mSpinnerBarHeight = (int) typedArray.getDimension(R.styleable.SpinnerLayout_spinnerHeight, DEFAULT_FILTER_BAR_UNIT_HEIGHT);
-        mSpinnerTitleSize = typedArray.getDimension(R.styleable.SpinnerLayout_textSize, dip2px(DEFAULT_FILTER_TITLE_SIZE_DP));
-        mSpinnerTitleColor = typedArray.getColor(R.styleable.SpinnerLayout_textColor, DEFAULT_FILTER_TITLE_COLOR);
-        mSpinnerTitleSelectedColor = typedArray.getColor(R.styleable.SpinnerLayout_textColorSelected, DEFAULT_FILTER_TITLE_SELECTED_COLOR);
-        mSpinnerCoverColor = typedArray.getColor(R.styleable.SpinnerLayout_coverColor, DEFAULT_FILTER_COVER_COLOR);
+        mSpinnerTextSize = typedArray.getDimension(R.styleable.SpinnerLayout_textSize, dip2px(DEFAULT_FILTER_TITLE_SIZE_DP));
+        mSpinnerTextColor = typedArray.getColor(R.styleable.SpinnerLayout_textColor, DEFAULT_FILTER_TITLE_COLOR);
+        mSpinnerTextSelectedColor = typedArray.getColor(R.styleable.SpinnerLayout_textColorSelected, DEFAULT_FILTER_TITLE_SELECTED_COLOR);
+        mbackSurfaceColor = typedArray.getColor(R.styleable.SpinnerLayout_backSurfaceColor, DEFAULT_FILTER_COVER_COLOR);
 
         mUnitIcon = typedArray.getDrawable(R.styleable.SpinnerLayout_icon) != null ?
                 typedArray.getDrawable(R.styleable.SpinnerLayout_icon) : getResources().getDrawable(R.drawable.footer_triangle_down_black);
-        mUnitSelectedIcon = typedArray.getDrawable(R.styleable.SpinnerLayout_iconSelected) != null ?
+        mUnitIconSelected = typedArray.getDrawable(R.styleable.SpinnerLayout_iconSelected) != null ?
                 typedArray.getDrawable(R.styleable.SpinnerLayout_iconSelected) : getResources().getDrawable(R.drawable.footer_triangle_up_blue);
         mGlobalIsTouchOutsideCanceled = typedArray.getBoolean(R.styleable.SpinnerLayout_touchOutsideCanceled, true);
 
         mLineScale = typedArray.getFloat(R.styleable.SpinnerLayout_lineScale, DEFAULT_LINE_SCALE);
         mSpinnerBarBackground = typedArray.getColor(R.styleable.SpinnerLayout_spinnerBackground, DEFAULT_INDICATOR_BACKGROUND);
         mGlobalFooterMode = mFooterModeSparse.get(typedArray.getInt(R.styleable.SpinnerLayout_footerMode, 1));
-        mGravityMode = mSpinnerGravitySparse.get(typedArray.getInt(R.styleable.SpinnerLayout_spinnerGravity, 0));
+        mspinnerGravity = mSpinnerGravitySparse.get(typedArray.getInt(R.styleable.SpinnerLayout_spinnerGravity, 0));
 
         typedArray.recycle();
     }
 
     private void init(Context context) {
-        Rect switchPaddingRect = getAndSwitchPaddingToFilterBarLayout();
-
+        Rect switchPaddingRect = getAndSwitchPaddingToSpinnerBarLayout();
         mSpinnerContainerLayout = generateSpinnerContainerLayout(context, switchPaddingRect);
         addView(mSpinnerContainerLayout);
 
@@ -231,7 +230,7 @@ public class SpinnerLayout extends RelativeLayout {
     /**
      * 把SpinnerLayout控件的Padding转到SpinnerBarLayout的Padding上
      */
-    private Rect getAndSwitchPaddingToFilterBarLayout() {
+    private Rect getAndSwitchPaddingToSpinnerBarLayout() {
         Rect rect = new Rect();
         rect.left = getPaddingLeft();
         rect.top = getPaddingTop();
@@ -267,11 +266,10 @@ public class SpinnerLayout extends RelativeLayout {
     }
 
 
-
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-        exchangeChildView();
+        childrenViewChangeIntoFooterView();
         checkParentLayoutType();
         Log.d(TAG, "onFinishInflate");
     }
@@ -283,8 +281,8 @@ public class SpinnerLayout extends RelativeLayout {
         LinearLayout.LayoutParams titleViewLayoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         titleViewLayoutParams.gravity = Gravity.CENTER_VERTICAL;
         titleView.setLayoutParams(titleViewLayoutParams);
-        titleView.setTextColor(mSpinnerTitleColor);
-        titleView.setTextSize(TypedValue.COMPLEX_UNIT_PX, mSpinnerTitleSize);
+        titleView.setTextColor(mSpinnerTextColor);
+        titleView.setTextSize(TypedValue.COMPLEX_UNIT_PX, mSpinnerTextSize);
         titleView.setSingleLine(true);
         titleView.setEllipsize(TextUtils.TruncateAt.END);
         titleView.setText(spinnerUnitTitle);
@@ -298,7 +296,7 @@ public class SpinnerLayout extends RelativeLayout {
 
         LinearLayout spinnerUnitLayout = new LinearLayout(context);
         spinnerUnitLayout.setOrientation(LinearLayout.HORIZONTAL);
-        spinnerUnitLayout.setGravity(mGravityMode);
+        spinnerUnitLayout.setGravity(mspinnerGravity);
         LinearLayout.LayoutParams unitLayoutParams = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1);
         spinnerUnitLayout.setLayoutParams(unitLayoutParams);
         spinnerUnitLayout.addView(titleView);
@@ -447,17 +445,13 @@ public class SpinnerLayout extends RelativeLayout {
         }
     }
 
-    /**
-     * 把当前的子控件引用复制一份到筛选条容器内
-     */
-    private void exchangeChildView() {
+    private void childrenViewChangeIntoFooterView() {
         int childCount = getChildCount();
         if (childCount > 1) {
             List<View> childViewList = new LinkedList<>();
             for (int i = 1; i < childCount; i++) {
                 childViewList.add(getChildAt(i));
             }
-//            removeAllViews(); // 如果使用该方法，移除了子控件，xml的注册控件会出现NPE异常
 
             int size = childViewList.size();
             for (int j = 0; j < size; j++) {
@@ -492,8 +486,8 @@ public class SpinnerLayout extends RelativeLayout {
             return;
         }
 
-        spinnerUnitEntity.getTvUnit().setTextColor(mSpinnerTitleSelectedColor);
-        spinnerUnitEntity.getImgUnitIcon().setImageDrawable(mUnitSelectedIcon);
+        spinnerUnitEntity.getTvUnit().setTextColor(mSpinnerTextSelectedColor);
+        spinnerUnitEntity.getImgUnitIcon().setImageDrawable(mUnitIconSelected);
 
         setOnClickListener(new OnClickListener() {
             @Override
@@ -524,7 +518,7 @@ public class SpinnerLayout extends RelativeLayout {
             return;
         }
 
-        spinnerUnitEntity.getTvUnit().setTextColor(mSpinnerTitleColor);
+        spinnerUnitEntity.getTvUnit().setTextColor(mSpinnerTextColor);
         spinnerUnitEntity.getImgUnitIcon().setImageDrawable(mUnitIcon);
 
         setClickable(false);
@@ -715,7 +709,7 @@ public class SpinnerLayout extends RelativeLayout {
      */
     private void backgroundReactionWhenOpen(SpinnerUnitEntity spinnerUnitEntity) {
         if (spinnerUnitEntity.isScreenDimAvailable()) {
-            setBackgroundColor(mSpinnerCoverColor);
+            setBackgroundColor(mbackSurfaceColor);
             ViewGroup.LayoutParams lp = getLayoutParams();
             if (lp instanceof LayoutParams) {
                 mOriginRootLayoutParams = (LayoutParams) lp;
@@ -952,7 +946,7 @@ public class SpinnerLayout extends RelativeLayout {
     }
 
     public void setSpinnerIconSelectedResource(@DrawableRes int resId) {
-        mUnitSelectedIcon = getResources().getDrawable(resId);
+        mUnitIconSelected = getResources().getDrawable(resId);
     }
 
     public void setSpinnerIconDrawable(Drawable filterIcon) {
@@ -960,7 +954,7 @@ public class SpinnerLayout extends RelativeLayout {
     }
 
     public void setFilterIconSelectedDrawable(Drawable filterSelectedIcon) {
-        mUnitSelectedIcon = filterSelectedIcon;
+        mUnitIconSelected = filterSelectedIcon;
     }
 
     public int getSpinnerBarHeight() {

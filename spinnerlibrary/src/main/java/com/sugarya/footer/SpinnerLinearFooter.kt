@@ -9,7 +9,7 @@ import com.sugarya.footer.base.BaseSpinnerFooter
 import com.sugarya.footer.interfaces.FooterMode
 import com.sugarya.footer.interfaces.IFooterItem
 import com.sugarya.footer.interfaces.OnFooterItemClickListener
-import com.sugarya.footer.interfaces.OnItemContainerClickListener
+import com.sugarya.footer.interfaces.OnFooterItemContainerClickListener
 import com.sugarya.utils.FOOTER_MODE_SPARSE
 import com.sugarya.spinnerlibrary.R
 
@@ -57,7 +57,7 @@ class SpinnerLinearFooter : BaseSpinnerFooter {
 
         mAdapter = LinearFooterAdapter(mItemHeight, recyclerView)
         recyclerView.adapter = mAdapter
-        mAdapter?.mOnItemContainerClickListener = object : OnItemContainerClickListener {
+        mAdapter?.mOnFooterItemContainerClickListener = object : OnFooterItemContainerClickListener {
             override fun onItemClick(list: MutableList<IFooterItem>, position: Int) {
                 for(item in list){
                     item.isSelected = false
