@@ -29,13 +29,14 @@ class SpinnerLinearFooter : BaseSpinnerFooter {
     private var mAdapter: LinearFooterAdapter? = null
     private var mItemHeight = FOOTER_ITEM_HEIGHT
 
-    constructor(context: Context) : super(context) {
+    constructor(context: Context, itemHeight: Float) : super(context) {
+        mItemHeight = itemHeight
         init(context)
     }
 
     constructor(context: Context, attributeSet: AttributeSet) : super(context, attributeSet) {
         val typedArray = context.obtainStyledAttributes(attributeSet, R.styleable.SpinnerLinearFooter)
-        mFooterMode = FOOTER_MODE_SPARSE[typedArray.getInt(R.styleable.SpinnerLinearFooter_linearFooterMode, -1)]
+        mFooterMode = FOOTER_MODE_SPARSE[typedArray.getInt(R.styleable.SpinnerLinearFooter_linearFooterMode, 1)]
         mItemHeight = typedArray.getDimension(R.styleable.SpinnerLinearFooter_linearItemHeight, FOOTER_ITEM_HEIGHT)
         typedArray.recycle()
 

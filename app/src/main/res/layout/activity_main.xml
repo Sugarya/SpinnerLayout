@@ -23,6 +23,7 @@
         app:firstText="状态"
         app:secondText="标签"
         app:thirdText="选择日期"
+        app:touchOutsideCanceled="true"
         >
 
         <com.sugarya.footer.SpinnerLinearFooter

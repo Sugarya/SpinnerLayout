@@ -21,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import com.sugarya.animateoperator.AnimateOperatorManager;
 import com.sugarya.animateoperator.operator.FlexibleOperator;
 import com.sugarya.animateoperator.operator.TransitionOperator;
@@ -147,7 +148,7 @@ public class SpinnerLayout extends RelativeLayout {
     /**
      * 存储FilterLayout Padding参数
      */
-    private final Rect mSpinnerLayoutPaddingRect = new Rect();
+//    private final Rect mSpinnerLayoutPaddingRect = new Rect();
 
     private static SparseArray<FooterMode> mFooterModeSparse = new SparseArray<>();
 
@@ -178,19 +179,19 @@ public class SpinnerLayout extends RelativeLayout {
 
     public SpinnerLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
-        initTypedArray(context, attrs);
+        initAttributeSet(context, attrs);
         init(context);
         Log.d(TAG, "FilterLayout 2");
     }
 
     public SpinnerLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        initTypedArray(context, attrs);
+        initAttributeSet(context, attrs);
         init(context);
         Log.d(TAG, "FilterLayout 3");
     }
 
-    private void initTypedArray(Context context, AttributeSet attrs) {
+    private void initAttributeSet(Context context, AttributeSet attrs) {
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.SpinnerLayout);
         mFirstTitle = typedArray.getString(R.styleable.SpinnerLayout_firstText);
         mSecondTitle = typedArray.getString(R.styleable.SpinnerLayout_secondText);
@@ -216,11 +217,102 @@ public class SpinnerLayout extends RelativeLayout {
         mGravityMode = mSpinnerGravitySparse.get(typedArray.getInt(R.styleable.SpinnerLayout_spinnerGravity, 0));
 
         typedArray.recycle();
-
-        initializeFromTypedArray();
     }
 
-    private void initializeFromTypedArray() {
+    private void init(Context context) {
+        Rect switchPaddingRect = getAndSwitchPaddingToFilterBarLayout();
+
+        mSpinnerContainerLayout = generateSpinnerContainerLayout(context, switchPaddingRect);
+        addView(mSpinnerContainerLayout);
+
+        setupSpinnerUnitEntity(context);
+    }
+
+    /**
+     * 把SpinnerLayout控件的Padding转到SpinnerBarLayout的Padding上
+     */
+    private Rect getAndSwitchPaddingToFilterBarLayout() {
+        Rect rect = new Rect();
+        rect.left = getPaddingLeft();
+        rect.top = getPaddingTop();
+        rect.right = getPaddingRight();
+        rect.bottom = getPaddingBottom();
+        setPadding(0, 0, 0, 0);
+        return rect;
+    }
+
+    /**
+     * 设置下SpinnerContainerLayout的构成
+     **/
+    private LinearLayout generateSpinnerContainerLayout(Context context, Rect paddingRect) {
+        mSpinnerBarLayout = new LinearLayout(context);
+        LinearLayout.LayoutParams SpinnerBarLayoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, mSpinnerBarHeight);
+        mSpinnerBarLayout.setLayoutParams(SpinnerBarLayoutParams);
+        mSpinnerBarLayout.setPadding(paddingRect.left, paddingRect.top, paddingRect.right, paddingRect.bottom);
+        mSpinnerBarLayout.setBackgroundColor(mSpinnerBarBackground);
+        mSpinnerBarLayout.setGravity(Gravity.CENTER_VERTICAL);
+        mSpinnerBarLayout.setOrientation(LinearLayout.HORIZONTAL);
+
+        //FooterView的根布局
+        mFooterViewRoot = new FrameLayout(getContext());
+        mFooterViewRoot.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+
+        mOriginSpinnerContainerLayoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+        LinearLayout spinnerContainerLayout = new LinearLayout(getContext());
+        spinnerContainerLayout.setOrientation(LinearLayout.VERTICAL);
+        spinnerContainerLayout.addView(mSpinnerBarLayout);
+        spinnerContainerLayout.addView(mFooterViewRoot);
+
+        return spinnerContainerLayout;
+    }
+
+
+
+    @Override
+    protected void onFinishInflate() {
+        super.onFinishInflate();
+        exchangeChildView();
+        checkParentLayoutType();
+        Log.d(TAG, "onFinishInflate");
+    }
+
+    private LinearLayout generateSpinnerUnitLayout(Context context, SpinnerUnitEntity spinnerUnitEntity) {
+        String spinnerUnitTitle = spinnerUnitEntity.getUnitTitle();
+
+        final TextView titleView = new TextView(context);
+        LinearLayout.LayoutParams titleViewLayoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        titleViewLayoutParams.gravity = Gravity.CENTER_VERTICAL;
+        titleView.setLayoutParams(titleViewLayoutParams);
+        titleView.setTextColor(mSpinnerTitleColor);
+        titleView.setTextSize(TypedValue.COMPLEX_UNIT_PX, mSpinnerTitleSize);
+        titleView.setSingleLine(true);
+        titleView.setEllipsize(TextUtils.TruncateAt.END);
+        titleView.setText(spinnerUnitTitle);
+
+        final ImageView unitIconIv = new ImageView(context);
+        LinearLayout.LayoutParams unitIconLayoutParams = new LinearLayout.LayoutParams(dip2px(8), dip2px(5));
+        unitIconLayoutParams.gravity = Gravity.CENTER_VERTICAL;
+        unitIconLayoutParams.leftMargin = dip2px(5);
+        unitIconIv.setLayoutParams(unitIconLayoutParams);
+        unitIconIv.setImageDrawable(mUnitIcon);
+
+        LinearLayout spinnerUnitLayout = new LinearLayout(context);
+        spinnerUnitLayout.setOrientation(LinearLayout.HORIZONTAL);
+        spinnerUnitLayout.setGravity(mGravityMode);
+        LinearLayout.LayoutParams unitLayoutParams = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1);
+        spinnerUnitLayout.setLayoutParams(unitLayoutParams);
+        spinnerUnitLayout.addView(titleView);
+        spinnerUnitLayout.addView(unitIconIv);
+
+        mSpinnerBarLayout.addView(spinnerUnitLayout);
+        spinnerUnitEntity.setTvUnit(titleView);
+        spinnerUnitEntity.setImgUnitIcon(unitIconIv);
+        spinnerUnitEntity.setSpinnerUnitLayout(spinnerUnitLayout);
+
+        return spinnerUnitLayout;
+    }
+
+    private void setupSpinnerUnitEntity(Context context) {
         if (!TextUtils.isEmpty(mFirstTitle)) {
             SpinnerUnitEntity spinnerUnitEntity = new SpinnerUnitEntity(mFirstTitle, true);
             mSpinnerUnitEntityList.add(spinnerUnitEntity);
@@ -241,49 +333,94 @@ public class SpinnerLayout extends RelativeLayout {
             SpinnerUnitEntity spinnerUnitEntity = new SpinnerUnitEntity(mFifthTitle, true);
             mSpinnerUnitEntityList.add(spinnerUnitEntity);
         }
-    }
-
-    private void init(Context context) {
-        switchPaddingToFilterBarLayout();
-
-        mSpinnerContainerLayout = new LinearLayout(getContext());
-        mSpinnerContainerLayout.setOrientation(LinearLayout.VERTICAL);
-        mOriginSpinnerContainerLayoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-
-        mSpinnerBarLayout = new LinearLayout(context);
-        LinearLayout.LayoutParams SpinnerBarLayoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, mSpinnerBarHeight);
-        mSpinnerBarLayout.setLayoutParams(SpinnerBarLayoutParams);
-        mSpinnerBarLayout.setPadding(mSpinnerLayoutPaddingRect.left, mSpinnerLayoutPaddingRect.top, mSpinnerLayoutPaddingRect.right, mSpinnerLayoutPaddingRect.bottom);
-        mSpinnerBarLayout.setBackgroundColor(mSpinnerBarBackground);
-
-        mSpinnerBarLayout.setGravity(Gravity.CENTER_VERTICAL);
-        mSpinnerBarLayout.setOrientation(LinearLayout.HORIZONTAL);
-
-        //FooterView的根布局
-        mFooterViewRoot = new FrameLayout(getContext());
-        mFooterViewRoot.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-
-        mSpinnerContainerLayout.addView(mSpinnerBarLayout);
-        mSpinnerContainerLayout.addView(mFooterViewRoot);
-        addView(mSpinnerContainerLayout);
 
         int size = mSpinnerUnitEntityList.size();
         for (int i = 0; i < size; i++) {
-            addSpinnerUnit(context, i);
+            initSpinnerUnitEntity(context, i);
             if (i < size - 1) {
-                addFilterBarLine(context);
+                View lineView = generateSpinnerUnitLine(context);
+                mSpinnerBarLayout.addView(lineView);
             }
         }
     }
 
+    /**
+     * 添加 筛选条单元
+     *
+     * @param context
+     * @param index
+     */
+    private void initSpinnerUnitEntity(Context context, final int index) {
+        final SpinnerUnitEntity spinnerUnitEntity = mSpinnerUnitEntityList.get(index);
+        if (spinnerUnitEntity == null) {
+            return;
+        }
 
-    @Override
-    protected void onFinishInflate() {
-        super.onFinishInflate();
-        exchangeChildView();
-        checkParentLayoutType();
-        Log.d(TAG, "onFinishInflate");
+        LinearLayout spinnerUnitLayout = generateSpinnerUnitLayout(context, spinnerUnitEntity);
+        spinnerUnitLayout.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                long currentTimeMillis = System.currentTimeMillis();
+                if (mLastClickTime > 0 && currentTimeMillis - mLastClickTime <= FOOTER_ANIMATION_DURATION) {
+                    return;
+                }
+
+                if (!spinnerUnitEntity.isExpanded()) {
+                    mSelectedIndex = index;
+                    if (mOnSpinnerLayoutClickListener != null) {
+                        mOnSpinnerLayoutClickListener.onClick(SpinnerLayout.this, index, false);
+                    }
+                } else {
+                    mSelectedIndex = -1;
+                    if (mOnSpinnerLayoutClickListener != null) {
+                        mOnSpinnerLayoutClickListener.onClick(SpinnerLayout.this, index, true);
+                    }
+                }
+
+                if (!spinnerUnitEntity.isExpanded()) {
+                    isShowing = true;
+                    reactSpinnerUnitUIWhenOpen(spinnerUnitEntity);
+                    setupSpinnerUnitClickableWhenOpen(index);
+                    backgroundReactionWhenOpen(spinnerUnitEntity);
+                } else {
+                    isShowing = false;
+                    reactSpinnerUnitUIWhenClose(spinnerUnitEntity);
+                    restoreAllClickableWhenClose();
+                    backgroundReactionWhenClose(spinnerUnitEntity);
+                }
+
+                if (!spinnerUnitEntity.isExpanded()) {
+                    expandFooter(spinnerUnitEntity);
+                } else {
+                    collapseFooter(spinnerUnitEntity);
+                }
+
+                spinnerUnitEntity.setExpanded(!spinnerUnitEntity.isExpanded());
+
+                mLastClickTime = currentTimeMillis;
+            }
+        });
     }
+
+    /**
+     * 添加筛选单元分割线
+     *
+     * @param context
+     */
+    private View generateSpinnerUnitLine(Context context) {
+        View lineView = new View(context);
+        lineView.setBackgroundColor(DEFAULT_LINE_COLOR);
+        if (mLineScale <= 0) {
+            mLineScale = 0.1f;
+        } else if (mLineScale > 1) {
+            mLineScale = 1f;
+        }
+        LinearLayout.LayoutParams lineLayoutParams = new LinearLayout.LayoutParams(2, (int) (mSpinnerBarHeight * mLineScale));
+        lineLayoutParams.gravity = Gravity.CENTER_VERTICAL;
+        lineView.setLayoutParams(lineLayoutParams);
+        return lineView;
+    }
+
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
@@ -338,135 +475,12 @@ public class SpinnerLayout extends RelativeLayout {
                 } else {
                     footerMode = mGlobalFooterMode;
                 }
-                addFooterView(j, childView, footerMode);
+                addSpinnerFooter(j, childView, footerMode);
             }
             childViewList.clear();
         }
     }
 
-
-    /**
-     * 把FilterLayout控件的Padding转到FilterBarLayout的Padding上
-     */
-    private void switchPaddingToFilterBarLayout() {
-        mSpinnerLayoutPaddingRect.left = getPaddingLeft();
-        mSpinnerLayoutPaddingRect.top = getPaddingTop();
-        mSpinnerLayoutPaddingRect.right = getPaddingRight();
-        mSpinnerLayoutPaddingRect.bottom = getPaddingBottom();
-
-        setPadding(0, 0, 0, 0);
-    }
-
-    /**
-     * 添加筛选单元分割线
-     *
-     * @param context
-     */
-    private void addFilterBarLine(Context context) {
-        View lineView = new View(context);
-        lineView.setBackgroundColor(DEFAULT_LINE_COLOR);
-
-        if (mLineScale <= 0) {
-            mLineScale = 0.1f;
-        } else if (mLineScale > 1) {
-            mLineScale = 1f;
-        }
-        LinearLayout.LayoutParams lineLayoutParams = new LinearLayout.LayoutParams(2, (int) (mSpinnerBarHeight * mLineScale));
-
-        lineLayoutParams.gravity = Gravity.CENTER_VERTICAL;
-        lineView.setLayoutParams(lineLayoutParams);
-        mSpinnerBarLayout.addView(lineView);
-    }
-
-    /**
-     * 添加 筛选条单元
-     *
-     * @param context
-     * @param i
-     */
-    private void addSpinnerUnit(Context context, int i) {
-        LinearLayout spinnerUnitLayout = new LinearLayout(context);
-        spinnerUnitLayout.setOrientation(LinearLayout.HORIZONTAL);
-        spinnerUnitLayout.setGravity(mGravityMode);
-        LinearLayout.LayoutParams unitLayoutParams = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1);
-        spinnerUnitLayout.setLayoutParams(unitLayoutParams);
-
-        final TextView titleView = new TextView(context);
-        LinearLayout.LayoutParams titleViewLayoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        titleViewLayoutParams.gravity = Gravity.CENTER_VERTICAL;
-        titleView.setLayoutParams(titleViewLayoutParams);
-        titleView.setTextColor(mSpinnerTitleColor);
-        titleView.setTextSize(TypedValue.COMPLEX_UNIT_PX, mSpinnerTitleSize);
-        titleView.setSingleLine(true);
-        titleView.setEllipsize(TextUtils.TruncateAt.END);
-
-        final SpinnerUnitEntity spinnerUnitEntity = mSpinnerUnitEntityList.get(i);
-        if (spinnerUnitEntity == null) {
-            return;
-        }
-
-        String filterTitle = spinnerUnitEntity.getUnitTitle();
-        titleView.setText(filterTitle);
-        spinnerUnitEntity.setTvUnit(titleView);
-
-        final ImageView unitIconIv = new ImageView(context);
-        LinearLayout.LayoutParams unitIconLayoutParams = new LinearLayout.LayoutParams(dip2px(8), dip2px(5));
-        unitIconLayoutParams.gravity = Gravity.CENTER_VERTICAL;
-        unitIconLayoutParams.leftMargin = dip2px(5);
-        unitIconIv.setLayoutParams(unitIconLayoutParams);
-        unitIconIv.setImageDrawable(mUnitIcon);
-        spinnerUnitEntity.setImgUnitIcon(unitIconIv);
-
-        spinnerUnitLayout.addView(titleView);
-        spinnerUnitLayout.addView(unitIconIv);
-        mSpinnerBarLayout.addView(spinnerUnitLayout);
-        spinnerUnitEntity.setFilterUnitLayout(spinnerUnitLayout);
-
-        final int index = i;
-        spinnerUnitLayout.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                long currentTimeMillis = System.currentTimeMillis();
-                if(mLastClickTime > 0 && currentTimeMillis - mLastClickTime <= FOOTER_ANIMATION_DURATION){
-                    return;
-                }
-
-                if (!spinnerUnitEntity.isExpanded()) {
-                    mSelectedIndex = index;
-                    if (mOnSpinnerLayoutClickListener != null) {
-                        mOnSpinnerLayoutClickListener.onClick(SpinnerLayout.this, index, false);
-                    }
-                } else {
-                    mSelectedIndex = -1;
-                    if (mOnSpinnerLayoutClickListener != null) {
-                        mOnSpinnerLayoutClickListener.onClick(SpinnerLayout.this, index, true);
-                    }
-                }
-
-                if (!spinnerUnitEntity.isExpanded()) {
-                    isShowing = true;
-                    reactSpinnerUnitUIWhenOpen(spinnerUnitEntity);
-                    setupSpinnerUnitClickableWhenOpen(index);
-                    backgroundReactionWhenOpen(spinnerUnitEntity);
-                } else {
-                    isShowing = false;
-                    reactSpinnerUnitUIWhenClose(spinnerUnitEntity);
-                    restoreAllClickableWhenClose();
-                    backgroundReactionWhenClose(spinnerUnitEntity);
-                }
-
-                if (!spinnerUnitEntity.isExpanded()) {
-                    expandFooter(spinnerUnitEntity);
-                } else {
-                    collapseFooter(spinnerUnitEntity);
-                }
-
-                spinnerUnitEntity.setExpanded(!spinnerUnitEntity.isExpanded());
-
-                mLastClickTime = currentTimeMillis;
-            }
-        });
-    }
 
     /**
      * 下拉时，配置筛选条单元
@@ -523,7 +537,7 @@ public class SpinnerLayout extends RelativeLayout {
      * @param childView  下拉视图
      * @param footerMode 视图展开方式
      */
-    public void addFooterView(int index, View childView, FooterMode footerMode) {
+    private void addSpinnerFooter(int index, View childView, FooterMode footerMode) {
         if (childView == null) {
             return;
         }
@@ -563,7 +577,7 @@ public class SpinnerLayout extends RelativeLayout {
 
         Integer originHeight = spinnerUnitEntity.getFooterViewOriginHeight();
         if (footerMode == FooterMode.MODE_EXPAND) {
-            Log.d(TAG, "MODE_EXPAND addFooterView: originHeight = " + originHeight);
+            Log.d(TAG, "MODE_EXPAND addSpinnerFooter: originHeight = " + originHeight);
             childView.setTag(R.id.footer_view_height, originHeight);
 
             footerViewContainerLayoutParams.height = ORIGIN_HEIGHT;
@@ -688,9 +702,9 @@ public class SpinnerLayout extends RelativeLayout {
             SpinnerUnitEntity spinnerUnitEntity = mSpinnerUnitEntityList.get(i);
             if (spinnerUnitEntity != null) {
                 if (i == selectedIndex) {
-                    spinnerUnitEntity.getFilterUnitLayout().setClickable(true);
+                    spinnerUnitEntity.getSpinnerUnitLayout().setClickable(true);
                 } else {
-                    spinnerUnitEntity.getFilterUnitLayout().setClickable(false);
+                    spinnerUnitEntity.getSpinnerUnitLayout().setClickable(false);
                 }
             }
         }
@@ -731,8 +745,8 @@ public class SpinnerLayout extends RelativeLayout {
         int size = mSpinnerUnitEntityList.size();
         for (int i = 0; i < size; i++) {
             SpinnerUnitEntity spinnerUnitEntity = mSpinnerUnitEntityList.get(i);
-            if (spinnerUnitEntity != null && spinnerUnitEntity.getFilterUnitLayout() != null) {
-                spinnerUnitEntity.getFilterUnitLayout().setClickable(true);
+            if (spinnerUnitEntity != null && spinnerUnitEntity.getSpinnerUnitLayout() != null) {
+                spinnerUnitEntity.getSpinnerUnitLayout().setClickable(true);
             }
         }
     }
@@ -768,6 +782,13 @@ public class SpinnerLayout extends RelativeLayout {
     }
 
     /**
+     * 代码添加FooterView
+     */
+    public void addFooterView() {
+
+    }
+
+    /**
      * 添加筛选条元素标题
      *
      * @param unitTitle
@@ -779,12 +800,13 @@ public class SpinnerLayout extends RelativeLayout {
 
         int size = mSpinnerUnitEntityList.size();
         if (size > 0) {
-            addFilterBarLine(getContext());
+            View lineView = generateSpinnerUnitLine(getContext());
+            mSpinnerBarLayout.addView(lineView);
         }
 
         SpinnerUnitEntity spinnerUnitEntity = new SpinnerUnitEntity(unitTitle, false);
         mSpinnerUnitEntityList.add(spinnerUnitEntity);
-        addSpinnerUnit(getContext(), size);
+        initSpinnerUnitEntity(getContext(), size);
     }
 
     /**
@@ -805,8 +827,8 @@ public class SpinnerLayout extends RelativeLayout {
      * @param index 序号
      * @param view  下拉视图
      */
-    public void addFooterView(int index, View view) {
-        addFooterView(index, view, mGlobalFooterMode);
+    public void addSpinnerFooter(int index, View view) {
+        addSpinnerFooter(index, view, mGlobalFooterMode);
     }
 
 
@@ -952,7 +974,6 @@ public class SpinnerLayout extends RelativeLayout {
     public FooterMode getGlobalFilterMode() {
         return mGlobalFooterMode;
     }
-
 
 
     public interface OnSpinnerLayoutClickListener {

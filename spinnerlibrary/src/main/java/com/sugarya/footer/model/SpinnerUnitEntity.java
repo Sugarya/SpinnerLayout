@@ -27,7 +27,7 @@ public class SpinnerUnitEntity {
     /**
      * 筛选条单元视图
      */
-    private View FilterUnitLayout;
+    private View spinnerUnitLayout;
     /**
      * 筛选标题控件
      */
@@ -68,11 +68,11 @@ public class SpinnerUnitEntity {
         this.screenDimAvailable = screenDimAvailable;
     }
 
-    public SpinnerUnitEntity(String unitTitle, boolean screenDimAvailable, FooterMode footerMode, View FilterUnitLayout, TextView tvUnit, ImageView imgUnitIcon, boolean isExpanded, boolean isCanceledOnTouchOutside, ViewGroup footerViewContainer) {
+    public SpinnerUnitEntity(String unitTitle, boolean screenDimAvailable, FooterMode footerMode, View spinnerUnitLayout, TextView tvUnit, ImageView imgUnitIcon, boolean isExpanded, boolean isCanceledOnTouchOutside, ViewGroup footerViewContainer) {
         this.unitTitle = unitTitle;
         this.screenDimAvailable = screenDimAvailable;
         this.footerMode = footerMode;
-        this.FilterUnitLayout = FilterUnitLayout;
+        this.spinnerUnitLayout = spinnerUnitLayout;
         this.tvUnit = tvUnit;
         this.imgUnitIcon = imgUnitIcon;
         this.isExpanded = isExpanded;
@@ -104,12 +104,12 @@ public class SpinnerUnitEntity {
         this.footerMode = footerMode;
     }
 
-    public View getFilterUnitLayout() {
-        return FilterUnitLayout;
+    public View getSpinnerUnitLayout() {
+        return spinnerUnitLayout;
     }
 
-    public void setFilterUnitLayout(View filterUnitLayout) {
-        this.FilterUnitLayout = filterUnitLayout;
+    public void setSpinnerUnitLayout(View spinnerUnitLayout) {
+        this.spinnerUnitLayout = spinnerUnitLayout;
     }
 
     public TextView getTvUnit() {
