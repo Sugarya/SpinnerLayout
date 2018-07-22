@@ -122,7 +122,7 @@ public class SpinnerLayout extends RelativeLayout {
     /**
      * 是否正在展示下拉视图
      */
-    private boolean isShowing = false;
+    private boolean mIsShowing = false;
     /**
      * 当前选中的
      */
@@ -141,7 +141,7 @@ public class SpinnerLayout extends RelativeLayout {
     /**
      * Filter Unit的位置
      */
-    private int mspinnerGravity = Gravity.CENTER;
+    private int mSpinnerGravity = Gravity.CENTER;
 
     private float mLineScale = DEFAULT_LINE_SCALE;
 
@@ -214,7 +214,7 @@ public class SpinnerLayout extends RelativeLayout {
         mLineScale = typedArray.getFloat(R.styleable.SpinnerLayout_lineScale, DEFAULT_LINE_SCALE);
         mSpinnerBarBackground = typedArray.getColor(R.styleable.SpinnerLayout_spinnerBackground, DEFAULT_INDICATOR_BACKGROUND);
         mGlobalFooterMode = mFooterModeSparse.get(typedArray.getInt(R.styleable.SpinnerLayout_footerMode, 1));
-        mspinnerGravity = mSpinnerGravitySparse.get(typedArray.getInt(R.styleable.SpinnerLayout_spinnerGravity, 0));
+        mSpinnerGravity = mSpinnerGravitySparse.get(typedArray.getInt(R.styleable.SpinnerLayout_spinnerGravity, 0));
 
         typedArray.recycle();
     }
@@ -296,7 +296,7 @@ public class SpinnerLayout extends RelativeLayout {
 
         LinearLayout spinnerUnitLayout = new LinearLayout(context);
         spinnerUnitLayout.setOrientation(LinearLayout.HORIZONTAL);
-        spinnerUnitLayout.setGravity(mspinnerGravity);
+        spinnerUnitLayout.setGravity(mSpinnerGravity);
         LinearLayout.LayoutParams unitLayoutParams = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1);
         spinnerUnitLayout.setLayoutParams(unitLayoutParams);
         spinnerUnitLayout.addView(titleView);
@@ -376,23 +376,28 @@ public class SpinnerLayout extends RelativeLayout {
                 }
 
                 if (!spinnerUnitEntity.isExpanded()) {
-                    isShowing = true;
-                    reactSpinnerUnitUIWhenOpen(spinnerUnitEntity);
-                    setupSpinnerUnitClickableWhenOpen(index);
-                    backgroundReactionWhenOpen(spinnerUnitEntity);
-                } else {
-                    isShowing = false;
-                    reactSpinnerUnitUIWhenClose(spinnerUnitEntity);
-                    restoreAllClickableWhenClose();
-                    backgroundReactionWhenClose(spinnerUnitEntity);
-                }
-
-                if (!spinnerUnitEntity.isExpanded()) {
                     expandFooter(spinnerUnitEntity);
                 } else {
                     collapseFooter(spinnerUnitEntity);
                 }
 
+                if (!spinnerUnitEntity.isExpanded()) {
+                    mIsShowing = true;
+                    reactionOfSpinnerUnitUIWhenToOpen(spinnerUnitEntity);
+                    setupSpinnerUnitClickableWhenToOpen(index);
+                    reactionOfBackgroundWhenToOpen(spinnerUnitEntity);
+                    setOnClickListener(new OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if(mGlobalIsTouchOutsideCanceled){
+                                back();
+                            }
+                        }
+                    });
+                } else {
+                    mIsShowing = false;
+                    reactionOfSpinnerUnitWhenToClose(spinnerUnitEntity);
+                }
                 spinnerUnitEntity.setExpanded(!spinnerUnitEntity.isExpanded());
 
                 mLastClickTime = currentTimeMillis;
@@ -418,7 +423,6 @@ public class SpinnerLayout extends RelativeLayout {
         lineView.setLayoutParams(lineLayoutParams);
         return lineView;
     }
-
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
@@ -481,7 +485,7 @@ public class SpinnerLayout extends RelativeLayout {
      *
      * @param spinnerUnitEntity
      */
-    private void reactSpinnerUnitUIWhenOpen(SpinnerUnitEntity spinnerUnitEntity) {
+    private void reactionOfSpinnerUnitUIWhenToOpen(SpinnerUnitEntity spinnerUnitEntity) {
         if (spinnerUnitEntity.getTvUnit() == null || spinnerUnitEntity.getImgUnitIcon() == null) {
             return;
         }
@@ -489,31 +493,15 @@ public class SpinnerLayout extends RelativeLayout {
         spinnerUnitEntity.getTvUnit().setTextColor(mSpinnerTextSelectedColor);
         spinnerUnitEntity.getImgUnitIcon().setImageDrawable(mUnitIconSelected);
 
-        setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                backWhenTouchOutside();
-            }
-        });
     }
 
-    private void backWhenTouchOutside() {
-        if (mSelectedIndex >= 0 && mSelectedIndex < mSpinnerUnitEntityList.size()) {
-            SpinnerUnitEntity spinnerUnitEntity = mSpinnerUnitEntityList.get(mSelectedIndex);
-            if (spinnerUnitEntity != null) {
-                if (spinnerUnitEntity.isCanceledOnTouchOutside()) {
-                    back();
-                }
-            }
-        }
-    }
 
     /**
      * 关闭时，配置筛选条单元
      *
      * @param spinnerUnitEntity
      */
-    private void reactSpinnerUnitUIWhenClose(SpinnerUnitEntity spinnerUnitEntity) {
+    private void reactionOfSpinnerUnitUIWhenToClose(SpinnerUnitEntity spinnerUnitEntity) {
         if (spinnerUnitEntity.getTvUnit() == null || spinnerUnitEntity.getImgUnitIcon() == null) {
             return;
         }
@@ -556,7 +544,7 @@ public class SpinnerLayout extends RelativeLayout {
             throw new RuntimeException("The LayoutParams of this footer view is null, You need to create a layout params");
         }
 
-        spinnerUnitEntity.setCanceledOnTouchOutside(mGlobalIsTouchOutsideCanceled);
+//        spinnerUnitEntity.setCanceledOnTouchOutside(mGlobalIsTouchOutsideCanceled);
 
         FrameLayout footerViewContainer = new FrameLayout(getContext());
         footerViewContainer.addView(childView);
@@ -690,7 +678,7 @@ public class SpinnerLayout extends RelativeLayout {
      *
      * @param selectedIndex 可以点击的筛选序号
      */
-    private void setupSpinnerUnitClickableWhenOpen(int selectedIndex) {
+    private void setupSpinnerUnitClickableWhenToOpen(int selectedIndex) {
         int size = mSpinnerUnitEntityList.size();
         for (int i = 0; i < size; i++) {
             SpinnerUnitEntity spinnerUnitEntity = mSpinnerUnitEntityList.get(i);
@@ -707,7 +695,7 @@ public class SpinnerLayout extends RelativeLayout {
     /**
      * 打开时背景暗色
      */
-    private void backgroundReactionWhenOpen(SpinnerUnitEntity spinnerUnitEntity) {
+    private void reactionOfBackgroundWhenToOpen(SpinnerUnitEntity spinnerUnitEntity) {
         if (spinnerUnitEntity.isScreenDimAvailable()) {
             setBackgroundColor(mbackSurfaceColor);
             ViewGroup.LayoutParams lp = getLayoutParams();
@@ -735,7 +723,7 @@ public class SpinnerLayout extends RelativeLayout {
     /**
      * 恢复所有的筛选条可点击
      */
-    private void restoreAllClickableWhenClose() {
+    private void restoreAllClickableWhenToClose() {
         int size = mSpinnerUnitEntityList.size();
         for (int i = 0; i < size; i++) {
             SpinnerUnitEntity spinnerUnitEntity = mSpinnerUnitEntityList.get(i);
@@ -748,7 +736,7 @@ public class SpinnerLayout extends RelativeLayout {
     /**
      * 关闭时，恢复背景
      */
-    private void backgroundReactionWhenClose(SpinnerUnitEntity spinnerUnitEntity) {
+    private void reactionOfBackgroundWhenToClose(SpinnerUnitEntity spinnerUnitEntity) {
         if (spinnerUnitEntity.isScreenDimAvailable() && mOriginRootLayoutParams != null) {
             setLayoutParams(mOriginRootLayoutParams);
             mSpinnerContainerLayout.setLayoutParams(mOriginSpinnerContainerLayoutParams);
@@ -766,14 +754,28 @@ public class SpinnerLayout extends RelativeLayout {
      *
      * @param spinnerUnitEntity
      */
-    private void filterUnitReactionWhenClose(SpinnerUnitEntity spinnerUnitEntity) {
+    private void reactionOfSpinnerUnitWhenToClose(SpinnerUnitEntity spinnerUnitEntity) {
         if (spinnerUnitEntity == null) {
             return;
         }
-        restoreAllClickableWhenClose();
-        reactSpinnerUnitUIWhenClose(spinnerUnitEntity);
-        spinnerUnitEntity.setExpanded(!spinnerUnitEntity.isExpanded());
+
+        reactionOfSpinnerUnitUIWhenToClose(spinnerUnitEntity);
+        restoreAllClickableWhenToClose();
+        reactionOfBackgroundWhenToClose(spinnerUnitEntity);
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     /**
      * 代码添加FooterView
@@ -861,6 +863,51 @@ public class SpinnerLayout extends RelativeLayout {
     }
 
     /**
+     * 还原筛选条
+     *
+     * @param index 序号
+     * @param title 筛选条选中的内容
+     */
+    private void close(int index, String title){
+        SpinnerUnitEntity spinnerUnitEntity = mSpinnerUnitEntityList.get(index);
+        if (spinnerUnitEntity == null) {
+            return;
+        }
+        mIsShowing = false;
+        collapseFooter(spinnerUnitEntity);
+        reactionOfSpinnerUnitWhenToClose(spinnerUnitEntity);
+//        reactionOfSpinnerUnitUIWhenToClose(spinnerUnitEntity);
+//        restoreAllClickableWhenToClose();
+//        reactionOfBackgroundWhenToClose(spinnerUnitEntity);
+        spinnerUnitEntity.setExpanded(!spinnerUnitEntity.isExpanded());
+
+        TextView tvFilterTitle = spinnerUnitEntity.getTvUnit();
+        if (tvFilterTitle != null && title != null) {
+            tvFilterTitle.setText(title);
+        }
+    }
+
+    public void back() {
+        if (isShowing() && mSelectedIndex >= 0) {
+            close(mSelectedIndex, null);
+        }
+    }
+
+    /**
+     * 还原筛选条
+     *
+     * @param index 筛选序号
+     */
+    public void back(int index) {
+        close(index, null);
+    }
+
+
+    public void back(int index, String title) {
+        close(index, title);
+    }
+
+    /**
      * 设置点击筛选条，是否屏幕变暗
      *
      * @param index
@@ -874,72 +921,36 @@ public class SpinnerLayout extends RelativeLayout {
         spinnerUnitEntity.setScreenDimAvailable(isAvailable);
     }
 
-    public void back() {
-        if (isShowing() && mSelectedIndex >= 0) {
-            back(mSelectedIndex, null);
-        }
-    }
-
-    /**
-     * 还原筛选条
-     *
-     * @param index 筛选序号
-     */
-    public void back(int index) {
-        back(index, null);
-    }
-
-    /**
-     * 还原筛选条
-     *
-     * @param index 序号
-     * @param title 筛选条选中的内容
-     */
-    public void back(int index, String title) {
-        SpinnerUnitEntity spinnerUnitEntity = mSpinnerUnitEntityList.get(index);
-        if (spinnerUnitEntity == null) {
-            return;
-        }
-        collapseFooter(spinnerUnitEntity);
-        filterUnitReactionWhenClose(spinnerUnitEntity);
-        backgroundReactionWhenClose(spinnerUnitEntity);
-        isShowing = false;
-
-        TextView tvFilterTitle = spinnerUnitEntity.getTvUnit();
-        if (tvFilterTitle != null && title != null) {
-            tvFilterTitle.setText(title);
-        }
-    }
 
     public boolean isShowing() {
-        return isShowing;
+        return mIsShowing;
     }
 
 
-    /**
-     * 设置所有的下拉列表
-     *
-     * @param enable
-     */
-    public void setCanceledOnTouchOutside(boolean enable) {
-        mGlobalIsTouchOutsideCanceled = enable;
-        for (SpinnerUnitEntity unit : mSpinnerUnitEntityList) {
-            unit.setCanceledOnTouchOutside(enable);
-        }
-    }
+//    /**
+//     * 设置所有的下拉列表
+//     *
+//     * @param enable
+//     */
+//    public void setCanceledOnTouchOutside(boolean enable) {
+//        mGlobalIsTouchOutsideCanceled = enable;
+//        for (SpinnerUnitEntity unit : mSpinnerUnitEntityList) {
+//            unit.setCanceledOnTouchOutside(enable);
+//        }
+//    }
 
-    /**
-     * 设置某个序号的下拉列表
-     *
-     * @param index
-     * @param enable
-     */
-    public void setCanceledOnTouchOutside(int index, boolean enable) {
-        if (index >= 0 && index < mSpinnerUnitEntityList.size()) {
-            SpinnerUnitEntity spinnerUnitEntity = mSpinnerUnitEntityList.get(index);
-            spinnerUnitEntity.setCanceledOnTouchOutside(enable);
-        }
-    }
+//    /**
+//     * 设置某个序号的下拉列表
+//     *
+//     * @param index
+//     * @param enable
+//     */
+//    public void setCanceledOnTouchOutside(int index, boolean enable) {
+//        if (index >= 0 && index < mSpinnerUnitEntityList.size()) {
+//            SpinnerUnitEntity spinnerUnitEntity = mSpinnerUnitEntityList.get(index);
+//            spinnerUnitEntity.setCanceledOnTouchOutside(enable);
+//        }
+//    }
 
     public void setSpinnerIconResource(@DrawableRes int resId) {
         mUnitIcon = getResources().getDrawable(resId);
@@ -965,9 +976,9 @@ public class SpinnerLayout extends RelativeLayout {
         return mSpinnerUnitEntityList;
     }
 
-    public FooterMode getGlobalFilterMode() {
-        return mGlobalFooterMode;
-    }
+//    public FooterMode getGlobalFilterMode() {
+//        return mGlobalFooterMode;
+//    }
 
 
     public interface OnSpinnerLayoutClickListener {

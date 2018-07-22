@@ -37,6 +37,28 @@ class SpinnerUnitEntity(
      */
     var footerViewContainer: ViewGroup? = null
 
+    /**
+     * 是否处在下拉状态
+     */
+    var isExpanded = false
+
+
+    /**
+     * footerView最初的高度
+     */
+    var footerViewOriginHeight: Int? = null
+        private set
+
+//    /**
+//     * 触摸筛选条外部是，是否可以关闭筛选条的标示
+//     */
+//    var isCanceledOnTouchOutside = false
+
+
+
+
+
+
 
 
     /**
@@ -44,26 +66,7 @@ class SpinnerUnitEntity(
      */
     var footerMode: FooterMode? = null
 
-    /**
-     * 触摸筛选条外部是，是否可以关闭筛选条的标示
-     */
-    var isCanceledOnTouchOutside = false
 
-
-
-
-
-
-    /**
-     * 是否处在下拉状态
-     */
-    var isExpanded = false
-
-    /**
-     * footerView最初的高度
-     */
-    var footerViewOriginHeight: Int? = null
-        private set
 
     fun setFooterViewOriginHeight(footerViewOriginHeight: Int) {
         if (this.footerViewOriginHeight == null) {
