@@ -17,32 +17,41 @@ How to use it with kotlin
 
 ```
     <com.sugarya.SpinnerLayout
-        android:id="@+id/spinnerLayout2"
+        android:id="@+id/spinnerLayout3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="160dp"
+        android:layout_marginTop="240dp"
         app:spinnerHeight="45dp"
-        app:firstText="status"
-        app:secondText="label"
+        app:touchOutsideCanceled="true"
         >
 
         <com.sugarya.footer.SpinnerLinearFooter
-            android:id="@+id/linearFooter2"
+            android:id="@+id/linearFooter3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:linearItemHeight="40dp"
             android:background="@color/bg_light_gray_footer"
+            app:itemHeightLinear="40dp"
+            app:textLinear="状态"
             />
 
         <com.sugarya.footer.SpinnerGridFooter
-            android:id="@+id/gridFooter2"
+            android:id="@+id/gridFooter3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingTop="7.5dp"
             android:paddingBottom="7.5dp"
             android:background="@color/bg_light_gray_footer"
-            app:gridSpanCount="4"
-            app:gridItemHeight="45dp"
+            app:spanCountGrid="4"
+            app:itemHeightGrid="45dp"
+            app:textGrid="标签"
+            />
+
+        <com.sugarya.footer.SpinnerDateFooter
+            android:id="@+id/dateFooter3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/bg_light_gray_footer"
+            app:textDate="选择日期"
             />
 
     </com.sugarya.SpinnerLayout>
@@ -50,19 +59,48 @@ How to use it with kotlin
 ```
 
 ```
+    fun mockStatusFooter(spinnerLinearFooter: SpinnerLinearFooter, spinnerLayout: SpinnerLayout){
         val statusList = arrayListOf(StatusModel("11", "status1"),
                 StatusModel("12", "status2"),
                 StatusModel("13", "status3"),
                 StatusModel("14", "status4"),
                 StatusModel("15", "status5"))
         spinnerLinearFooter.setNewData(statusList)
-
         spinnerLinearFooter.setOnFooterItemClickListener(object : OnFooterItemClickListener{
             override fun onClick(iFooterItem: IFooterItem) {
 
                 spinnerLayout.back()
             }
         })
+    }
+
+    fun mockLabelFooter(spinnerGridFooter: SpinnerGridFooter, spinnerLayout: SpinnerLayout){
+        val labelList = arrayListOf(
+                LabelModel("21","label1"),
+                LabelModel("22","label2"),
+                LabelModel("23","label3"),
+                LabelModel("24","label4"),
+                LabelModel("25","label5"),
+                LabelModel("26","label6"),
+                LabelModel("27","label7")
+        )
+        spinnerGridFooter.setNewData(labelList)
+        spinnerGridFooter.setOnFooterItemClickListener(object : OnFooterItemClickListener{
+            override fun onClick(iFooterItem: IFooterItem) {
+
+                spinnerLayout.back()
+            }
+        })
+    }
+
+    fun mockDateFooter(spinnerDateFooter: SpinnerDateFooter, spinnerLayout: SpinnerLayout){
+        spinnerDateFooter.setOnConfirmClickListener(object: SpinnerDateFooter.OnConfirmClickListener{
+            override fun onConfirmClick(startTime: Long, endTime: Long) {
+
+                spinnerLayout.back()
+            }
+        })
+    }
 ```
 
 ## License
