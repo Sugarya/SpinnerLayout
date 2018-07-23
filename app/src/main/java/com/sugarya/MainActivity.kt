@@ -2,6 +2,8 @@ package com.sugarya
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.util.TypedValue
+import android.widget.RelativeLayout
 import com.sugarya.footer.SpinnerDateFooter
 import com.sugarya.footer.SpinnerGridFooter
 import com.sugarya.footer.SpinnerLinearFooter
@@ -23,6 +25,8 @@ class MainActivity : AppCompatActivity() {
         initSpinnerLayout1_2()
         initSpinnerLayout2()
         initSpinnerLayout3()
+
+        initSpinnerLayout3_2()
     }
 
     fun initSpinnerLayout1(){
@@ -42,6 +46,26 @@ class MainActivity : AppCompatActivity() {
         mockStatusFooter(linearFooter3, spinnerLayout3)
         mockLabelFooter(gridFooter3, spinnerLayout3)
         mockDateFooter(dateFooter3, spinnerLayout3)
+    }
+
+    fun initSpinnerLayout3_2(){
+        val spinnerLinearFooter = SpinnerLinearFooter(this, "状态", TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 45f, resources.displayMetrics))
+
+        val spinnerGridFooter = SpinnerGridFooter(this, "标签", TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 40f, resources.displayMetrics), 4)
+        spinnerGridFooter.setPadding(0,
+                TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 7.5f, resources.displayMetrics).toInt(),
+                0,
+                TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 7.5f, resources.displayMetrics).toInt())
+
+        val spinnerDateFooter = SpinnerDateFooter(this, "选择日期")
+
+        spinnerLayout3_2.addFooterView(spinnerLinearFooter)
+        spinnerLayout3_2.addFooterView(spinnerGridFooter)
+        spinnerLayout3_2.addFooterView(spinnerDateFooter)
+
+        mockStatusFooter(spinnerLinearFooter, spinnerLayout3_2)
+        mockLabelFooter(spinnerGridFooter, spinnerLayout3_2)
+        mockDateFooter(spinnerDateFooter, spinnerLayout3_2)
     }
 
 

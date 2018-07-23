@@ -7,7 +7,7 @@ import com.sugarya.footer.interfaces.FooterMode
 import com.sugarya.footer.interfaces.IFooterMode
 import com.sugarya.footer.model.BaseFooterProperty
 
-abstract class BaseSpinnerFooter<T: BaseFooterProperty> : RelativeLayout, IFooterMode {
+abstract class BaseSpinnerFooter<out T: BaseFooterProperty> : RelativeLayout, IFooterMode {
 
     abstract val mFooterViewProperty: T
 

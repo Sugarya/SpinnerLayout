@@ -30,7 +30,8 @@ class SpinnerDateFooter : BaseSpinnerFooter<DateFooterProperty> {
 
     override val mFooterViewProperty: DateFooterProperty = DateFooterProperty()
 
-    constructor(context: Context) : super(context) {
+    constructor(context: Context, title: String) : super(context) {
+        mFooterViewProperty.text = title
         init()
     }
 
@@ -43,8 +44,7 @@ class SpinnerDateFooter : BaseSpinnerFooter<DateFooterProperty> {
         val text = typedArray.getString(R.styleable.SpinnerDateFooter_textDate)
         mFooterViewProperty.text = text
 
-        val textSize = typedArray.getDimension(R.styleable.SpinnerDateFooter_textSizeDate,
-                TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, SpinnerConfig.DEFAULT_SPINNER_TITLE_SIZE_DP, resources.displayMetrics))
+        val textSize = typedArray.getDimension(R.styleable.SpinnerDateFooter_textSizeDate, SpinnerConfig.DEFAULT_SPINNER_TITLE_SIZE_DP)
         mFooterViewProperty.textSize = textSize
 
         val textColor = typedArray.getColor(R.styleable.SpinnerDateFooter_textColorDate, SpinnerConfig.DEFAULT_SPINNER_BACK_SURFACE_COLOR)

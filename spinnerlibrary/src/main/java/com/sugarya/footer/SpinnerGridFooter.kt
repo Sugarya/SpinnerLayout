@@ -34,9 +34,13 @@ class SpinnerGridFooter : BaseSpinnerFooter<GridFooterProperty> {
 
     override val mFooterViewProperty: GridFooterProperty = GridFooterProperty()
 
-    constructor(context: Context) : super(context) {
+    constructor(context: Context, title: String, itemHeight: Float, spanCount: Int) : super(context) {
+        mFooterViewProperty.text = title
+        mFooterViewProperty.gridItemHeight = itemHeight
+        mFooterViewProperty.gridSpanCount = spanCount
         init()
     }
+
 
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
         val typedArray = context.obtainStyledAttributes(attrs, R.styleable.SpinnerGridFooter)
@@ -53,8 +57,7 @@ class SpinnerGridFooter : BaseSpinnerFooter<GridFooterProperty> {
         val text = typedArray.getString(R.styleable.SpinnerGridFooter_textGrid)
         mFooterViewProperty.text = text
 
-        val textSize = typedArray.getDimension(R.styleable.SpinnerGridFooter_textSizeGrid,
-                TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, SpinnerConfig.DEFAULT_SPINNER_TITLE_SIZE_DP, resources.displayMetrics))
+        val textSize = typedArray.getDimension(R.styleable.SpinnerGridFooter_textSizeGrid, SpinnerConfig.DEFAULT_SPINNER_TITLE_SIZE_DP)
         mFooterViewProperty.textSize = textSize
 
         val textColor = typedArray.getColor(R.styleable.SpinnerGridFooter_textColorGrid, SpinnerConfig.DEFAULT_SPINNER_BACK_SURFACE_COLOR)

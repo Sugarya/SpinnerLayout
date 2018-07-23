@@ -39,8 +39,9 @@ class SpinnerLinearFooter : BaseSpinnerFooter<LinearFooterProperty> {
     override val mFooterViewProperty: LinearFooterProperty = LinearFooterProperty()
 
 
-    constructor(context: Context, itemHeight: Float) : super(context) {
+    constructor(context: Context, title: String, itemHeight: Float) : super(context) {
         mFooterViewProperty.linearItemHeight = itemHeight
+        mFooterViewProperty.text = title
         init(context)
     }
 
@@ -57,8 +58,7 @@ class SpinnerLinearFooter : BaseSpinnerFooter<LinearFooterProperty> {
         val text = typedArray.getString(R.styleable.SpinnerLinearFooter_textLinear)
         mFooterViewProperty.text = text
 
-        val textSize = typedArray.getDimension(R.styleable.SpinnerLinearFooter_textSizeLinear,
-                TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, SpinnerConfig.DEFAULT_SPINNER_TITLE_SIZE_DP, resources.displayMetrics))
+        val textSize = typedArray.getDimension(R.styleable.SpinnerLinearFooter_textSizeLinear, SpinnerConfig.DEFAULT_SPINNER_TITLE_SIZE_DP)
         mFooterViewProperty.textSize = textSize
 
         val textColor = typedArray.getColor(R.styleable.SpinnerLinearFooter_textColorLinear, SpinnerConfig.DEFAULT_SPINNER_BACK_SURFACE_COLOR)
