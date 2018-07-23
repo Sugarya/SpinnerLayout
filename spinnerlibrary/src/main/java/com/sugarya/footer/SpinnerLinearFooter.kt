@@ -58,7 +58,6 @@ class SpinnerLinearFooter : BaseSpinnerFooter<LinearFooterProperty> {
 
         val itemHeight = typedArray.getDimension(R.styleable.SpinnerLinearFooter_itemHeightLinear, FOOTER_ITEM_HEIGHT)
         mFooterViewProperty.linearItemHeight = itemHeight
-        Log.d(TAG, "constructor itemHeight = $itemHeight")
 
         val text = typedArray.getString(R.styleable.SpinnerLinearFooter_textLinear)
         mFooterViewProperty.text = text
@@ -66,25 +65,20 @@ class SpinnerLinearFooter : BaseSpinnerFooter<LinearFooterProperty> {
         val textSize = typedArray.getDimension(R.styleable.SpinnerLinearFooter_textSizeLinear, SpinnerConfig.DEFAULT_SPINNER_TITLE_SIZE_DP)
         mFooterViewProperty.textSize = textSize
 
-        val textColor = typedArray.getColor(R.styleable.SpinnerLinearFooter_textColorLinear, SpinnerConfig.DEFAULT_SPINNER_BACK_SURFACE_COLOR)
+        val textColor = typedArray.getColor(R.styleable.SpinnerLinearFooter_textColorLinear, SpinnerConfig.DEFAULT_SPINNER_UNIT_TITLE_COLOR)
         mFooterViewProperty.textColor = textColor
 
         val textSelectedColor = typedArray.getColor(R.styleable.SpinnerLinearFooter_textColorSelectedLinear, SpinnerConfig.DEFAULT_SPINNER_UNIT_TITLE_COLOR_SELECTED)
         mFooterViewProperty.textSelectedColor = textSelectedColor
 
-        val unitIconDrawable = if (typedArray.getDrawable(R.styleable.SpinnerLinearFooter_iconLinear) != null) {
-            typedArray.getDrawable(R.styleable.SpinnerLayout_icon)
-        } else {
-            resources.getDrawable(R.drawable.footer_triangle_down_black)
-        }
-        mFooterViewProperty.unitIcon = unitIconDrawable
+        mFooterViewProperty.unitIcon = typedArray.getDrawable(R.styleable.SpinnerLinearFooter_iconLinear)
 
-        val unitIconSelectedDrawable = if (typedArray.getDrawable(R.styleable.SpinnerLinearFooter_iconSelectedLinear) != null) {
-            typedArray.getDrawable(R.styleable.SpinnerLayout_iconSelected)
-        } else {
-            resources.getDrawable(R.drawable.footer_triangle_up_blue)
-        }
-        mFooterViewProperty.unitIconSelected = unitIconSelectedDrawable
+//        val unitIconSelectedDrawable = if (typedArray.getDrawable(R.styleable.SpinnerLinearFooter_iconSelectedLinear) != null) {
+//            typedArray.getDrawable(R.styleable.SpinnerLinearFooter_iconSelectedLinear)
+//        } else {
+//            null
+//        }
+        mFooterViewProperty.unitIconSelected = typedArray.getDrawable(R.styleable.SpinnerLinearFooter_iconSelectedLinear)
 
         val backSurfaceAvailable = typedArray.getBoolean(R.styleable.SpinnerLinearFooter_backSurfaceAvailableLinear, SpinnerConfig.DEFAULT_BACK_SURFACE_AVAILABLE)
         mFooterViewProperty.backSurfaceAvailable = backSurfaceAvailable

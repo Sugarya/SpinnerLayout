@@ -47,7 +47,7 @@ class SpinnerDateFooter : BaseSpinnerFooter<DateFooterProperty> {
         val textSize = typedArray.getDimension(R.styleable.SpinnerDateFooter_textSizeDate, SpinnerConfig.DEFAULT_SPINNER_TITLE_SIZE_DP)
         mFooterViewProperty.textSize = textSize
 
-        val textColor = typedArray.getColor(R.styleable.SpinnerDateFooter_textColorDate, SpinnerConfig.DEFAULT_SPINNER_BACK_SURFACE_COLOR)
+        val textColor = typedArray.getColor(R.styleable.SpinnerDateFooter_textColorDate, SpinnerConfig.DEFAULT_SPINNER_UNIT_TITLE_COLOR)
         mFooterViewProperty.textColor = textColor
 
         val textSelectedColor = typedArray.getColor(R.styleable.SpinnerDateFooter_textColorSelectedDate, SpinnerConfig.DEFAULT_SPINNER_UNIT_TITLE_COLOR_SELECTED)

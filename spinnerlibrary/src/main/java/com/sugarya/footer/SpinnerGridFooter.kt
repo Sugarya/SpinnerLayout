@@ -66,7 +66,7 @@ class SpinnerGridFooter : BaseSpinnerFooter<GridFooterProperty> {
         val textSize = typedArray.getDimension(R.styleable.SpinnerGridFooter_textSizeGrid, SpinnerConfig.DEFAULT_SPINNER_TITLE_SIZE_DP)
         mFooterViewProperty.textSize = textSize
 
-        val textColor = typedArray.getColor(R.styleable.SpinnerGridFooter_textColorGrid, SpinnerConfig.DEFAULT_SPINNER_BACK_SURFACE_COLOR)
+        val textColor = typedArray.getColor(R.styleable.SpinnerGridFooter_textColorGrid, SpinnerConfig.DEFAULT_SPINNER_UNIT_TITLE_COLOR)
         mFooterViewProperty.textColor = textColor
 
         val textSelectedColor = typedArray.getColor(R.styleable.SpinnerGridFooter_textColorSelectedGrid, SpinnerConfig.DEFAULT_SPINNER_UNIT_TITLE_COLOR_SELECTED)

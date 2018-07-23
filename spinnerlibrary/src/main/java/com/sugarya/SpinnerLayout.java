@@ -89,7 +89,7 @@ public class SpinnerLayout extends RelativeLayout {
     /**
      * 原始 根布局参数
      */
-    private LayoutParams mOriginRootLayoutParams;
+    private RelativeLayout.LayoutParams mOriginRootLayoutParams;
     /**
      * mSpinnerContainerLayout 对应的原始布局参数
      */
@@ -139,7 +139,7 @@ public class SpinnerLayout extends RelativeLayout {
         Log.d(TAG, "FilterLayout 3");
     }
 
-    private void initSpinnerLayoutProperty(){
+    private void initSpinnerLayoutProperty() {
 
     }
 
@@ -155,7 +155,7 @@ public class SpinnerLayout extends RelativeLayout {
         float textSize = typedArray.getDimension(R.styleable.SpinnerLayout_textSize, SpinnerConfig.DEFAULT_SPINNER_TITLE_SIZE_DP);
         mSpinnerLayoutProperty.setTextSize(textSize);
 
-        int textColor = typedArray.getColor(R.styleable.SpinnerLayout_textColor, SpinnerConfig.DEFAULT_SPINNER_BACK_SURFACE_COLOR);
+        int textColor = typedArray.getColor(R.styleable.SpinnerLayout_textColor, SpinnerConfig.DEFAULT_SPINNER_UNIT_TITLE_COLOR);
         mSpinnerLayoutProperty.setTextColor(textColor);
 
         int textSelectedColor = typedArray.getColor(R.styleable.SpinnerLayout_textColorSelected, SpinnerConfig.DEFAULT_SPINNER_UNIT_TITLE_COLOR_SELECTED);
@@ -235,7 +235,6 @@ public class SpinnerLayout extends RelativeLayout {
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-
         childrenViewChangeIntoFooterView();
 
         checkParentLayoutType();
@@ -270,6 +269,7 @@ public class SpinnerLayout extends RelativeLayout {
 
     /**
      * xml， 添加FooterView
+     *
      * @param baseSpinnerFooter
      */
     private void addSpinnerFooter(BaseSpinnerFooter<BaseFooterProperty> baseSpinnerFooter) {
@@ -291,28 +291,31 @@ public class SpinnerLayout extends RelativeLayout {
 
     /**
      * FooterView属性更新到SpinnerLayout属性上
+     *
      * @param baseFooterViewProperty
      */
     private void updateSpinnerLayoutPropertyFromFooterViewProperty(BaseFooterProperty baseFooterViewProperty) {
         SpinnerLayoutProperty property = mSpinnerLayoutProperty;
 
         float textSize = baseFooterViewProperty.getTextSize();
-        if (textSize > 0) {
+        if (textSize != SpinnerConfig.DEFAULT_SPINNER_TITLE_SIZE_DP) {
             property.setTextSize(textSize);
         }
 
         int textColor = baseFooterViewProperty.getTextColor();
-        if (textColor > 0) {
+        if (textColor != SpinnerConfig.DEFAULT_SPINNER_UNIT_TITLE_COLOR) {
             property.setTextColor(textColor);
         }
 
         int textSelectedColor = baseFooterViewProperty.getTextSelectedColor();
-        if (textSelectedColor > 0) {
+        if (textSelectedColor != SpinnerConfig.DEFAULT_SPINNER_UNIT_TITLE_COLOR_SELECTED) {
             property.setTextSelectedColor(textSelectedColor);
         }
 
         boolean backSurfaceAvailable = baseFooterViewProperty.getBackSurfaceAvailable();
-        property.setBackSurfaceAvailable(backSurfaceAvailable);
+        if (backSurfaceAvailable != SpinnerConfig.DEFAULT_BACK_SURFACE_AVAILABLE) {
+            property.setBackSurfaceAvailable(backSurfaceAvailable);
+        }
 
         Drawable unitIconDrawable = baseFooterViewProperty.getUnitIcon();
         if (unitIconDrawable != null) {
@@ -325,15 +328,19 @@ public class SpinnerLayout extends RelativeLayout {
         }
 
         boolean touchOutsideCanceled = baseFooterViewProperty.isTouchOutsideCanceled();
-        property.setTouchOutsideCanceled(touchOutsideCanceled);
+        if (touchOutsideCanceled != SpinnerConfig.DEFAULT_TOUCH_OUTSIDE_CANCELED) {
+            property.setTouchOutsideCanceled(touchOutsideCanceled);
+        }
 
         FooterMode footerMode = baseFooterViewProperty.getFooterMode();
-        property.setFooterMode(footerMode);
-
+        if(footerMode != FooterMode.MODE_EXPAND){
+            property.setFooterMode(footerMode);
+        }
     }
 
     /**
      * 生成SpinnerUnitLayout
+     *
      * @param context
      * @param spinnerUnitEntity
      * @param spinnerUnitTitle
@@ -380,6 +387,7 @@ public class SpinnerLayout extends RelativeLayout {
 
     /**
      * 设置SpinnerUnitLayout点击监听
+     *
      * @param spinnerUnitLayout
      * @param currentSpinnerUnitEntity
      */
@@ -446,6 +454,12 @@ public class SpinnerLayout extends RelativeLayout {
     }
 
     @Override
+    public void onWindowFocusChanged(boolean hasWindowFocus) {
+        super.onWindowFocusChanged(hasWindowFocus);
+        Log.d(TAG, "onWindowFocusChanged: ");
+    }
+
+    @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         //固定wrap_content
@@ -504,6 +518,7 @@ public class SpinnerLayout extends RelativeLayout {
 
     /**
      * 生成FooterView的包裹视图，用作下拉动画的目标
+     *
      * @param spinnerFooter
      * @return
      */
@@ -513,7 +528,7 @@ public class SpinnerLayout extends RelativeLayout {
         }
         ViewGroup.LayoutParams childViewLayoutParams = spinnerFooter.getLayoutParams();
         if (childViewLayoutParams == null) {
-            FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,  RelativeLayout.LayoutParams.WRAP_CONTENT);
+            FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
             spinnerFooter.setLayoutParams(layoutParams);
         }
 
@@ -663,17 +678,34 @@ public class SpinnerLayout extends RelativeLayout {
      */
     private void reactionOfBackgroundWhenToOpen() {
         if (mSpinnerLayoutProperty.getBackSurfaceAvailable()) {
-            setBackgroundColor(mSpinnerLayoutProperty.getBackSurfaceColor());
-            ViewGroup.LayoutParams lp = getLayoutParams();
-            if (lp instanceof LayoutParams) {
-                mOriginRootLayoutParams = (LayoutParams) lp;
-                LayoutParams containerLayoutParams = new LayoutParams(mOriginRootLayoutParams.width, mOriginSpinnerContainerLayoutParams.height);
-                containerLayoutParams.leftMargin = mOriginRootLayoutParams.leftMargin;
-                containerLayoutParams.topMargin = mOriginRootLayoutParams.topMargin;
-                containerLayoutParams.rightMargin = mOriginRootLayoutParams.rightMargin;
-                containerLayoutParams.bottomMargin = mOriginRootLayoutParams.bottomMargin;
-                mSpinnerContainerLayout.setLayoutParams(containerLayoutParams);
+            if (getLayoutParams() instanceof RelativeLayout.LayoutParams) {
+                mOriginRootLayoutParams = (RelativeLayout.LayoutParams) getLayoutParams();
 
+                Rect rect = new Rect();
+                getWindowVisibleDisplayFrame(rect);
+                Log.d(TAG, "reactionOfBackgroundWhenToOpen: rect.top = " + rect.top);
+
+                int[] locations = new int[]{0, 0};
+                getLocationInWindow(locations);
+                int x = locations[0];
+                int y = locations[1];
+                Log.d(TAG, "reactionOfBackgroundWhenToOpen: x = " + x + " y = " + y);
+                LayoutParams containerLayoutParams = new LayoutParams(mOriginRootLayoutParams.width, mOriginSpinnerContainerLayoutParams.height);
+                containerLayoutParams.leftMargin = x;
+                //todo 如何更精确的计算topMargin的值
+                containerLayoutParams.topMargin = (int) (y - rect.top - TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, SpinnerConfig.TITLE_BAR_HEIGHT_DP, getResources().getDisplayMetrics()));
+                if(mOriginRootLayoutParams.width <= 0){
+                    containerLayoutParams.rightMargin = 0;
+                }else{
+                    int widthPixels = getResources().getDisplayMetrics().widthPixels;
+                    containerLayoutParams.rightMargin = widthPixels - (x + getWidth());
+                }
+                containerLayoutParams.bottomMargin = mOriginRootLayoutParams.bottomMargin;
+
+                mSpinnerContainerLayout.setLayoutParams(containerLayoutParams);
+                Log.d(TAG, "reactionOfBackgroundWhenToOpen: topMargin = " + containerLayoutParams.topMargin + " leftMargin = " + x + " rightMargin = " + containerLayoutParams.rightMargin);
+
+                setBackgroundColor(mSpinnerLayoutProperty.getBackSurfaceColor());
                 LayoutParams layoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
                 layoutParams.leftMargin = 0;
                 layoutParams.topMargin = 0;
@@ -793,7 +825,6 @@ public class SpinnerLayout extends RelativeLayout {
     public boolean isShowing() {
         return mIsShowing;
     }
-
 
 
 }

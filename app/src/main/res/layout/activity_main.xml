@@ -8,11 +8,13 @@
     tools:context="com.sugarya.MainActivity"
     >
 
-    <!--<TextView-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_marginTop="40dp"-->
-        <!--/>-->
+    <TextView
+        android:id="@+id/tv_test"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="测试内容"
+        android:textSize="20sp"
+        />
 
     <com.sugarya.SpinnerLayout
         android:id="@+id/spinnerLayout3_2"
@@ -34,6 +36,7 @@
         android:layout_marginTop="240dp"
         app:spinnerHeight="45dp"
         app:touchOutsideCanceled="true"
+        app:iconSelected="@drawable/ic_item_selected"
         >
 
         <com.sugarya.footer.SpinnerLinearFooter
@@ -43,6 +46,8 @@
             android:background="@color/bg_light_gray_footer"
             app:itemHeightLinear="40dp"
             app:textLinear="状态"
+            app:textColorLinear="@color/red"
+            app:iconLinear="@drawable/ic_item_selected"
             />
 
         <com.sugarya.footer.SpinnerGridFooter
@@ -55,6 +60,7 @@
             app:spanCountGrid="4"
             app:itemHeightGrid="45dp"
             app:textGrid="标签"
+            app:textColorGrid="@color/red"
             />
 
         <com.sugarya.footer.SpinnerDateFooter
@@ -63,6 +69,7 @@
             android:layout_height="wrap_content"
             android:background="@color/bg_light_gray_footer"
             app:textDate="选择日期"
+            app:textColorDate="@color/red"
             />
 
     </com.sugarya.SpinnerLayout>
@@ -125,6 +132,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:spinnerHeight="45dp"
+        android:layout_below="@id/tv_test"
         >
 
         <com.sugarya.footer.SpinnerLinearFooter

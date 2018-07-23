@@ -49,23 +49,23 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun initSpinnerLayout3_2(){
-        val spinnerLinearFooter = SpinnerLinearFooter(this, "状态", TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 45f, resources.displayMetrics))
+        val spinnerLinearFooter = SpinnerLinearFooter(this, "状态")
 
-        val spinnerGridFooter = SpinnerGridFooter(this, "标签", TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 40f, resources.displayMetrics), 4)
-        spinnerGridFooter.setPadding(0,
-                TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 7.5f, resources.displayMetrics).toInt(),
-                0,
-                TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 7.5f, resources.displayMetrics).toInt())
-
-        val spinnerDateFooter = SpinnerDateFooter(this, "选择日期")
+//        val spinnerGridFooter = SpinnerGridFooter(this, "标签", TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 40f, resources.displayMetrics), 4)
+//        spinnerGridFooter.setPadding(0,
+//                TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 7.5f, resources.displayMetrics).toInt(),
+//                0,
+//                TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 7.5f, resources.displayMetrics).toInt())
+//
+//        val spinnerDateFooter = SpinnerDateFooter(this, "选择日期")
 
         spinnerLayout3_2.addFooterView(spinnerLinearFooter)
-        spinnerLayout3_2.addFooterView(spinnerGridFooter)
-        spinnerLayout3_2.addFooterView(spinnerDateFooter)
+//        spinnerLayout3_2.addFooterView(spinnerGridFooter)
+//        spinnerLayout3_2.addFooterView(spinnerDateFooter)
 
         mockStatusFooter(spinnerLinearFooter, spinnerLayout3_2)
-        mockLabelFooter(spinnerGridFooter, spinnerLayout3_2)
-        mockDateFooter(spinnerDateFooter, spinnerLayout3_2)
+//        mockLabelFooter(spinnerGridFooter, spinnerLayout3_2)
+//        mockDateFooter(spinnerDateFooter, spinnerLayout3_2)
     }
 
 

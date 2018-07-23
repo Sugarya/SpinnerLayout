@@ -1,10 +1,13 @@
 package com.sugarya
 
 import android.graphics.Color
+import com.sugarya.spinnerlibrary.R
 
 class SpinnerConfig{
 
     companion object {
+        const val STATUS_BAR_HEIGHT_DP = 24
+        const val TITLE_BAR_HEIGHT_DP = 56
 
         const val DEFAULT_SPINNER_BAR_HEIGHT = 135
         const val DEFAULT_SPINNER_BACKGROUND_COLOR = Color.WHITE
