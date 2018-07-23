@@ -7,6 +7,7 @@ import android.util.AttributeSet
 import android.util.Log
 import android.util.TypedValue
 import com.sugarya.SpinnerConfig
+import com.sugarya.SpinnerConfig.Companion.DEFAULT_LINEAR_FOOTER_ITEM_HEIGHT_DP
 import com.sugarya.footer.adapter.LinearFooterAdapter
 import com.sugarya.footer.base.BaseSpinnerFooter
 import com.sugarya.footer.interfaces.FooterMode
@@ -38,6 +39,10 @@ class SpinnerLinearFooter : BaseSpinnerFooter<LinearFooterProperty> {
 
     override val mFooterViewProperty: LinearFooterProperty = LinearFooterProperty()
 
+    constructor(context: Context, title: String) : this(
+            context,
+            title,
+            TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, SpinnerConfig.DEFAULT_LINEAR_FOOTER_ITEM_HEIGHT_DP, context.resources.displayMetrics))
 
     constructor(context: Context, title: String, itemHeight: Float) : super(context) {
         mFooterViewProperty.linearItemHeight = itemHeight
@@ -122,7 +127,7 @@ class SpinnerLinearFooter : BaseSpinnerFooter<LinearFooterProperty> {
 
 
 
-    fun setNewData(sourceList: MutableList<out IFooterItem>) {
+    fun <T: IFooterItem> setNewData(sourceList: MutableList<T>) {
         val size = sourceList.size
         val needHeight = mFooterViewProperty.linearItemHeight * size
         Log.d(TAG, "setNewData needHeight = $needHeight")

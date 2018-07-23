@@ -42,7 +42,7 @@ class LinearFooterAdapter(private val itemHeight: Float, val recyclerView: Recyc
         }
     }
 
-    fun setNewData(sourceList: MutableList<out IFooterItem>?){
+    fun <T: IFooterItem>setNewData(sourceList: MutableList<T>?){
         val list = sourceList?: arrayListOf()
         mDataList.clear()
         mDataList.addAll(list)

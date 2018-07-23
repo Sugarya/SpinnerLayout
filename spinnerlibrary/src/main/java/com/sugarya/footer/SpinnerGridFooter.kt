@@ -34,6 +34,12 @@ class SpinnerGridFooter : BaseSpinnerFooter<GridFooterProperty> {
 
     override val mFooterViewProperty: GridFooterProperty = GridFooterProperty()
 
+    constructor(context: Context, title: String, spanCount: Int) : this(
+            context,
+            title,
+            TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, SpinnerConfig.DEFAULT_GRID_FOOTER_ITEM_HEIGHT_DP, context.resources.displayMetrics),
+            spanCount)
+
     constructor(context: Context, title: String, itemHeight: Float, spanCount: Int) : super(context) {
         mFooterViewProperty.text = title
         mFooterViewProperty.gridItemHeight = itemHeight
