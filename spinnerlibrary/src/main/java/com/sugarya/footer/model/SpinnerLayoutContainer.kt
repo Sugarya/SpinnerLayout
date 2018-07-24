@@ -1,16 +1,11 @@
 package com.sugarya.footer.model
 
-import android.content.Context
 import android.graphics.drawable.Drawable
-import android.util.TypedValue
-import android.view.Gravity
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import com.sugarya.SpinnerConfig
 import com.sugarya.footer.base.BaseSpinnerFooter
 import com.sugarya.footer.interfaces.FooterMode
-import com.sugarya.spinnerlibrary.R
 
 /**
  * 筛选条单元实体类
@@ -40,9 +35,10 @@ class SpinnerUnitEntity(var baseSpinnerFooter: BaseSpinnerFooter<BaseFooterPrope
      */
     var isExpanded = false
 
-
-
-    var mBaseFooterProperty: BaseFooterProperty? = null
+    /**
+     * BaseFooterView的属性
+     */
+    var baseFooterPropertyWrapper: BaseFooterPropertyWrapper? = null
 
 
     override fun equals(other: Any?): Boolean {
@@ -69,23 +65,21 @@ class SpinnerUnitEntity(var baseSpinnerFooter: BaseSpinnerFooter<BaseFooterPrope
  * todo backSurfaceAvailable 使用委托属性
  */
 
-class SpinnerLayoutProperty(context:Context){
-
-    var barHeight: Int = SpinnerConfig.DEFAULT_SPINNER_BAR_HEIGHT
-    var textSize: Float = SpinnerConfig.DEFAULT_SPINNER_TITLE_SIZE_DP
-    var textColor: Int = SpinnerConfig.DEFAULT_SPINNER_UNIT_TITLE_COLOR
-    var textSelectedColor: Int = SpinnerConfig.DEFAULT_SPINNER_UNIT_TITLE_COLOR_SELECTED
-    var backSurfaceColor: Int = SpinnerConfig.DEFAULT_SPINNER_BACK_SURFACE_COLOR
-    var backSurfaceAvailable: Boolean = SpinnerConfig.DEFAULT_BACK_SURFACE_AVAILABLE
-    var unitIcon: Drawable = context.resources.getDrawable(R.drawable.footer_triangle_down_black)
-    var unitIconSelected: Drawable = context.resources.getDrawable(R.drawable.footer_triangle_up_blue)
-    var isTouchOutsideCanceled: Boolean = SpinnerConfig.DEFAULT_TOUCH_OUTSIDE_CANCELED
-    var lineScale: Float = SpinnerConfig.DEFAULT_LINE_SCALE
-    var barBackground: Int = SpinnerConfig.DEFAULT_SPINNER_BACKGROUND_COLOR
-    var footerMode: FooterMode = FooterMode.MODE_EXPAND
-    var spinnerGravity: Int = Gravity.CENTER_HORIZONTAL
-
-
+open class SpinnerLayoutProperty(
+        val barHeight: Float,
+        open val textSize: Float?,
+        open val textColor: Int?,
+        open val textSelectedColor: Int?,
+        open val backSurfaceColor: Int?,
+        open val unitIcon: Drawable?,
+        open val unitIconSelected: Drawable?,
+        open val backSurfaceAvailable: Boolean?,
+        open val isTouchOutsideCanceled: Boolean?,
+        open val lineScale: Float?,
+        open val barBackground: Int?,
+        open val footerMode: FooterMode?,
+        open val spinnerGravity: Int?
+) {
 
 //    constructor(property: SpinnerLayoutProperty): this(){
 //        this.barHeight = property.barHeight

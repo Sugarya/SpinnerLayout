@@ -26,7 +26,6 @@
         >
 
 
-
     </com.sugarya.SpinnerLayout>
 
     <com.sugarya.SpinnerLayout
@@ -36,7 +35,6 @@
         android:layout_marginTop="240dp"
         app:spinnerHeight="45dp"
         app:touchOutsideCanceled="true"
-        app:iconSelected="@drawable/ic_item_selected"
         >
 
         <com.sugarya.footer.SpinnerLinearFooter
@@ -133,6 +131,7 @@
         android:layout_height="wrap_content"
         app:spinnerHeight="45dp"
         android:layout_below="@id/tv_test"
+
         >
 
         <com.sugarya.footer.SpinnerLinearFooter

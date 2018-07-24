@@ -12,6 +12,8 @@ val FOOTER_MODE_SPARSE =
             put(1, FooterMode.MODE_EXPAND)
         }
 
+const val MODE_EXPAND = 1
+
 fun formatDate(date: Date): String {
     val format = SimpleDateFormat("yyyy-MM-dd", Locale.CHINA)
     return format.format(date)

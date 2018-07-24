@@ -26,7 +26,9 @@ import com.sugarya.animateoperator.operator.TransitionOperator;
 import com.sugarya.footer.base.BaseSpinnerFooter;
 import com.sugarya.footer.interfaces.FooterMode;
 import com.sugarya.footer.model.BaseFooterProperty;
+import com.sugarya.footer.model.BaseFooterPropertyWrapper;
 import com.sugarya.footer.model.SpinnerLayoutProperty;
+import com.sugarya.footer.model.SpinnerLayoutPropertyWrapper;
 import com.sugarya.footer.model.SpinnerUnitEntity;
 import com.sugarya.spinnerlibrary.R;
 
@@ -52,7 +54,6 @@ public class SpinnerLayout extends RelativeLayout {
 
     private static final String TAG = SpinnerLayout.class.getSimpleName();
 
-    private static final float DEFAULT_LINE_SCALE = 0.3f;
     private static final int FOOTER_ANIMATION_DURATION = 260;
 
 
@@ -98,7 +99,8 @@ public class SpinnerLayout extends RelativeLayout {
     /**
      * SpinnerLayout属性 容器
      */
-    private SpinnerLayoutProperty mSpinnerLayoutProperty = new SpinnerLayoutProperty(getContext());
+    private SpinnerLayoutProperty mSpinnerLayoutProperty;
+    private SpinnerLayoutPropertyWrapper mSpinnerLayoutPropertyWrapper;
 
     /**
      * 是否正在展示下拉视图
@@ -120,6 +122,7 @@ public class SpinnerLayout extends RelativeLayout {
 
     public SpinnerLayout(Context context) {
         super(context);
+        // todo
         initSpinnerLayoutProperty();
         init(context);
         Log.d(TAG, "FilterLayout 1");
@@ -127,14 +130,16 @@ public class SpinnerLayout extends RelativeLayout {
 
     public SpinnerLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
-        initAttributeSet(context, attrs);
+        mSpinnerLayoutProperty = parseAttributeSet(context, attrs);
+        mSpinnerLayoutPropertyWrapper = new SpinnerLayoutPropertyWrapper(getContext(), mSpinnerLayoutProperty);
         init(context);
         Log.d(TAG, "FilterLayout 2");
     }
 
     public SpinnerLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        initAttributeSet(context, attrs);
+        mSpinnerLayoutProperty = parseAttributeSet(context, attrs);
+        mSpinnerLayoutPropertyWrapper = new SpinnerLayoutPropertyWrapper(getContext(), mSpinnerLayoutProperty);
         init(context);
         Log.d(TAG, "FilterLayout 3");
     }
@@ -143,48 +148,127 @@ public class SpinnerLayout extends RelativeLayout {
 
     }
 
-    private void initAttributeSet(Context context, AttributeSet attrs) {
+    private SpinnerLayoutProperty parseAttributeSet(Context context, AttributeSet attrs) {
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.SpinnerLayout);
 
-        int barHeight = (int) typedArray.getDimension(R.styleable.SpinnerLayout_spinnerHeight, SpinnerConfig.DEFAULT_SPINNER_BAR_HEIGHT);
-        mSpinnerLayoutProperty.setBarHeight(barHeight);
+        Float barHeight;
+        float barHeightValue = typedArray.getDimension(R.styleable.SpinnerLayout_spinnerHeight, -1f);
+        if(barHeightValue == -1){
+            throw new IllegalArgumentException("SpinnerLayout need a bar height");
+        }else{
+            barHeight = barHeightValue;
+        }
 
-        int barBackground = typedArray.getColor(R.styleable.SpinnerLayout_spinnerBackground, SpinnerConfig.DEFAULT_SPINNER_BACKGROUND_COLOR);
-        mSpinnerLayoutProperty.setBarBackground(barBackground);
+        Integer barBackground;
+        int barBackgroundValue = typedArray.getColor(R.styleable.SpinnerLayout_spinnerBackground, -1);
+        if(barBackgroundValue == -1){
+            barBackground = null;
+        }else{
+            barBackground = barBackgroundValue;
+        }
 
-        float textSize = typedArray.getDimension(R.styleable.SpinnerLayout_textSize, SpinnerConfig.DEFAULT_SPINNER_TITLE_SIZE_DP);
-        mSpinnerLayoutProperty.setTextSize(textSize);
+        Float textSize;
+        float textSizeValue = typedArray.getDimension(R.styleable.SpinnerLayout_textSize, -1f);
+        if(textSizeValue == -1){
+            textSize = null;
+        }else{
+            textSize = textSizeValue;
+        }
 
-        int textColor = typedArray.getColor(R.styleable.SpinnerLayout_textColor, SpinnerConfig.DEFAULT_SPINNER_UNIT_TITLE_COLOR);
-        mSpinnerLayoutProperty.setTextColor(textColor);
+        Integer textColor;
+        int textColorValue = typedArray.getColor(R.styleable.SpinnerLayout_textColor, -1);
+        if(textColorValue == -1){
+            textColor = null;
+        }else{
+            textColor = textColorValue;
+        }
 
-        int textSelectedColor = typedArray.getColor(R.styleable.SpinnerLayout_textColorSelected, SpinnerConfig.DEFAULT_SPINNER_UNIT_TITLE_COLOR_SELECTED);
-        mSpinnerLayoutProperty.setTextSelectedColor(textSelectedColor);
+        Integer textSelectedColor;
+        int textSelectedColorValue = typedArray.getColor(R.styleable.SpinnerLayout_textColorSelected, -1);
+        if(textSelectedColorValue == -1){
+            textSelectedColor = null;
+        }else{
+            textSelectedColor = textSelectedColorValue;
+        }
 
-        int backSurfaceColor = typedArray.getColor(R.styleable.SpinnerLayout_backSurfaceColor, SpinnerConfig.DEFAULT_SPINNER_BACK_SURFACE_COLOR);
-        mSpinnerLayoutProperty.setBackSurfaceColor(backSurfaceColor);
+        Integer backSurfaceColor;
+        int backSurfaceColorValue = typedArray.getColor(R.styleable.SpinnerLayout_backSurfaceColor, -1);
+        if(backSurfaceColorValue == -1){
+            backSurfaceColor = null;
+        }else{
+            backSurfaceColor = backSurfaceColorValue;
+        }
 
-        Drawable unitIcon = typedArray.getDrawable(R.styleable.SpinnerLayout_icon) != null ?
-                typedArray.getDrawable(R.styleable.SpinnerLayout_icon) : getResources().getDrawable(R.drawable.footer_triangle_down_black);
-        mSpinnerLayoutProperty.setUnitIcon(unitIcon);
+        Drawable unitIcon = typedArray.getDrawable(R.styleable.SpinnerLayout_icon);
 
-        Drawable unitIconSelected = typedArray.getDrawable(R.styleable.SpinnerLayout_iconSelected) != null ?
-                typedArray.getDrawable(R.styleable.SpinnerLayout_iconSelected) : getResources().getDrawable(R.drawable.footer_triangle_up_blue);
-        mSpinnerLayoutProperty.setUnitIconSelected(unitIconSelected);
+        Drawable unitIconSelected = typedArray.getDrawable(R.styleable.SpinnerLayout_iconSelected);
 
-        boolean isTouchOutsideCanceled = typedArray.getBoolean(R.styleable.SpinnerLayout_touchOutsideCanceled, true);
-        mSpinnerLayoutProperty.setTouchOutsideCanceled(isTouchOutsideCanceled);
+        Boolean backSurfaceAvailable;
+        boolean testAvailableValue1 = typedArray.getBoolean(R.styleable.SpinnerLayout_backSurfaceAvailable, false);
+        boolean testAvailableValue2 = typedArray.getBoolean(R.styleable.SpinnerLayout_backSurfaceAvailable, true);
+        if(testAvailableValue1 == testAvailableValue2){
+            backSurfaceAvailable = testAvailableValue1;
+        }else{
+            backSurfaceAvailable = null;
+        }
 
-        float lineScale = typedArray.getFloat(R.styleable.SpinnerLayout_lineScale, DEFAULT_LINE_SCALE);
-        mSpinnerLayoutProperty.setLineScale(lineScale);
+        Boolean isTouchOutsideCanceled;
+        boolean testTouchOutsideCanceledValue1 = typedArray.getBoolean(R.styleable.SpinnerLayout_touchOutsideCanceled, false);
+        boolean testTouchOutsideCanceledValue2 = typedArray.getBoolean(R.styleable.SpinnerLayout_touchOutsideCanceled, true);
+        if(testTouchOutsideCanceledValue1 == testTouchOutsideCanceledValue2){
+            isTouchOutsideCanceled = testTouchOutsideCanceledValue1;
+        }else{
+            isTouchOutsideCanceled = null;
+        }
 
-        FooterMode footerMode = mFooterModeSparse.get(typedArray.getInt(R.styleable.SpinnerLayout_footerMode, 1));
-        mSpinnerLayoutProperty.setFooterMode(footerMode);
+        Float lineScale;
+        float lineScaleValue = typedArray.getFloat(R.styleable.SpinnerLayout_lineScale, -1);
+        if(lineScaleValue == -1){
+             lineScale = null;
+        }else{
+            if (lineScaleValue <= 0) {
+                lineScale = 0.1f;
+            } else if (lineScaleValue > 1) {
+                lineScale = 1f;
+            }else {
+                lineScale = lineScaleValue;
+            }
+        }
 
-        int spinnerGravity = mSpinnerGravitySparse.get(typedArray.getInt(R.styleable.SpinnerLayout_spinnerGravity, 0));
-        mSpinnerLayoutProperty.setSpinnerGravity(spinnerGravity);
+        FooterMode footerMode;
+        int ordinal = typedArray.getInt(R.styleable.SpinnerLayout_footerMode, -1);
+        if(ordinal == -1){
+            footerMode = null;
+        }else{
+            footerMode = mFooterModeSparse.get(ordinal);
+        }
+
+        Integer spinnerGravity;
+        int ordinalGravity = typedArray.getInt(R.styleable.SpinnerLayout_spinnerGravity, -1);
+        if(ordinalGravity == -1){
+            spinnerGravity = null;
+        }else{
+            spinnerGravity = mSpinnerGravitySparse.get(ordinalGravity);
+        }
 
         typedArray.recycle();
+
+
+        return new SpinnerLayoutProperty(
+                barHeight,
+                textSize,
+                textColor,
+                textSelectedColor,
+                backSurfaceColor,
+                unitIcon,
+                unitIconSelected,
+                backSurfaceAvailable,
+                isTouchOutsideCanceled,
+                lineScale,
+                barBackground,
+                footerMode,
+                spinnerGravity
+        );
     }
 
     private void init(Context context) {
@@ -211,10 +295,10 @@ public class SpinnerLayout extends RelativeLayout {
      **/
     private LinearLayout generateSpinnerContainerLayout(Context context, Rect paddingRect) {
         mSpinnerBarLayout = new LinearLayout(context);
-        LinearLayout.LayoutParams SpinnerBarLayoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, mSpinnerLayoutProperty.getBarHeight());
+        LinearLayout.LayoutParams SpinnerBarLayoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, (int) mSpinnerLayoutPropertyWrapper.getBarHeight());
         mSpinnerBarLayout.setLayoutParams(SpinnerBarLayoutParams);
         mSpinnerBarLayout.setPadding(paddingRect.left, paddingRect.top, paddingRect.right, paddingRect.bottom);
-        mSpinnerBarLayout.setBackgroundColor(mSpinnerLayoutProperty.getBarBackground());
+        mSpinnerBarLayout.setBackgroundColor(mSpinnerLayoutPropertyWrapper.getBarBackground());
         mSpinnerBarLayout.setGravity(Gravity.CENTER_VERTICAL);
         mSpinnerBarLayout.setOrientation(LinearLayout.HORIZONTAL);
 
@@ -236,7 +320,6 @@ public class SpinnerLayout extends RelativeLayout {
     protected void onFinishInflate() {
         super.onFinishInflate();
         childrenViewChangeIntoFooterView();
-
         checkParentLayoutType();
         Log.d(TAG, "onFinishInflate");
     }
@@ -276,67 +359,18 @@ public class SpinnerLayout extends RelativeLayout {
         SpinnerUnitEntity spinnerUnitEntity = new SpinnerUnitEntity(baseSpinnerFooter);
         mSpinnerUnitEntityList.add(spinnerUnitEntity);
 
-        FrameLayout footerViewContainerLayout = generateFooterViewContainerLayout(baseSpinnerFooter);
+        BaseFooterPropertyWrapper baseFooterPropertyWrapper = new BaseFooterPropertyWrapper(getContext(), mSpinnerLayoutProperty, baseSpinnerFooter.getBaseFooterViewProperty());
+        spinnerUnitEntity.setBaseFooterPropertyWrapper(baseFooterPropertyWrapper);
+
+
+        FrameLayout footerViewContainerLayout = generateFooterViewContainerLayout(baseSpinnerFooter, baseFooterPropertyWrapper);
         spinnerUnitEntity.setFooterViewContainer(footerViewContainerLayout);
 
-        BaseFooterProperty baseFooterViewProperty = baseSpinnerFooter.getMFooterViewProperty();
-        updateSpinnerLayoutPropertyFromFooterViewProperty(baseFooterViewProperty);
-        spinnerUnitEntity.setMBaseFooterProperty(baseFooterViewProperty);
-
-        String title = baseFooterViewProperty.getText();
-        Log.d(TAG, "addSpinnerFooter: title = " + title);
+        String title = baseFooterPropertyWrapper.getText();
         LinearLayout spinnerUnitLayout = generateSpinnerUnitLayout(getContext(), spinnerUnitEntity, title);
         initSpinnerUnitLayoutListener(spinnerUnitLayout, spinnerUnitEntity);
     }
 
-    /**
-     * FooterView属性更新到SpinnerLayout属性上
-     *
-     * @param baseFooterViewProperty
-     */
-    private void updateSpinnerLayoutPropertyFromFooterViewProperty(BaseFooterProperty baseFooterViewProperty) {
-        SpinnerLayoutProperty property = mSpinnerLayoutProperty;
-
-        float textSize = baseFooterViewProperty.getTextSize();
-        if (textSize != SpinnerConfig.DEFAULT_SPINNER_TITLE_SIZE_DP) {
-            property.setTextSize(textSize);
-        }
-
-        int textColor = baseFooterViewProperty.getTextColor();
-        if (textColor != SpinnerConfig.DEFAULT_SPINNER_UNIT_TITLE_COLOR) {
-            property.setTextColor(textColor);
-        }
-
-        int textSelectedColor = baseFooterViewProperty.getTextSelectedColor();
-        if (textSelectedColor != SpinnerConfig.DEFAULT_SPINNER_UNIT_TITLE_COLOR_SELECTED) {
-            property.setTextSelectedColor(textSelectedColor);
-        }
-
-        boolean backSurfaceAvailable = baseFooterViewProperty.getBackSurfaceAvailable();
-        if (backSurfaceAvailable != SpinnerConfig.DEFAULT_BACK_SURFACE_AVAILABLE) {
-            property.setBackSurfaceAvailable(backSurfaceAvailable);
-        }
-
-        Drawable unitIconDrawable = baseFooterViewProperty.getUnitIcon();
-        if (unitIconDrawable != null) {
-            property.setUnitIcon(unitIconDrawable);
-        }
-
-        Drawable unitIconSelectedDrawable = baseFooterViewProperty.getUnitIconSelected();
-        if (unitIconSelectedDrawable != null) {
-            property.setUnitIconSelected(unitIconSelectedDrawable);
-        }
-
-        boolean touchOutsideCanceled = baseFooterViewProperty.isTouchOutsideCanceled();
-        if (touchOutsideCanceled != SpinnerConfig.DEFAULT_TOUCH_OUTSIDE_CANCELED) {
-            property.setTouchOutsideCanceled(touchOutsideCanceled);
-        }
-
-        FooterMode footerMode = baseFooterViewProperty.getFooterMode();
-        if(footerMode != FooterMode.MODE_EXPAND){
-            property.setFooterMode(footerMode);
-        }
-    }
 
     /**
      * 生成SpinnerUnitLayout
@@ -348,13 +382,15 @@ public class SpinnerLayout extends RelativeLayout {
      */
     private LinearLayout generateSpinnerUnitLayout(Context context, SpinnerUnitEntity spinnerUnitEntity, String spinnerUnitTitle) {
 
+        BaseFooterPropertyWrapper baseFooterPropertyWrapper = spinnerUnitEntity.getBaseFooterPropertyWrapper();
+
         final TextView titleView = new TextView(context);
         LinearLayout.LayoutParams titleViewLayoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         titleViewLayoutParams.gravity = Gravity.CENTER_VERTICAL;
         titleView.setLayoutParams(titleViewLayoutParams);
-        int textColor = mSpinnerLayoutProperty.getTextColor();
+        int textColor = baseFooterPropertyWrapper.getTextColor();
         titleView.setTextColor(textColor);
-        float textSize = mSpinnerLayoutProperty.getTextSize();
+        float textSize = baseFooterPropertyWrapper.getTextSize();
         titleView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, textSize);
         titleView.setSingleLine(true);
         titleView.setEllipsize(TextUtils.TruncateAt.END);
@@ -365,12 +401,12 @@ public class SpinnerLayout extends RelativeLayout {
         unitIconLayoutParams.gravity = Gravity.CENTER_VERTICAL;
         unitIconLayoutParams.leftMargin = dip2px(5);
         unitIconIv.setLayoutParams(unitIconLayoutParams);
-        Drawable unitIcon = mSpinnerLayoutProperty.getUnitIcon();
+        Drawable unitIcon = baseFooterPropertyWrapper.getUnitIcon();
         unitIconIv.setImageDrawable(unitIcon);
 
         LinearLayout spinnerUnitLayout = new LinearLayout(context);
         spinnerUnitLayout.setOrientation(LinearLayout.HORIZONTAL);
-        int gravity = mSpinnerLayoutProperty.getSpinnerGravity();
+        int gravity = mSpinnerLayoutPropertyWrapper.getSpinnerGravity();
         spinnerUnitLayout.setGravity(gravity);
         LinearLayout.LayoutParams unitLayoutParams = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1);
         spinnerUnitLayout.setLayoutParams(unitLayoutParams);
@@ -412,11 +448,15 @@ public class SpinnerLayout extends RelativeLayout {
                     mIsShowing = true;
                     reactionOfSpinnerUnitUIWhenToOpen(currentSpinnerUnitEntity);
                     setupSpinnerUnitClickableWhenToOpen(mSelectedSpinnerUnitEntity);
-                    reactionOfBackgroundWhenToOpen();
+
+                    Boolean backSurfaceAvailable = currentSpinnerUnitEntity.getBaseFooterPropertyWrapper().getBackSurfaceAvailable();
+                    reactionOfBackgroundWhenToOpen(backSurfaceAvailable);
+
                     setOnClickListener(new OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            if (mSpinnerLayoutProperty.isTouchOutsideCanceled()) {
+                            if (currentSpinnerUnitEntity.getBaseFooterPropertyWrapper() != null
+                                    && currentSpinnerUnitEntity.getBaseFooterPropertyWrapper().isTouchOutsideCanceled()) {
                                 back();
                             }
                         }
@@ -440,13 +480,8 @@ public class SpinnerLayout extends RelativeLayout {
     private View generateSpinnerUnitLine(Context context) {
         View lineView = new View(context);
         lineView.setBackgroundColor(SpinnerConfig.DEFAULT_LINE_COLOR);
-        float lineScale = mSpinnerLayoutProperty.getLineScale();
-        if (lineScale <= 0) {
-            mSpinnerLayoutProperty.setLineScale(0.1f);
-        } else if (lineScale > 1) {
-            mSpinnerLayoutProperty.setLineScale(1f);
-        }
-        int lineHeight = (int) (mSpinnerLayoutProperty.getBarHeight() * lineScale);
+        float lineScale = mSpinnerLayoutPropertyWrapper.getLineScale();
+        int lineHeight = (int) (mSpinnerLayoutPropertyWrapper.getBarHeight() * lineScale);
         LinearLayout.LayoutParams lineLayoutParams = new LinearLayout.LayoutParams(2, lineHeight);
         lineLayoutParams.gravity = Gravity.CENTER_VERTICAL;
         lineView.setLayoutParams(lineLayoutParams);
@@ -495,8 +530,9 @@ public class SpinnerLayout extends RelativeLayout {
             return;
         }
 
-        spinnerUnitEntity.getTvUnit().setTextColor(mSpinnerLayoutProperty.getTextSelectedColor());
-        spinnerUnitEntity.getImgUnitIcon().setImageDrawable(mSpinnerLayoutProperty.getUnitIconSelected());
+        BaseFooterPropertyWrapper baseFooterPropertyWrapper = spinnerUnitEntity.getBaseFooterPropertyWrapper();
+        spinnerUnitEntity.getTvUnit().setTextColor(baseFooterPropertyWrapper.getTextSelectedColor());
+        spinnerUnitEntity.getImgUnitIcon().setImageDrawable(baseFooterPropertyWrapper.getUnitIconSelected());
     }
 
 
@@ -510,8 +546,10 @@ public class SpinnerLayout extends RelativeLayout {
             return;
         }
 
-        spinnerUnitEntity.getTvUnit().setTextColor(mSpinnerLayoutProperty.getTextColor());
-        spinnerUnitEntity.getImgUnitIcon().setImageDrawable(mSpinnerLayoutProperty.getUnitIcon());
+        BaseFooterPropertyWrapper baseFooterPropertyWrapper = spinnerUnitEntity.getBaseFooterPropertyWrapper();
+
+        spinnerUnitEntity.getTvUnit().setTextColor(baseFooterPropertyWrapper.getTextColor());
+        spinnerUnitEntity.getImgUnitIcon().setImageDrawable(baseFooterPropertyWrapper.getUnitIcon());
 
         setClickable(false);
     }
@@ -522,7 +560,7 @@ public class SpinnerLayout extends RelativeLayout {
      * @param spinnerFooter
      * @return
      */
-    private FrameLayout generateFooterViewContainerLayout(BaseSpinnerFooter spinnerFooter) {
+    private FrameLayout generateFooterViewContainerLayout(BaseSpinnerFooter spinnerFooter, BaseFooterPropertyWrapper baseFooterPropertyWrapper) {
         if (spinnerFooter == null) {
             throw new IllegalArgumentException("BaseSpinnerFooter is null");
         }
@@ -534,7 +572,7 @@ public class SpinnerLayout extends RelativeLayout {
 
         FrameLayout footerViewContainerLayout = new FrameLayout(getContext());
         footerViewContainerLayout.addView(spinnerFooter);
-        FrameLayout.LayoutParams layoutParamsForStartingValue = generateFooterViewContainerLayoutParamsForStartingValue(spinnerFooter.getHeight());
+        FrameLayout.LayoutParams layoutParamsForStartingValue = generateFooterViewContainerLayoutParamsForStartingValue(spinnerFooter.getHeight(), baseFooterPropertyWrapper);
         footerViewContainerLayout.setLayoutParams(layoutParamsForStartingValue);
 
         mFooterViewRoot.addView(footerViewContainerLayout);
@@ -542,9 +580,9 @@ public class SpinnerLayout extends RelativeLayout {
         return footerViewContainerLayout;
     }
 
-    private FrameLayout.LayoutParams generateFooterViewContainerLayoutParamsForStartingValue(int originHeight) {
+    private FrameLayout.LayoutParams generateFooterViewContainerLayoutParamsForStartingValue(int originHeight, BaseFooterPropertyWrapper baseFooterPropertyWrapper) {
         FrameLayout.LayoutParams footerViewContainerLayoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        FooterMode footerMode = mSpinnerLayoutProperty.getFooterMode();
+        FooterMode footerMode = baseFooterPropertyWrapper.getFooterMode();
         if (footerMode == FooterMode.MODE_EXPAND) {
 
             footerViewContainerLayoutParams.height = SpinnerConfig.ORIGIN_HEIGHT;
@@ -555,7 +593,7 @@ public class SpinnerLayout extends RelativeLayout {
                 因为无法确定MODE_TRANSLATE下FooterView的初始位置，故强制把下拉模式改成MODE_EXPAND
              */
             if (originHeight <= 0) {
-                mSpinnerLayoutProperty.setFooterMode(FooterMode.MODE_EXPAND);
+                baseFooterPropertyWrapper.setFooterMode(FooterMode.MODE_EXPAND);
                 footerViewContainerLayoutParams.height = SpinnerConfig.ORIGIN_HEIGHT;
                 footerViewContainerLayoutParams.topMargin = 0;
             } else {
@@ -586,11 +624,13 @@ public class SpinnerLayout extends RelativeLayout {
 
         View footerView = footerViewContainer.getChildAt(0);
 
+        BaseFooterPropertyWrapper baseFooterPropertyWrapper = spinnerUnitEntity.getBaseFooterPropertyWrapper();
+
         //重置height和topMargin属性的值
         ViewGroup.LayoutParams lp = footerViewContainer.getLayoutParams();
         if (lp != null && lp instanceof FrameLayout.LayoutParams) {
             FrameLayout.LayoutParams footerViewContainerLayoutParams = (FrameLayout.LayoutParams) lp;
-            if (mSpinnerLayoutProperty.getFooterMode() == FooterMode.MODE_EXPAND) {
+            if (baseFooterPropertyWrapper.getFooterMode() == FooterMode.MODE_EXPAND) {
                 footerViewContainerLayoutParams.topMargin = 0;
             } else {
                 footerViewContainerLayoutParams.height = footerView.getHeight();
@@ -609,7 +649,7 @@ public class SpinnerLayout extends RelativeLayout {
         }
 
 
-        if (mSpinnerLayoutProperty.getFooterMode() == FooterMode.MODE_EXPAND) {
+        if (baseFooterPropertyWrapper.getFooterMode() == FooterMode.MODE_EXPAND) {
             Log.d(TAG, "expandFooter: MODE_EXPAND height = " + height);
             mFlexibleOperator = AnimateOperatorManager.getInstance()
                     .flexibleBuilder(footerViewContainer)
@@ -639,7 +679,8 @@ public class SpinnerLayout extends RelativeLayout {
         if (footerViewContainer == null) {
             return;
         }
-        if (mSpinnerLayoutProperty.getFooterMode() == FooterMode.MODE_EXPAND) {
+        BaseFooterPropertyWrapper baseFooterPropertyWrapper = spinnerUnitEntity.getBaseFooterPropertyWrapper();
+        if (baseFooterPropertyWrapper.getFooterMode() == FooterMode.MODE_EXPAND) {
             mFlexibleOperator.collapse();
         } else {
             mTransitionOperator.collapse();
@@ -676,8 +717,8 @@ public class SpinnerLayout extends RelativeLayout {
     /**
      * 打开时背景暗色
      */
-    private void reactionOfBackgroundWhenToOpen() {
-        if (mSpinnerLayoutProperty.getBackSurfaceAvailable()) {
+    private void reactionOfBackgroundWhenToOpen(boolean backSurfaceAvailable) {
+        if (backSurfaceAvailable) {
             if (getLayoutParams() instanceof RelativeLayout.LayoutParams) {
                 mOriginRootLayoutParams = (RelativeLayout.LayoutParams) getLayoutParams();
 
@@ -705,7 +746,7 @@ public class SpinnerLayout extends RelativeLayout {
                 mSpinnerContainerLayout.setLayoutParams(containerLayoutParams);
                 Log.d(TAG, "reactionOfBackgroundWhenToOpen: topMargin = " + containerLayoutParams.topMargin + " leftMargin = " + x + " rightMargin = " + containerLayoutParams.rightMargin);
 
-                setBackgroundColor(mSpinnerLayoutProperty.getBackSurfaceColor());
+                setBackgroundColor(mSpinnerLayoutPropertyWrapper.getBackSurfaceColor());
                 LayoutParams layoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
                 layoutParams.leftMargin = 0;
                 layoutParams.topMargin = 0;
@@ -732,8 +773,8 @@ public class SpinnerLayout extends RelativeLayout {
     /**
      * 关闭时，恢复背景
      */
-    private void reactionOfBackgroundWhenToClose() {
-        if (mSpinnerLayoutProperty.getBackSurfaceAvailable() && mOriginRootLayoutParams != null) {
+    private void reactionOfBackgroundWhenToClose(boolean backSurfaceAvailable) {
+        if (backSurfaceAvailable && mOriginRootLayoutParams != null) {
             setLayoutParams(mOriginRootLayoutParams);
             mSpinnerContainerLayout.setLayoutParams(mOriginSpinnerContainerLayoutParams);
             setBackgroundColor(getContext().getResources().getColor(android.R.color.transparent));
@@ -757,7 +798,10 @@ public class SpinnerLayout extends RelativeLayout {
 
         reactionOfSpinnerUnitUIWhenToClose(spinnerUnitEntity);
         restoreAllClickableWhenToClose();
-        reactionOfBackgroundWhenToClose();
+
+        BaseFooterPropertyWrapper baseFooterPropertyWrapper = spinnerUnitEntity.getBaseFooterPropertyWrapper();
+        Boolean backSurfaceAvailable = baseFooterPropertyWrapper.getBackSurfaceAvailable();
+        reactionOfBackgroundWhenToClose(backSurfaceAvailable);
     }
 
 

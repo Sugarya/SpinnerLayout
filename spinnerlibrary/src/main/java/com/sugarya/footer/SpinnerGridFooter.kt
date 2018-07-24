@@ -32,7 +32,13 @@ class SpinnerGridFooter : BaseSpinnerFooter<GridFooterProperty> {
 
     private var mAdapter: GridFooterAdapter? = null
 
-    override val mFooterViewProperty: GridFooterProperty = GridFooterProperty()
+    override val baseFooterViewProperty: GridFooterProperty
+
+    constructor(context: Context, title: String) : this(
+            context,
+            title,
+            TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, SpinnerConfig.DEFAULT_GRID_FOOTER_ITEM_HEIGHT_DP, context.resources.displayMetrics),
+            SpinnerConfig.DEFAULT_GRID_FOOTER_SPAN_COUNT)
 
     constructor(context: Context, title: String, spanCount: Int) : this(
             context,
@@ -41,59 +47,105 @@ class SpinnerGridFooter : BaseSpinnerFooter<GridFooterProperty> {
             spanCount)
 
     constructor(context: Context, title: String, itemHeight: Float, spanCount: Int) : super(context) {
-        mFooterViewProperty.text = title
-        mFooterViewProperty.gridItemHeight = itemHeight
-        mFooterViewProperty.gridSpanCount = spanCount
+        baseFooterViewProperty = GridFooterProperty(
+                itemHeight,
+                spanCount,
+                title,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+        )
         init()
     }
 
 
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
         val typedArray = context.obtainStyledAttributes(attrs, R.styleable.SpinnerGridFooter)
-        val footerMode = FOOTER_MODE_SPARSE[typedArray.getInt(R.styleable.SpinnerGridFooter_footerModeGrid, 1)]
-        mFooterViewProperty.footerMode = footerMode
 
-        val spanCount = typedArray.getInt(R.styleable.SpinnerGridFooter_spanCountGrid, SpinnerConfig.DEFAULT_GRID_FOOTER_SPAN_COUNT)
-        mFooterViewProperty.gridSpanCount = spanCount
-
-        val itemHeight = typedArray.getDimension(R.styleable.SpinnerGridFooter_itemHeightGrid, SpinnerConfig.ORIGIN_HEIGHT.toFloat())
-        mFooterViewProperty.gridItemHeight = itemHeight
-        Log.d(TAG, "constructor itemHeight = $itemHeight")
-
-        val text = typedArray.getString(R.styleable.SpinnerGridFooter_textGrid)
-        mFooterViewProperty.text = text
-
-        val textSize = typedArray.getDimension(R.styleable.SpinnerGridFooter_textSizeGrid, SpinnerConfig.DEFAULT_SPINNER_TITLE_SIZE_DP)
-        mFooterViewProperty.textSize = textSize
-
-        val textColor = typedArray.getColor(R.styleable.SpinnerGridFooter_textColorGrid, SpinnerConfig.DEFAULT_SPINNER_UNIT_TITLE_COLOR)
-        mFooterViewProperty.textColor = textColor
-
-        val textSelectedColor = typedArray.getColor(R.styleable.SpinnerGridFooter_textColorSelectedGrid, SpinnerConfig.DEFAULT_SPINNER_UNIT_TITLE_COLOR_SELECTED)
-        mFooterViewProperty.textSelectedColor = textSelectedColor
-
-        val unitIconDrawable = if (typedArray.getDrawable(R.styleable.SpinnerGridFooter_iconGrid) != null) {
-            typedArray.getDrawable(R.styleable.SpinnerLayout_icon)
-        } else {
-            resources.getDrawable(R.drawable.footer_triangle_down_black)
+        val ordinalFooterMode = typedArray.getInt(R.styleable.SpinnerGridFooter_footerModeGrid, -1)
+        val footerMode: FooterMode? = if(ordinalFooterMode == -1){
+            null
+        }else{
+            FOOTER_MODE_SPARSE[ordinalFooterMode]
         }
-        mFooterViewProperty.unitIcon = unitIconDrawable
 
-        val unitIconSelectedDrawable = if (typedArray.getDrawable(R.styleable.SpinnerGridFooter_iconSelectedGrid) != null) {
-            typedArray.getDrawable(R.styleable.SpinnerLayout_iconSelected)
-        } else {
-            resources.getDrawable(R.drawable.footer_triangle_up_blue)
+        val spanCountValue = typedArray.getInt(R.styleable.SpinnerGridFooter_spanCountGrid, -1)
+        val spanCount: Int = if(spanCountValue == -1){
+            SpinnerConfig.DEFAULT_GRID_FOOTER_SPAN_COUNT
+        }else{
+            spanCountValue
         }
-        mFooterViewProperty.unitIconSelected = unitIconSelectedDrawable
 
-        val backSurfaceAvailable = typedArray.getBoolean(R.styleable.SpinnerGridFooter_backSurfaceAvailableGrid, SpinnerConfig.DEFAULT_BACK_SURFACE_AVAILABLE)
-        mFooterViewProperty.backSurfaceAvailable = backSurfaceAvailable
+        val itemHeightValue = typedArray.getDimension(R.styleable.SpinnerGridFooter_itemHeightGrid, -1f)
+        val itemHeight: Float = if(itemHeightValue == -1f){
+            throw IllegalArgumentException("${SpinnerGridFooter::class.java.simpleName} need a item height")
+        }else{
+            itemHeightValue
+        }
 
-        val isTouchOutsideCanceled = typedArray.getBoolean(R.styleable.SpinnerGridFooter_touchOutsideCanceledGrid, SpinnerConfig.DEFAULT_TOUCH_OUTSIDE_CANCELED)
-        mFooterViewProperty.isTouchOutsideCanceled = isTouchOutsideCanceled
+        val text = typedArray.getString(R.styleable.SpinnerGridFooter_textGrid) ?: ""
 
+        val textSizeValue = typedArray.getDimension(R.styleable.SpinnerGridFooter_textSizeGrid, -1f)
+        val textSize: Float? = if(textSizeValue == -1f){
+            null
+        }else{
+            textSizeValue
+        }
+
+        val textColorValue = typedArray.getColor(R.styleable.SpinnerGridFooter_textColorGrid, 1)
+        val textColor: Int? = if(textColorValue == -1){
+            null
+        }else{
+            textColorValue
+        }
+
+        val textSelectedColorValue =  typedArray.getColor(R.styleable.SpinnerGridFooter_textColorSelectedGrid, -1)
+        val textSelectedColor: Int? = if(textSelectedColorValue == -1){
+            null
+        }else{
+            textSelectedColorValue
+        }
+
+        val unitIconDrawable = typedArray.getDrawable(R.styleable.SpinnerGridFooter_iconGrid)
+        val unitIconSelectedDrawable = typedArray.getDrawable(R.styleable.SpinnerGridFooter_iconSelectedGrid)
+
+
+        val testAvailableValue1 = typedArray.getBoolean(R.styleable.SpinnerGridFooter_backSurfaceAvailableGrid, false)
+        val testAvailableValue2 = typedArray.getBoolean(R.styleable.SpinnerGridFooter_backSurfaceAvailableGrid, true)
+        val backSurfaceAvailable: Boolean? = if(testAvailableValue1 == testAvailableValue2){
+            testAvailableValue1
+        }else{
+            null
+        }
+
+        val testTouchOutsideCanceledValue1 = typedArray.getBoolean(R.styleable.SpinnerGridFooter_touchOutsideCanceledGrid, false)
+        val testTouchOutsideCanceledValue2 = typedArray.getBoolean(R.styleable.SpinnerGridFooter_touchOutsideCanceledGrid, true)
+        val isTouchOutsideCanceled: Boolean? = if(testTouchOutsideCanceledValue1 == testTouchOutsideCanceledValue2){
+            testTouchOutsideCanceledValue1
+        }else{
+            null
+        }
 
         typedArray.recycle()
+
+        baseFooterViewProperty = GridFooterProperty(
+                itemHeight,
+                spanCount,
+                text,
+                textSize,
+                textColor,
+                textSelectedColor,
+                unitIconDrawable,
+                unitIconSelectedDrawable,
+                backSurfaceAvailable,
+                isTouchOutsideCanceled,
+                footerMode
+        )
 
         init()
     }
@@ -109,11 +161,11 @@ class SpinnerGridFooter : BaseSpinnerFooter<GridFooterProperty> {
                     addRule(RelativeLayout.CENTER_VERTICAL)
                 }
 
-        recyclerView.layoutManager = GridLayoutManager(context, mFooterViewProperty.gridSpanCount, GridLayoutManager.VERTICAL, false)
+        recyclerView.layoutManager = GridLayoutManager(context, baseFooterViewProperty.gridSpanCount, GridLayoutManager.VERTICAL, false)
         removeAllViews()
         addView(recyclerView)
 
-        mAdapter = GridFooterAdapter(mFooterViewProperty.gridItemHeight)
+        mAdapter = GridFooterAdapter(baseFooterViewProperty.gridItemHeight)
         recyclerView.adapter = mAdapter
 
         mAdapter?.mOnFooterItemContainerClickListener = object : OnFooterItemContainerClickListener {
@@ -138,8 +190,8 @@ class SpinnerGridFooter : BaseSpinnerFooter<GridFooterProperty> {
      */
     fun setNewData(dataList: MutableList<out IFooterItem>) {
         val size = dataList.size
-        val rowCount = size / mFooterViewProperty.gridSpanCount + 1
-        val needHeight = rowCount * mFooterViewProperty.gridItemHeight
+        val rowCount = size / baseFooterViewProperty.gridSpanCount + 1
+        val needHeight = rowCount * baseFooterViewProperty.gridItemHeight
         Log.d(TAG, "needHeight = ${needHeight}")
         setupFooterHeight(needHeight.toInt())
 

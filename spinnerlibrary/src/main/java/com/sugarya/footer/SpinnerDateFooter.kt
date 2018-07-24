@@ -2,12 +2,11 @@ package com.sugarya.footer
 
 import android.content.Context
 import android.util.AttributeSet
-import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import com.bigkoo.pickerview.builder.TimePickerBuilder
-import com.sugarya.SpinnerConfig
 import com.sugarya.footer.base.BaseSpinnerFooter
+import com.sugarya.footer.interfaces.FooterMode
 import com.sugarya.footer.model.DateFooterProperty
 import com.sugarya.utils.FOOTER_MODE_SPARSE
 import com.sugarya.utils.formatDate
@@ -28,52 +27,89 @@ class SpinnerDateFooter : BaseSpinnerFooter<DateFooterProperty> {
     var mOnConfirmClickListener: OnConfirmClickListener? = null
 
 
-    override val mFooterViewProperty: DateFooterProperty = DateFooterProperty()
+    override val baseFooterViewProperty: DateFooterProperty
 
     constructor(context: Context, title: String) : super(context) {
-        mFooterViewProperty.text = title
+        baseFooterViewProperty = DateFooterProperty(
+                title,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+        )
         init()
     }
 
     constructor(context: Context, attributeSet: AttributeSet) : super(context, attributeSet) {
         val typedArray = context.obtainStyledAttributes(attributeSet, R.styleable.SpinnerDateFooter)
 
-        val footerMode = FOOTER_MODE_SPARSE[typedArray.getInt(R.styleable.SpinnerDateFooter_footerModeDate, 1)]
-        mFooterViewProperty.footerMode = footerMode
+        val footerModeOrdinal = typedArray.getInt(R.styleable.SpinnerDateFooter_footerModeDate, -1)
+        val footerMode: FooterMode? = if(footerModeOrdinal == -1){
+            null
+        }else{
+            FOOTER_MODE_SPARSE[footerModeOrdinal]
+        }
 
         val text = typedArray.getString(R.styleable.SpinnerDateFooter_textDate)
-        mFooterViewProperty.text = text
 
-        val textSize = typedArray.getDimension(R.styleable.SpinnerDateFooter_textSizeDate, SpinnerConfig.DEFAULT_SPINNER_TITLE_SIZE_DP)
-        mFooterViewProperty.textSize = textSize
-
-        val textColor = typedArray.getColor(R.styleable.SpinnerDateFooter_textColorDate, SpinnerConfig.DEFAULT_SPINNER_UNIT_TITLE_COLOR)
-        mFooterViewProperty.textColor = textColor
-
-        val textSelectedColor = typedArray.getColor(R.styleable.SpinnerDateFooter_textColorSelectedDate, SpinnerConfig.DEFAULT_SPINNER_UNIT_TITLE_COLOR_SELECTED)
-        mFooterViewProperty.textSelectedColor = textSelectedColor
-
-        val unitIconDrawable = if (typedArray.getDrawable(R.styleable.SpinnerDateFooter_iconDate) != null) {
-            typedArray.getDrawable(R.styleable.SpinnerLayout_icon)
-        } else {
-            resources.getDrawable(R.drawable.footer_triangle_down_black)
+        val textSizeValue = typedArray.getDimension(R.styleable.SpinnerDateFooter_textSizeDate, -1f)
+        val textSize: Float? = if(textSizeValue == -1f){
+            null
+        }else{
+            textSizeValue
         }
-        mFooterViewProperty.unitIcon = unitIconDrawable
 
-        val unitIconSelectedDrawable = if (typedArray.getDrawable(R.styleable.SpinnerDateFooter_iconSelectedDate) != null) {
-            typedArray.getDrawable(R.styleable.SpinnerLayout_iconSelected)
-        } else {
-            resources.getDrawable(R.drawable.footer_triangle_up_blue)
+        val textColorValue = typedArray.getColor(R.styleable.SpinnerDateFooter_textColorDate, -1)
+        val textColor: Int? = if(textColorValue == -1){
+            null
+        }else{
+            textColorValue
         }
-        mFooterViewProperty.unitIconSelected = unitIconSelectedDrawable
 
-        val backSurfaceAvailable = typedArray.getBoolean(R.styleable.SpinnerDateFooter_backSurfaceAvailableDate, SpinnerConfig.DEFAULT_BACK_SURFACE_AVAILABLE)
-        mFooterViewProperty.backSurfaceAvailable = backSurfaceAvailable
+        val textSelectedColorValue = typedArray.getColor(R.styleable.SpinnerDateFooter_textColorSelectedDate, -1)
+        val textSelectedColor: Int? = if(textSelectedColorValue == -1){
+            null
+        }else{
+            textSelectedColorValue
+        }
 
-        val isTouchOutsideCanceled = typedArray.getBoolean(R.styleable.SpinnerDateFooter_touchOutsideCanceledDate, SpinnerConfig.DEFAULT_TOUCH_OUTSIDE_CANCELED)
-        mFooterViewProperty.isTouchOutsideCanceled = isTouchOutsideCanceled
+        val unitIconDrawable = typedArray.getDrawable(R.styleable.SpinnerDateFooter_iconDate)
+        val unitIconSelectedDrawable = typedArray.getDrawable(R.styleable.SpinnerDateFooter_iconSelectedDate)
+
+        val testBackSurfaceAvailableValue1 = typedArray.getBoolean(R.styleable.SpinnerDateFooter_backSurfaceAvailableDate, false)
+        val testBackSurfaceAvailableValue2 = typedArray.getBoolean(R.styleable.SpinnerDateFooter_backSurfaceAvailableDate, true)
+        val backSurfaceAvailable: Boolean? = if(testBackSurfaceAvailableValue1 == testBackSurfaceAvailableValue2){
+            testBackSurfaceAvailableValue1
+        }else{
+            null
+        }
+
+        val testTouchOutsideCanceledValue1 = typedArray.getBoolean(R.styleable.SpinnerDateFooter_touchOutsideCanceledDate, false)
+        val testTouchOutsideCanceledValue2 = typedArray.getBoolean(R.styleable.SpinnerDateFooter_touchOutsideCanceledDate, false)
+        val isTouchOutsideCanceled: Boolean? = if(testTouchOutsideCanceledValue1 == testTouchOutsideCanceledValue2){
+            testTouchOutsideCanceledValue1
+        }else{
+            null
+        }
 
         typedArray.recycle()
+
+        baseFooterViewProperty = DateFooterProperty(
+                text,
+                textSize,
+                textColor,
+                textSelectedColor,
+                unitIconDrawable,
+                unitIconSelectedDrawable,
+                backSurfaceAvailable,
+                isTouchOutsideCanceled,
+                footerMode
+        )
+
         init()
     }
 

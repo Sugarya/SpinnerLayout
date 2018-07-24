@@ -9,7 +9,7 @@ import com.sugarya.footer.model.BaseFooterProperty
 
 abstract class BaseSpinnerFooter<out T: BaseFooterProperty> : RelativeLayout, IFooterMode {
 
-    abstract val mFooterViewProperty: T
+    abstract val baseFooterViewProperty: T
 
     var computedEndingHeight: Int = 0
 
@@ -23,6 +23,6 @@ abstract class BaseSpinnerFooter<out T: BaseFooterProperty> : RelativeLayout, IF
     }
 
     override var mFooterMode: FooterMode?
-        get() = mFooterViewProperty.footerMode
+        get() = baseFooterViewProperty.footerMode
         set(value) {}
 }

@@ -1,20 +1,19 @@
 package com.sugarya.footer
 
 import android.content.Context
+import android.graphics.drawable.Drawable
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.AttributeSet
 import android.util.Log
 import android.util.TypedValue
 import com.sugarya.SpinnerConfig
-import com.sugarya.SpinnerConfig.Companion.DEFAULT_LINEAR_FOOTER_ITEM_HEIGHT_DP
 import com.sugarya.footer.adapter.LinearFooterAdapter
 import com.sugarya.footer.base.BaseSpinnerFooter
 import com.sugarya.footer.interfaces.FooterMode
 import com.sugarya.footer.interfaces.IFooterItem
 import com.sugarya.footer.interfaces.OnFooterItemClickListener
 import com.sugarya.footer.interfaces.OnFooterItemContainerClickListener
-import com.sugarya.footer.model.BaseFooterProperty
 import com.sugarya.footer.model.LinearFooterProperty
 import com.sugarya.utils.FOOTER_MODE_SPARSE
 import com.sugarya.spinnerlibrary.R
@@ -37,7 +36,7 @@ class SpinnerLinearFooter : BaseSpinnerFooter<LinearFooterProperty> {
     private var mAdapter: LinearFooterAdapter? = null
 
 
-    override val mFooterViewProperty: LinearFooterProperty = LinearFooterProperty()
+    override val baseFooterViewProperty: LinearFooterProperty
 
     constructor(context: Context, title: String) : this(
             context,
@@ -45,48 +44,108 @@ class SpinnerLinearFooter : BaseSpinnerFooter<LinearFooterProperty> {
             TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, SpinnerConfig.DEFAULT_LINEAR_FOOTER_ITEM_HEIGHT_DP, context.resources.displayMetrics))
 
     constructor(context: Context, title: String, itemHeight: Float) : super(context) {
-        mFooterViewProperty.linearItemHeight = itemHeight
-        mFooterViewProperty.text = title
+        baseFooterViewProperty = LinearFooterProperty(
+                itemHeight,
+                title,
+                null,
+                null,
+                null,
+                null,
+                null,
+                SpinnerConfig.DEFAULT_BACK_SURFACE_AVAILABLE,
+                SpinnerConfig.DEFAULT_TOUCH_OUTSIDE_CANCELED,
+                null
+        )
         init(context)
     }
 
+    /*
+
+    val linearItemHeight: Float?,
+        text: String,
+        textSize: Float?,
+        textColor: Int?,
+        textSelectedColor: Int?,
+        unitIcon: Drawable?,
+        unitIconSelected: Drawable?,
+        backSurfaceAvailable: Boolean?,
+        isTouchOutsideCanceled: Boolean?,
+        footerMode: FooterMode?
+     */
     constructor(context: Context, attributeSet: AttributeSet) : super(context, attributeSet) {
         val typedArray = context.obtainStyledAttributes(attributeSet, R.styleable.SpinnerLinearFooter)
 
-        val footerMode = FOOTER_MODE_SPARSE[typedArray.getInt(R.styleable.SpinnerLinearFooter_footerModeLinear, 1)]
-        mFooterViewProperty.footerMode = footerMode
+        val itemHeightValue = typedArray.getDimension(R.styleable.SpinnerLinearFooter_itemHeightLinear, -1f)
+        val itemHeight: Float = if (itemHeightValue == -1f) {
+            throw IllegalStateException("SpinnerLinearFooter needs a item height")
+        } else {
+            itemHeightValue
+        }
 
-        val itemHeight = typedArray.getDimension(R.styleable.SpinnerLinearFooter_itemHeightLinear, FOOTER_ITEM_HEIGHT)
-        mFooterViewProperty.linearItemHeight = itemHeight
+        val text = typedArray.getString(R.styleable.SpinnerLinearFooter_textLinear) ?: ""
 
-        val text = typedArray.getString(R.styleable.SpinnerLinearFooter_textLinear)
-        mFooterViewProperty.text = text
+        val textSizeValue = typedArray.getDimension(R.styleable.SpinnerLinearFooter_textSizeLinear, -1f)
+        val textSize: Float? = if (textSizeValue == -1f) {
+            null
+        } else {
+            textSizeValue
+        }
 
-        val textSize = typedArray.getDimension(R.styleable.SpinnerLinearFooter_textSizeLinear, SpinnerConfig.DEFAULT_SPINNER_TITLE_SIZE_DP)
-        mFooterViewProperty.textSize = textSize
+        val textColorValue = typedArray.getColor(R.styleable.SpinnerLinearFooter_textColorLinear, -1)
+        val textColor: Int? = if (textColorValue == -1) {
+            null
+        } else {
+            textColorValue
+        }
 
-        val textColor = typedArray.getColor(R.styleable.SpinnerLinearFooter_textColorLinear, SpinnerConfig.DEFAULT_SPINNER_UNIT_TITLE_COLOR)
-        mFooterViewProperty.textColor = textColor
+        val textSelectedColorValue = typedArray.getColor(R.styleable.SpinnerLinearFooter_textColorSelectedLinear, -1)
+        val textSelectedColor: Int? = if (textSelectedColorValue == -1) {
+            null
+        } else {
+            textSelectedColorValue
+        }
 
-        val textSelectedColor = typedArray.getColor(R.styleable.SpinnerLinearFooter_textColorSelectedLinear, SpinnerConfig.DEFAULT_SPINNER_UNIT_TITLE_COLOR_SELECTED)
-        mFooterViewProperty.textSelectedColor = textSelectedColor
+        val unitIcon: Drawable? = typedArray.getDrawable(R.styleable.SpinnerLinearFooter_iconLinear)
+        val unitIconSelectedDrawable: Drawable? = typedArray.getDrawable(R.styleable.SpinnerLinearFooter_iconSelectedLinear)
 
-        mFooterViewProperty.unitIcon = typedArray.getDrawable(R.styleable.SpinnerLinearFooter_iconLinear)
+        val testAvailableValue1 = typedArray.getBoolean(R.styleable.SpinnerLinearFooter_backSurfaceAvailableLinear, false)
+        val testAvailableValue2 = typedArray.getBoolean(R.styleable.SpinnerLinearFooter_backSurfaceAvailableLinear, true)
 
-//        val unitIconSelectedDrawable = if (typedArray.getDrawable(R.styleable.SpinnerLinearFooter_iconSelectedLinear) != null) {
-//            typedArray.getDrawable(R.styleable.SpinnerLinearFooter_iconSelectedLinear)
-//        } else {
-//            null
-//        }
-        mFooterViewProperty.unitIconSelected = typedArray.getDrawable(R.styleable.SpinnerLinearFooter_iconSelectedLinear)
+        val backSurfaceAvailable: Boolean? = if(testAvailableValue1 == testAvailableValue2){
+            testAvailableValue1
+        }else{
+            null
+        }
 
-        val backSurfaceAvailable = typedArray.getBoolean(R.styleable.SpinnerLinearFooter_backSurfaceAvailableLinear, SpinnerConfig.DEFAULT_BACK_SURFACE_AVAILABLE)
-        mFooterViewProperty.backSurfaceAvailable = backSurfaceAvailable
+        val testTouchOutsideCanceledValue1 = typedArray.getBoolean(R.styleable.SpinnerLinearFooter_touchOutsideCanceledLinear, false)
+        val testTouchOutsideCanceledValue2 = typedArray.getBoolean(R.styleable.SpinnerLinearFooter_touchOutsideCanceledLinear, true)
 
-        val isTouchOutsideCanceled = typedArray.getBoolean(R.styleable.SpinnerLinearFooter_touchOutsideCanceledLinear, SpinnerConfig.DEFAULT_TOUCH_OUTSIDE_CANCELED)
-        mFooterViewProperty.isTouchOutsideCanceled = isTouchOutsideCanceled
+        val isTouchOutsideCanceled: Boolean? = if(testTouchOutsideCanceledValue1 == testTouchOutsideCanceledValue2){
+            testTouchOutsideCanceledValue1
+        }else{
+            null
+        }
+
+        val index = typedArray.getInt(R.styleable.SpinnerLinearFooter_footerModeLinear, -1)
+        val footerMode: FooterMode? = if (index == -1) {
+            null
+        } else {
+            FOOTER_MODE_SPARSE[index]
+        }
 
         typedArray.recycle()
+
+        baseFooterViewProperty = LinearFooterProperty(
+                itemHeight,
+                text,
+                textSize,
+                textColor,
+                textSelectedColor,
+                unitIcon,
+                unitIconSelectedDrawable,
+                backSurfaceAvailable,
+                isTouchOutsideCanceled,
+                footerMode)
 
         init(context)
     }
@@ -103,11 +162,11 @@ class SpinnerLinearFooter : BaseSpinnerFooter<LinearFooterProperty> {
         removeAllViews()
         addView(recyclerView)
 
-        mAdapter = LinearFooterAdapter(mFooterViewProperty.linearItemHeight, recyclerView)
+        mAdapter = LinearFooterAdapter(baseFooterViewProperty.linearItemHeight, recyclerView)
         recyclerView.adapter = mAdapter
         mAdapter?.mOnFooterItemContainerClickListener = object : OnFooterItemContainerClickListener {
             override fun onItemClick(list: MutableList<IFooterItem>, position: Int) {
-                for(item in list){
+                for (item in list) {
                     item.isSelected = false
                 }
                 val footerItem = list[position]
@@ -119,11 +178,9 @@ class SpinnerLinearFooter : BaseSpinnerFooter<LinearFooterProperty> {
         }
     }
 
-
-
-    fun <T: IFooterItem> setNewData(sourceList: MutableList<T>) {
+    fun <T : IFooterItem> setNewData(sourceList: MutableList<T>) {
         val size = sourceList.size
-        val needHeight = mFooterViewProperty.linearItemHeight * size
+        val needHeight = baseFooterViewProperty.linearItemHeight * size
         Log.d(TAG, "setNewData needHeight = $needHeight")
         setupFooterHeight(needHeight.toInt())
 
@@ -134,10 +191,9 @@ class SpinnerLinearFooter : BaseSpinnerFooter<LinearFooterProperty> {
         mAdapter?.setNewData(sourceList)
     }
 
-    fun setOnFooterItemClickListener(onFooterItemClickListener: OnFooterItemClickListener){
+    fun setOnFooterItemClickListener(onFooterItemClickListener: OnFooterItemClickListener) {
         this.mOnFooterItemClickListener = onFooterItemClickListener
     }
-
 
 
 }
