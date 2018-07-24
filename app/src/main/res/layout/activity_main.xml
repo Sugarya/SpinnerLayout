@@ -59,6 +59,7 @@
             app:itemHeightGrid="45dp"
             app:textGrid="标签"
             app:textColorGrid="@color/red"
+            app:iconGrid="@drawable/ic_item_selected"
             />
 
         <com.sugarya.footer.SpinnerDateFooter
@@ -68,6 +69,7 @@
             android:background="@color/bg_light_gray_footer"
             app:textDate="选择日期"
             app:textColorDate="@color/red"
+            app:iconSelectedDate="@drawable/ic_item_selected"
             />
 
     </com.sugarya.SpinnerLayout>
@@ -99,6 +101,7 @@
             app:spanCountGrid="4"
             app:itemHeightGrid="45dp"
             app:textGrid="标签"
+            app:textColorSelectedGrid="@color/font_orange"
             />
 
 

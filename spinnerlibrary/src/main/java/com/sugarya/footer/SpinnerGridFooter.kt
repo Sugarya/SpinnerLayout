@@ -97,7 +97,7 @@ class SpinnerGridFooter : BaseSpinnerFooter<GridFooterProperty> {
             textSizeValue
         }
 
-        val textColorValue = typedArray.getColor(R.styleable.SpinnerGridFooter_textColorGrid, 1)
+        val textColorValue = typedArray.getColor(R.styleable.SpinnerGridFooter_textColorGrid, -1)
         val textColor: Int? = if(textColorValue == -1){
             null
         }else{
