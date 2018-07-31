@@ -1,7 +1,10 @@
 package com.sugarya;
 
+import android.animation.ArgbEvaluator;
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
@@ -54,7 +57,7 @@ public class SpinnerLayout extends RelativeLayout {
 
     private static final String TAG = SpinnerLayout.class.getSimpleName();
 
-    private static final int FOOTER_ANIMATION_DURATION = 260;
+    private static final int FOOTER_ANIMATION_DURATION = 300;
 
 
     private static SparseArray<FooterMode> mFooterModeSparse = new SparseArray<>();
@@ -638,7 +641,7 @@ public class SpinnerLayout extends RelativeLayout {
             footerViewContainer.setLayoutParams(footerViewContainerLayoutParams);
         }
 
-        //比大小，选择高的值作为动画属性值
+        //比大小，选择大的值作为动画属性值
         float height;
         int computedEndingHeight = spinnerUnitEntity.getBaseSpinnerFooter().getComputedEndingHeight();
         float currentViewHeight = footerView.getHeight();
@@ -746,13 +749,18 @@ public class SpinnerLayout extends RelativeLayout {
                 mSpinnerContainerLayout.setLayoutParams(containerLayoutParams);
                 Log.d(TAG, "reactionOfBackgroundWhenToOpen: topMargin = " + containerLayoutParams.topMargin + " leftMargin = " + x + " rightMargin = " + containerLayoutParams.rightMargin);
 
-                setBackgroundColor(mSpinnerLayoutPropertyWrapper.getBackSurfaceColor());
                 LayoutParams layoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
                 layoutParams.leftMargin = 0;
                 layoutParams.topMargin = 0;
                 layoutParams.rightMargin = 0;
                 layoutParams.bottomMargin = 0;
                 setLayoutParams(layoutParams);
+
+                ObjectAnimator colorAnimator = ObjectAnimator.ofInt(this, "BackgroundColor", Color.TRANSPARENT, mSpinnerLayoutPropertyWrapper.getBackSurfaceColor());
+                colorAnimator.setEvaluator(new ArgbEvaluator());
+                colorAnimator.setDuration(FOOTER_ANIMATION_DURATION);
+                colorAnimator.start();
+//                setBackgroundColor(mSpinnerLayoutPropertyWrapper.getBackSurfaceColor());
             }
         }
     }
@@ -775,9 +783,15 @@ public class SpinnerLayout extends RelativeLayout {
      */
     private void reactionOfBackgroundWhenToClose(boolean backSurfaceAvailable) {
         if (backSurfaceAvailable && mOriginRootLayoutParams != null) {
+            //            setBackgroundColor(getContext().getResources().getColor(android.R.color.transparent));
+
+            ObjectAnimator colorAnimator = ObjectAnimator.ofInt(this, "BackgroundColor", mSpinnerLayoutPropertyWrapper.getBackSurfaceColor(), Color.TRANSPARENT);
+            colorAnimator.setEvaluator(new ArgbEvaluator());
+            colorAnimator.setDuration(FOOTER_ANIMATION_DURATION);
+            colorAnimator.start();
+
             setLayoutParams(mOriginRootLayoutParams);
             mSpinnerContainerLayout.setLayoutParams(mOriginSpinnerContainerLayoutParams);
-            setBackgroundColor(getContext().getResources().getColor(android.R.color.transparent));
         }
     }
 
@@ -795,7 +809,6 @@ public class SpinnerLayout extends RelativeLayout {
         if (spinnerUnitEntity == null) {
             return;
         }
-
         reactionOfSpinnerUnitUIWhenToClose(spinnerUnitEntity);
         restoreAllClickableWhenToClose();
 

@@ -89,7 +89,7 @@ class SpinnerDateFooter : BaseSpinnerFooter<DateFooterProperty> {
         }
 
         val testTouchOutsideCanceledValue1 = typedArray.getBoolean(R.styleable.SpinnerDateFooter_touchOutsideCanceledDate, false)
-        val testTouchOutsideCanceledValue2 = typedArray.getBoolean(R.styleable.SpinnerDateFooter_touchOutsideCanceledDate, false)
+        val testTouchOutsideCanceledValue2 = typedArray.getBoolean(R.styleable.SpinnerDateFooter_touchOutsideCanceledDate, true)
         val isTouchOutsideCanceled: Boolean? = if(testTouchOutsideCanceledValue1 == testTouchOutsideCanceledValue2){
             testTouchOutsideCanceledValue1
         }else{
