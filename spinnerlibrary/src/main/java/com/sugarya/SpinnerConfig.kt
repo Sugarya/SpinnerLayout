@@ -7,7 +7,7 @@ import com.sugarya.spinnerlibrary.R
 
 class SpinnerConfig{
 
-    private var windowPaddingTop: Float = 56f
+    private var windowPaddingTop: Float = 0f
 
     companion object {
         const val DEFAULT_SPINNER_BAR_HEIGHT = 135
