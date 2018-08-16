@@ -906,5 +906,15 @@ public class SpinnerLayout extends RelativeLayout {
         return mIsShowing;
     }
 
+    public void showFooterTitle(int position, String title){
+        int size = mSpinnerUnitEntityList.size();
+        if(position >= 0 && position < size){
+            SpinnerUnitEntity spinnerUnitEntity = mSpinnerUnitEntityList.get(position);
+            TextView tvUnit = spinnerUnitEntity.getTvUnit();
+            if(tvUnit != null){
+                tvUnit.setText(title);
+            }
+        }
+    }
 
 }

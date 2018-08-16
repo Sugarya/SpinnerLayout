@@ -2,8 +2,6 @@ package com.sugarya
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.util.TypedValue
-import android.widget.RelativeLayout
 import com.sugarya.footer.SpinnerDateFooter
 import com.sugarya.footer.SpinnerGridFooter
 import com.sugarya.footer.SpinnerLinearFooter
