@@ -6,7 +6,7 @@ import com.sugarya.footer.interfaces.FooterMode
 
 open class BaseFooterProperty(
 //        var text: String = "",
-//        var textSize: Float = SpinnerConfig.DEFAULT_SPINNER_TITLE_SIZE_DP,
+//        var textSize: Float = SpinnerConfig.DEFAULT_SPINNER_TITLE_SIZE_PX,
 //        var textColor: Int = SpinnerConfig.DEFAULT_SPINNER_UNIT_TITLE_COLOR,
 //        var textSelectedColor: Int = SpinnerConfig.DEFAULT_SPINNER_UNIT_TITLE_COLOR_SELECTED,
 //

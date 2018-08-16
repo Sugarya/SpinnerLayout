@@ -26,7 +26,7 @@ class BaseFooterPropertyWrapper(
 
     override val textSize: Float = baseFooterProperty.textSize
             ?: spinnerLayoutProperty.textSize
-            ?: SpinnerConfig.DEFAULT_SPINNER_TITLE_SIZE_DP
+            ?: SpinnerConfig.DEFAULT_SPINNER_TITLE_SIZE_PX
 
     override val textColor: Int = baseFooterProperty.textColor
             ?: spinnerLayoutProperty.textColor
@@ -79,7 +79,7 @@ class SpinnerLayoutPropertyWrapper(
 ) {
 
 
-    override val textSize: Float = spinnerLayoutProperty.textSize ?: SpinnerConfig.DEFAULT_SPINNER_TITLE_SIZE_DP
+    override val textSize: Float = spinnerLayoutProperty.textSize ?: SpinnerConfig.DEFAULT_SPINNER_TITLE_SIZE_PX
 
     override val textColor: Int = spinnerLayoutProperty.textColor ?: SpinnerConfig.DEFAULT_SPINNER_UNIT_TITLE_COLOR
 

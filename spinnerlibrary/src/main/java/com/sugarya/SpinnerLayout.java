@@ -394,7 +394,7 @@ public class SpinnerLayout extends RelativeLayout {
         int textColor = baseFooterPropertyWrapper.getTextColor();
         titleView.setTextColor(textColor);
         float textSize = baseFooterPropertyWrapper.getTextSize();
-        titleView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, textSize);
+        titleView.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
         titleView.setSingleLine(true);
         titleView.setEllipsize(TextUtils.TruncateAt.END);
         titleView.setText(spinnerUnitTitle);

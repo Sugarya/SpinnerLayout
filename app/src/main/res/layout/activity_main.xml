@@ -80,6 +80,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="160dp"
         app:spinnerHeight="45dp"
+        app:textSize="@dimen/font_small"
         >
 
         <com.sugarya.footer.SpinnerLinearFooter
@@ -132,9 +133,9 @@
         android:id="@+id/spinnerLayout1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:spinnerHeight="45dp"
         android:layout_below="@id/tv_test"
-
+        app:spinnerHeight="45dp"
+        app:textSize="@dimen/font_little"
         >
 
         <com.sugarya.footer.SpinnerLinearFooter
