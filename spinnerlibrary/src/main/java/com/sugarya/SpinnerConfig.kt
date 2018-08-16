@@ -7,14 +7,13 @@ import com.sugarya.spinnerlibrary.R
 
 class SpinnerConfig{
 
-    companion object {
-        const val STATUS_BAR_HEIGHT_DP = 24
-        const val TITLE_BAR_HEIGHT_DP = 56
+    private var windowPaddingTop: Float = 56f
 
+    companion object {
         const val DEFAULT_SPINNER_BAR_HEIGHT = 135
         const val DEFAULT_BACK_SURFACE_AVAILABLE = true
         const val ORIGIN_HEIGHT = 0
-        const val DEFAULT_SPINNER_TITLE_SIZE_PX = 30f
+        const val DEFAULT_SPINNER_TITLE_SIZE_PX = 42f
         const val DEFAULT_TOUCH_OUTSIDE_CANCELED = true
         const val DEFAULT_LINE_SCALE = 0.3f
         val DEFAULT_FOOTER_MODE = FooterMode.MODE_EXPAND
@@ -32,5 +31,41 @@ class SpinnerConfig{
 
         const val DEFAULT_LINEAR_FOOTER_ITEM_HEIGHT_DP = 45f
         const val DEFAULT_GRID_FOOTER_ITEM_HEIGHT_DP = 40f
+
+        private var INSTANCE: SpinnerConfig? = null
+
+        @JvmStatic
+        fun getInstance(): SpinnerConfig{
+            if(INSTANCE == null){
+                synchronized(SpinnerConfig::class.java){
+                    if(INSTANCE == null){
+                        INSTANCE = SpinnerConfig()
+                    }
+                }
+            }
+            return INSTANCE!!
+        }
     }
+
+    fun setWindowPaddingTop(top: Float){
+        this.windowPaddingTop = top
+    }
+
+    fun getWindowPaddingTop(): Float = windowPaddingTop
+
+//    class SpinnerConfigBuilder(private val spinnerConfigParam: SpinnerConfigParam = SpinnerConfigParam()){
+//
+//        fun setupTitleBarHeight(height: Float): SpinnerConfigBuilder{
+//            spinnerConfigParam.titleBarHeight = height
+//            return this
+//        }
+//
+//        fun build(): SpinnerConfig{
+//            return SpinnerConfig()
+//        }
+//    }
+//
+//
+//    data class SpinnerConfigParam(var titleBarHeight: Float = 56f)
+
 }
