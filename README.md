@@ -8,7 +8,7 @@ This is a custom library called SpinnerLayout in Android Application
 
 ```
 dependencies {
-    implementation 'com.sugarya:spinnerlayout:0.2.13'
+    implementation 'com.sugarya:spinnerlayout:0.2.14'
 }
 ```
 
