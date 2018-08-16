@@ -173,6 +173,7 @@ class SpinnerLinearFooter : BaseSpinnerFooter<LinearFooterProperty> {
                 footerItem.isSelected = true
                 mAdapter?.notifyDataSetChanged()
 
+                baseFooterViewProperty.selectedOptionText = footerItem.titleName
                 mOnFooterItemClickListener?.onClick(list[position])
             }
         }

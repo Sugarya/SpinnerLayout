@@ -19,6 +19,7 @@ open class BaseFooterProperty(
 //        var footerMode: FooterMode = FooterMode.MODE_EXPAND
 
         val text: String,
+        var selectedOptionText: String,
         open val textSize: Float?,
         open val textColor: Int?,
         open val textSelectedColor: Int?,
@@ -42,7 +43,7 @@ class LinearFooterProperty(
         backSurfaceAvailable: Boolean?,
         isTouchOutsideCanceled: Boolean?,
         footerMode: FooterMode?
-) : BaseFooterProperty(text, textSize, textColor, textSelectedColor, unitIcon, unitIconSelected, backSurfaceAvailable, isTouchOutsideCanceled, footerMode)
+) : BaseFooterProperty(text, "" ,textSize, textColor, textSelectedColor, unitIcon, unitIconSelected, backSurfaceAvailable, isTouchOutsideCanceled, footerMode)
 
 
 class GridFooterProperty(
@@ -60,7 +61,7 @@ class GridFooterProperty(
         isTouchOutsideCanceled: Boolean?,
 
         footerMode: FooterMode?
-) : BaseFooterProperty(text, textSize, textColor, textSelectedColor, unitIcon, unitIconSelected, backSurfaceAvailable, isTouchOutsideCanceled, footerMode)
+) : BaseFooterProperty(text, "", textSize, textColor, textSelectedColor, unitIcon, unitIconSelected, backSurfaceAvailable, isTouchOutsideCanceled, footerMode)
 
 
 class DateFooterProperty(
@@ -73,4 +74,4 @@ class DateFooterProperty(
         backSurfaceAvailable: Boolean?,
         isTouchOutsideCanceled: Boolean?,
         footerMode: FooterMode?
-) : BaseFooterProperty(text, textSize, textColor, textSelectedColor, unitIcon, unitIconSelected, backSurfaceAvailable, isTouchOutsideCanceled, footerMode)
+) : BaseFooterProperty(text, "", textSize, textColor, textSelectedColor, unitIcon, unitIconSelected, backSurfaceAvailable, isTouchOutsideCanceled, footerMode)

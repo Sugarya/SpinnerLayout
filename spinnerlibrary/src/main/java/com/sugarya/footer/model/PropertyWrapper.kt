@@ -13,6 +13,7 @@ class BaseFooterPropertyWrapper(
         private val baseFooterProperty: BaseFooterProperty)
     : BaseFooterProperty(
         baseFooterProperty.text,
+        baseFooterProperty.selectedOptionText,
         baseFooterProperty.textSize,
         baseFooterProperty.textColor,
         baseFooterProperty.textSelectedColor,

@@ -160,5 +160,4 @@ class SpinnerDateFooter : BaseSpinnerFooter<DateFooterProperty> {
     interface OnConfirmClickListener {
         fun onConfirmClick(startTime: Long, endTime: Long)
     }
-
 }

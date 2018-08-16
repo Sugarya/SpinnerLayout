@@ -178,6 +178,7 @@ class SpinnerGridFooter : BaseSpinnerFooter<GridFooterProperty> {
                 currentFooterItem.isSelected = true
                 mAdapter?.notifyDataSetChanged()
 
+                baseFooterViewProperty.selectedOptionText = currentFooterItem.titleName
                 mOnFooterItemClickListener?.onClick(currentFooterItem)
             }
         }

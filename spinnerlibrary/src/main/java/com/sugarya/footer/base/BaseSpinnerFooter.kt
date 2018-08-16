@@ -25,4 +25,8 @@ abstract class BaseSpinnerFooter<out T: BaseFooterProperty> : RelativeLayout, IF
     override var mFooterMode: FooterMode?
         get() = baseFooterViewProperty.footerMode
         set(value) {}
+
+    fun setSelectedOptionText(option: String){
+        baseFooterViewProperty.selectedOptionText = option
+    }
 }

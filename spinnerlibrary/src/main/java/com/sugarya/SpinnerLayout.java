@@ -626,8 +626,11 @@ public class SpinnerLayout extends RelativeLayout {
         }
 
         View footerView = footerViewContainer.getChildAt(0);
-
         BaseFooterPropertyWrapper baseFooterPropertyWrapper = spinnerUnitEntity.getBaseFooterPropertyWrapper();
+        TextView tvUnit = spinnerUnitEntity.getTvUnit();
+        if(tvUnit != null && baseFooterPropertyWrapper != null){
+            tvUnit.setText(baseFooterPropertyWrapper.getText());
+        }
 
         //重置height和topMargin属性的值
         ViewGroup.LayoutParams lp = footerViewContainer.getLayoutParams();
@@ -682,6 +685,15 @@ public class SpinnerLayout extends RelativeLayout {
         if (footerViewContainer == null) {
             return;
         }
+        TextView tvUnit = spinnerUnitEntity.getTvUnit();
+        if(tvUnit != null){
+            BaseFooterProperty baseFooterViewProperty = spinnerUnitEntity.getBaseSpinnerFooter().getBaseFooterViewProperty();
+            String selectedOptionText = baseFooterViewProperty.getSelectedOptionText();
+            if(!TextUtils.isEmpty(selectedOptionText)){
+                tvUnit.setText(selectedOptionText);
+            }
+        }
+
         BaseFooterPropertyWrapper baseFooterPropertyWrapper = spinnerUnitEntity.getBaseFooterPropertyWrapper();
         if (baseFooterPropertyWrapper.getFooterMode() == FooterMode.MODE_EXPAND) {
             mFlexibleOperator.collapse();
@@ -822,26 +834,28 @@ public class SpinnerLayout extends RelativeLayout {
      * 还原筛选条
      *
      * @param selectedSpinnerUnitEntity
-     * @param title
+     * @param option
      */
-    private void close(SpinnerUnitEntity selectedSpinnerUnitEntity, String title) {
+    private void close(SpinnerUnitEntity selectedSpinnerUnitEntity, String option) {
         if (selectedSpinnerUnitEntity == null) {
             return;
         }
         mIsShowing = false;
+        if (!TextUtils.isEmpty(option)) {
+            BaseFooterPropertyWrapper baseFooterPropertyWrapper = selectedSpinnerUnitEntity.getBaseFooterPropertyWrapper();
+            if(baseFooterPropertyWrapper != null){
+                baseFooterPropertyWrapper.setSelectedOptionText(option);
+            }
+        }
+
         collapseFooter(selectedSpinnerUnitEntity);
         reactionOfSpinnerUnitWhenToClose(selectedSpinnerUnitEntity);
         selectedSpinnerUnitEntity.setExpanded(!selectedSpinnerUnitEntity.isExpanded());
-
-        TextView tvFilterTitle = selectedSpinnerUnitEntity.getTvUnit();
-        if (tvFilterTitle != null && title != null) {
-            tvFilterTitle.setText(title);
-        }
     }
 
     public void back() {
         if (isShowing() && mSelectedSpinnerUnitEntity != null) {
-            close(mSelectedSpinnerUnitEntity, null);
+            close(mSelectedSpinnerUnitEntity, "");
         }
     }
 
@@ -853,7 +867,7 @@ public class SpinnerLayout extends RelativeLayout {
     public void back(int currentIndex) {
         if (currentIndex >= 0 && currentIndex < mSpinnerUnitEntityList.size()) {
             SpinnerUnitEntity spinnerUnitEntity = mSpinnerUnitEntityList.get(currentIndex);
-            close(spinnerUnitEntity, null);
+            close(spinnerUnitEntity, "");
         }
     }
 
