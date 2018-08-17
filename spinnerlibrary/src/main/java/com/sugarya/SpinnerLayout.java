@@ -748,17 +748,11 @@ public class SpinnerLayout extends RelativeLayout {
                 Log.d(TAG, "reactionOfBackgroundWhenToOpen: x = " + x + " y = " + y);
                 LayoutParams containerLayoutParams = new LayoutParams(mOriginRootLayoutParams.width, mOriginSpinnerContainerLayoutParams.height);
                 containerLayoutParams.leftMargin = x;
-                //通过手动赋值，确定topMargin的值
 
+                //通过手动赋值，确定topMargin的值
                 float windowPaddingTop = SpinnerConfig.getInstance().getWindowPaddingTop();
-                float applyDimension;
-                if(windowPaddingTop < 0){
-                    applyDimension = - TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, -windowPaddingTop, getResources().getDisplayMetrics());
-                }else{
-                    applyDimension = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, windowPaddingTop, getResources().getDisplayMetrics());
-                }
-                containerLayoutParams.topMargin = (int) (y - rect.top - applyDimension);
-//                containerLayoutParams.topMargin = y - rect.top;
+                containerLayoutParams.topMargin = (int) (y - rect.top - windowPaddingTop);
+
                 if(mOriginRootLayoutParams.width <= 0){
                     containerLayoutParams.rightMargin = 0;
                 }else{

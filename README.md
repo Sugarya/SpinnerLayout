@@ -5,10 +5,9 @@ This is a custom library called SpinnerLayout in Android Application
 
 
 ## Adding to project
-
-```
+5```
 dependencies {
-    implementation 'com.sugarya:spinnerlayout:0.2.15'
+    implementation 'com.sugarya:spinnerlayout:0.2.16'
 }
 ```
 
