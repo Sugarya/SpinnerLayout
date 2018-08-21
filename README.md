@@ -5,14 +5,13 @@ This is a custom library called SpinnerLayout in Android Application
 
 
 ## Adding to project
-5```
+```
 dependencies {
     implementation 'com.sugarya:spinnerlayout:0.2.17'
 }
 ```
 
 ## Examples
-
 ![spinner display](https://upload-images.jianshu.io/upload_images/1933990-ce584265aabdb7bb.gif?imageMogr2/auto-orient/strip)
 
 ## Simple usage
