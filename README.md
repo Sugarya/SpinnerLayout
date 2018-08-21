@@ -7,7 +7,7 @@ This is a custom library called SpinnerLayout in Android Application
 ## Adding to project
 5```
 dependencies {
-    implementation 'com.sugarya:spinnerlayout:0.2.16'
+    implementation 'com.sugarya:spinnerlayout:0.2.17'
 }
 ```
 
@@ -108,4 +108,7 @@ How to use it with kotlin
 
 ## License
 Apache-2.0
+
+## Thanks
+[Bigkoo/Android-PickerView](https://github.com/Bigkoo/Android-PickerView)
 

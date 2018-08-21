@@ -856,9 +856,14 @@ public class SpinnerLayout extends RelativeLayout {
         selectedSpinnerUnitEntity.setExpanded(!selectedSpinnerUnitEntity.isExpanded());
     }
 
-    public void back() {
+    /**
+     * 还原筛选条
+     *
+     * @param title
+     */
+    public void back(String title) {
         if (isShowing() && mSelectedSpinnerUnitEntity != null) {
-            close(mSelectedSpinnerUnitEntity, "");
+            close(mSelectedSpinnerUnitEntity, title);
         }
     }
 
@@ -867,19 +872,19 @@ public class SpinnerLayout extends RelativeLayout {
      *
      * @param currentIndex 筛选序号
      */
-    public void back(int currentIndex) {
-        if (currentIndex >= 0 && currentIndex < mSpinnerUnitEntityList.size()) {
-            SpinnerUnitEntity spinnerUnitEntity = mSpinnerUnitEntityList.get(currentIndex);
-            close(spinnerUnitEntity, "");
-        }
-    }
-
-
     public void back(int currentIndex, String title) {
         if (currentIndex >= 0 && currentIndex < mSpinnerUnitEntityList.size()) {
             SpinnerUnitEntity spinnerUnitEntity = mSpinnerUnitEntityList.get(currentIndex);
             close(spinnerUnitEntity, title);
         }
+    }
+
+    public void back() {
+        back("");
+    }
+
+    public void back(int currentIndex) {
+        back(currentIndex, "");
     }
 
     /**

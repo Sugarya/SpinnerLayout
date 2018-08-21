@@ -4,10 +4,10 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
-import com.bigkoo.pickerview.builder.TimePickerBuilder
 import com.sugarya.footer.base.BaseSpinnerFooter
 import com.sugarya.footer.interfaces.FooterMode
 import com.sugarya.footer.model.DateFooterProperty
+import com.sugarya.pickerview.builder.TimePickerBuilder
 import com.sugarya.utils.FOOTER_MODE_SPARSE
 import com.sugarya.utils.formatDate
 import com.sugarya.spinnerlibrary.R
@@ -154,6 +154,10 @@ class SpinnerDateFooter : BaseSpinnerFooter<DateFooterProperty> {
         this.mOnConfirmClickListener = onConfirmClickListener
     }
 
+
+    override fun onFinishInflate() {
+        super.onFinishInflate()
+    }
 
 
 
