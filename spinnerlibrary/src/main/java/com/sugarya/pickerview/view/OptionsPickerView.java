@@ -41,12 +41,12 @@ public class OptionsPickerView<T> extends BasePickerView implements View.OnClick
             LayoutInflater.from(context).inflate(mPickerOptions.layoutRes, contentContainer);
 
             //顶部标题
-            TextView tvTitle = (TextView) findViewById(R.id.tvTitle);
-            RelativeLayout rv_top_bar = (RelativeLayout) findViewById(R.id.rv_topbar);
+            TextView tvTitle = (TextView) findViewById(R.id.spinnerTvTitle);
+            RelativeLayout rv_top_bar = (RelativeLayout) findViewById(R.id.spinner_rv_topbar);
 
             //确定和取消按钮
-            Button btnSubmit = (Button) findViewById(R.id.btnSubmit);
-            Button btnCancel = (Button) findViewById(R.id.btnCancel);
+            Button btnSubmit = (Button) findViewById(R.id.spinnerBtnSubmit);
+            Button btnCancel = (Button) findViewById(R.id.spinnerBtnCancel);
 
             btnSubmit.setTag(TAG_SUBMIT);
             btnCancel.setTag(TAG_CANCEL);
@@ -73,7 +73,7 @@ public class OptionsPickerView<T> extends BasePickerView implements View.OnClick
         }
 
         // ----滚轮布局
-        final LinearLayout optionsPicker = (LinearLayout) findViewById(R.id.optionspicker);
+        final LinearLayout optionsPicker = (LinearLayout) findViewById(R.id.spinneroptionspicker);
         optionsPicker.setBackgroundColor(mPickerOptions.bgColorWheel);
 
         wheelOptions = new WheelOptions(optionsPicker, mPickerOptions.isRestoreItem);
@@ -103,7 +103,7 @@ public class OptionsPickerView<T> extends BasePickerView implements View.OnClick
      * @param text 标题文本内容
      */
     public void setTitleText(String text) {
-        TextView tvTitle = (TextView) findViewById(R.id.tvTitle);
+        TextView tvTitle = (TextView) findViewById(R.id.spinnerTvTitle);
         if (tvTitle != null) {
             tvTitle.setText(text);
         }

@@ -40,15 +40,15 @@ public class TimePickerView extends BasePickerView implements View.OnClickListen
         initAnim();
 
         if (mPickerOptions.customListener == null) {
-            LayoutInflater.from(context).inflate(R.layout.pickerview_time, contentContainer);
+            LayoutInflater.from(context).inflate(R.layout.spinner_pickerview_time, contentContainer);
 
             //顶部标题
-            TextView tvTitle = (TextView) findViewById(R.id.tvTitle);
-            RelativeLayout rv_top_bar = (RelativeLayout) findViewById(R.id.rv_topbar);
+            TextView tvTitle = (TextView) findViewById(R.id.spinnerTvTitle);
+            RelativeLayout rv_top_bar = (RelativeLayout) findViewById(R.id.spinner_rv_topbar);
 
             //确定和取消按钮
-            Button btnSubmit = (Button) findViewById(R.id.btnSubmit);
-            Button btnCancel = (Button) findViewById(R.id.btnCancel);
+            Button btnSubmit = (Button) findViewById(R.id.spinnerBtnSubmit);
+            Button btnCancel = (Button) findViewById(R.id.spinnerBtnCancel);
 
             btnSubmit.setTag(TAG_SUBMIT);
             btnCancel.setTag(TAG_CANCEL);
@@ -76,7 +76,7 @@ public class TimePickerView extends BasePickerView implements View.OnClickListen
             mPickerOptions.customListener.customLayout(LayoutInflater.from(context).inflate(mPickerOptions.layoutRes, contentContainer));
         }
         // 时间转轮 自定义控件
-        LinearLayout timePickerView = (LinearLayout) findViewById(R.id.timepicker);
+        LinearLayout timePickerView = (LinearLayout) findViewById(R.id.spinnertimepicker);
         timePickerView.setBackgroundColor(mPickerOptions.bgColorWheel);
 
         initWheelTime(timePickerView);
@@ -240,7 +240,7 @@ public class TimePickerView extends BasePickerView implements View.OnClickListen
      * @param text 标题文本内容
      */
     public void setTitleText(String text) {
-        TextView tvTitle = (TextView) findViewById(R.id.tvTitle);
+        TextView tvTitle = (TextView) findViewById(R.id.spinnerTvTitle);
         if (tvTitle != null) {
             tvTitle.setText(text);
         }

@@ -6,13 +6,13 @@
     >
 
     <include
-        layout="@layout/include_pickerview_topbar"
+        layout="@layout/include_spinner_pickerview_topbar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/pickerview_topbar_height"
         />
 
     <LinearLayout
-        android:id="@+id/timepicker"
+        android:id="@+id/spinnertimepicker"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/white"
@@ -20,43 +20,42 @@
         >
 
         <com.sugarya.pickerview.contrarywind.view.WheelView
-            android:id="@+id/year"
+            android:id="@+id/spinnerYear"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="0.96"
             />
 
         <com.sugarya.pickerview.contrarywind.view.WheelView
-
-            android:id="@+id/month"
+            android:id="@+id/spinnerMonth"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             />
 
         <com.sugarya.pickerview.contrarywind.view.WheelView
-            android:id="@+id/day"
+            android:id="@+id/spinnerDay"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             />
 
         <com.sugarya.pickerview.contrarywind.view.WheelView
-            android:id="@+id/hour"
+            android:id="@+id/spinnerHour"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             />
 
         <com.sugarya.pickerview.contrarywind.view.WheelView
-            android:id="@+id/min"
+            android:id="@+id/spinnerMin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             />
 
         <com.sugarya.pickerview.contrarywind.view.WheelView
-            android:id="@+id/second"
+            android:id="@+id/spinnerSecond"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"

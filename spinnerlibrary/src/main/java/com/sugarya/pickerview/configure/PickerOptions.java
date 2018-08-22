@@ -70,9 +70,9 @@ public class PickerOptions {
 
     public PickerOptions(int buildType) {
         if (buildType == TYPE_PICKER_OPTIONS) {
-            layoutRes = R.layout.pickerview_options;
+            layoutRes = R.layout.spinner_pickerview_options;
         } else {
-            layoutRes = R.layout.pickerview_time;
+            layoutRes = R.layout.spinner_pickerview_time;
         }
     }
 

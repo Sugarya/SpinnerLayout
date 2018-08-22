@@ -5,31 +5,31 @@
     android:orientation="vertical">
 
     <include
-        layout="@layout/include_pickerview_topbar"
+        layout="@layout/include_spinner_pickerview_topbar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/pickerview_topbar_height" />
 
     <LinearLayout
-        android:id="@+id/optionspicker"
+        android:id="@+id/spinneroptionspicker"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/white"
         android:orientation="horizontal">
 
         <com.sugarya.pickerview.contrarywind.view.WheelView
-            android:id="@+id/options1"
+            android:id="@+id/spinnerOptions1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1" />
 
         <com.sugarya.pickerview.contrarywind.view.WheelView
-            android:id="@+id/options2"
+            android:id="@+id/spinnerOptions2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1" />
 
         <com.sugarya.pickerview.contrarywind.view.WheelView
-            android:id="@+id/options3"
+            android:id="@+id/spinnerOptions3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1" />
