@@ -164,4 +164,9 @@ class SpinnerDateFooter : BaseSpinnerFooter<DateFooterProperty> {
     interface OnConfirmClickListener {
         fun onConfirmClick(startTime: Long, endTime: Long)
     }
+
+    fun setupDefaultTime(startTime: String, endTime: String){
+        tvFooterStartTime.text = startTime
+        tvFooterEndTime.text = endTime
+    }
 }
