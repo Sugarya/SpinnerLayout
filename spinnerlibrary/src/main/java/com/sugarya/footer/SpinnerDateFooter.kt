@@ -12,6 +12,7 @@ import com.sugarya.utils.FOOTER_MODE_SPARSE
 import com.sugarya.utils.formatDate
 import com.sugarya.spinnerlibrary.R
 import kotlinx.android.synthetic.main.filter_footer_date.view.*
+import java.text.SimpleDateFormat
 import java.util.*
 
 /**
@@ -165,8 +166,19 @@ class SpinnerDateFooter : BaseSpinnerFooter<DateFooterProperty> {
         fun onConfirmClick(startTime: Long, endTime: Long)
     }
 
-    fun setupDefaultTime(startTime: String, endTime: String){
-        tvFooterStartTime.text = startTime
-        tvFooterEndTime.text = endTime
+    fun setupDefaultDate(startTime: Long, endTime: Long){
+        mStartTime = startTime
+        mEndTime = endTime
+
+        tvFooterStartTime.text = parseDate(startTime)
+        tvFooterEndTime.text = parseDate(endTime)
+        tvFooterDateConfirm.isEnabled = true
     }
+
+    private fun parseDate(sourceDate: Long): String{
+        val format = SimpleDateFormat("yyyy-MM-dd", Locale.CHINA)
+        val result = format.format(Date(sourceDate))
+        return result
+    }
+
 }
