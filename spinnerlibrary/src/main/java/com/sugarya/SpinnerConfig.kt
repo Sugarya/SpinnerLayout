@@ -13,7 +13,7 @@ class SpinnerConfig{
         const val DEFAULT_SPINNER_BAR_HEIGHT = 135
         const val DEFAULT_BACK_SURFACE_AVAILABLE = true
         const val ORIGIN_HEIGHT = 0
-        const val DEFAULT_SPINNER_TITLE_SIZE_PX = 42f
+        const val DEFAULT_SPINNER_TITLE_SIZE_PX = 28f
         const val DEFAULT_TOUCH_OUTSIDE_CANCELED = true
         const val DEFAULT_LINE_SCALE = 0.3f
         val DEFAULT_FOOTER_MODE = FooterMode.MODE_EXPAND

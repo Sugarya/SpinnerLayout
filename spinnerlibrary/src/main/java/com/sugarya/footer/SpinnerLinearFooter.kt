@@ -77,7 +77,7 @@ class SpinnerLinearFooter : BaseSpinnerFooter<LinearFooterProperty> {
 
         val itemHeightValue = typedArray.getDimension(R.styleable.SpinnerLinearFooter_itemHeightLinear, -1f)
         val itemHeight: Float = if (itemHeightValue == -1f) {
-            throw IllegalStateException("SpinnerLinearFooter needs a item height")
+            SpinnerConfig.DEFAULT_LINEAR_FOOTER_ITEM_HEIGHT_DP
         } else {
             itemHeightValue
         }
