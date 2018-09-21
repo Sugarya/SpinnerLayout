@@ -46,6 +46,7 @@
             app:itemHeightLinear="40dp"
             app:textLinear="状态"
             app:textColorLinear="@color/red"
+            app:textSizeLinear="@dimen/font_small"
             app:iconLinear="@drawable/ic_item_selected"
             />
 
@@ -69,6 +70,7 @@
             android:layout_height="wrap_content"
             android:background="@color/bg_light_gray_footer"
             app:textDate="选择日期"
+            app:textSizeDate="@dimen/font_small"
             app:textColorDate="@color/red"
             app:iconSelectedDate="@drawable/ic_item_selected"
             />
