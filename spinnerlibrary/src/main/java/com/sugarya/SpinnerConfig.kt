@@ -32,6 +32,8 @@ class SpinnerConfig{
         const val DEFAULT_LINEAR_FOOTER_ITEM_HEIGHT_DP = 45f
         const val DEFAULT_GRID_FOOTER_ITEM_HEIGHT_DP = 40f
 
+        const val DEFAULT_SPINNER_UNIT_TEXT_PADDING_LEFT = 10f
+
         private var INSTANCE: SpinnerConfig? = null
 
         @JvmStatic

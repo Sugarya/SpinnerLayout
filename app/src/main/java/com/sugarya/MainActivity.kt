@@ -42,6 +42,7 @@ class MainActivity : AppCompatActivity() {
 
     fun initSpinnerLayout3(){
         mockStatusFooter(linearFooter3, spinnerLayout3)
+        mockStatusFooter(linearFooter3_2, spinnerLayout3)
         mockLabelFooter(gridFooter3, spinnerLayout3)
         mockDateFooter(dateFooter3, spinnerLayout3)
     }
@@ -72,11 +73,10 @@ class MainActivity : AppCompatActivity() {
                 StatusModel("12", "status2"),
                 StatusModel("13", "status3"),
                 StatusModel("14", "status4"),
-                StatusModel("15", "status5"))
+                StatusModel("15", "status55555555555555555"))
         spinnerLinearFooter.setNewData(statusList)
         spinnerLinearFooter.setOnFooterItemClickListener(object : OnFooterItemClickListener{
             override fun onClick(iFooterItem: IFooterItem) {
-
                 spinnerLayout.back()
             }
         })
@@ -90,7 +90,7 @@ class MainActivity : AppCompatActivity() {
                 LabelModel("24","label4"),
                 LabelModel("25","label5"),
                 LabelModel("26","label6"),
-                LabelModel("27","label7")
+                LabelModel("27","label7777777777777777777")
         )
         spinnerGridFooter.setNewData(labelList)
         spinnerGridFooter.setOnFooterItemClickListener(object : OnFooterItemClickListener{

@@ -125,7 +125,6 @@ public class SpinnerLayout extends RelativeLayout {
 
     public SpinnerLayout(Context context) {
         super(context);
-        // todo
         initSpinnerLayoutProperty();
         init(context);
         Log.d(TAG, "FilterLayout 1");
@@ -157,7 +156,7 @@ public class SpinnerLayout extends RelativeLayout {
         Float barHeight;
         float barHeightValue = typedArray.getDimension(R.styleable.SpinnerLayout_spinnerHeight, -1f);
         if(barHeightValue == -1){
-            throw new IllegalArgumentException("SpinnerLayout need a bar height");
+            throw new IllegalArgumentException("SpinnerLayout needs a bar height");
         }else{
             barHeight = barHeightValue;
         }
@@ -256,7 +255,6 @@ public class SpinnerLayout extends RelativeLayout {
 
         typedArray.recycle();
 
-
         return new SpinnerLayoutProperty(
                 barHeight,
                 textSize,
@@ -318,7 +316,6 @@ public class SpinnerLayout extends RelativeLayout {
         return spinnerContainerLayout;
     }
 
-
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
@@ -365,7 +362,6 @@ public class SpinnerLayout extends RelativeLayout {
         BaseFooterPropertyWrapper baseFooterPropertyWrapper = new BaseFooterPropertyWrapper(getContext(), mSpinnerLayoutProperty, baseSpinnerFooter.getBaseFooterViewProperty());
         spinnerUnitEntity.setBaseFooterPropertyWrapper(baseFooterPropertyWrapper);
 
-
         FrameLayout footerViewContainerLayout = generateFooterViewContainerLayout(baseSpinnerFooter, baseFooterPropertyWrapper);
         spinnerUnitEntity.setFooterViewContainer(footerViewContainerLayout);
 
@@ -373,7 +369,6 @@ public class SpinnerLayout extends RelativeLayout {
         LinearLayout spinnerUnitLayout = generateSpinnerUnitLayout(getContext(), spinnerUnitEntity, title);
         initSpinnerUnitLayoutListener(spinnerUnitLayout, spinnerUnitEntity);
     }
-
 
     /**
      * 生成SpinnerUnitLayout
@@ -384,12 +379,12 @@ public class SpinnerLayout extends RelativeLayout {
      * @return
      */
     private LinearLayout generateSpinnerUnitLayout(Context context, SpinnerUnitEntity spinnerUnitEntity, String spinnerUnitTitle) {
-
         BaseFooterPropertyWrapper baseFooterPropertyWrapper = spinnerUnitEntity.getBaseFooterPropertyWrapper();
 
         final TextView titleView = new TextView(context);
         LinearLayout.LayoutParams titleViewLayoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        titleViewLayoutParams.gravity = Gravity.CENTER_VERTICAL;
+        titleViewLayoutParams.gravity = Gravity.CENTER;
+        titleViewLayoutParams.leftMargin = dip2px(SpinnerConfig.DEFAULT_SPINNER_UNIT_TEXT_PADDING_LEFT);
         titleView.setLayoutParams(titleViewLayoutParams);
         int textColor = baseFooterPropertyWrapper.getTextColor();
         titleView.setTextColor(textColor);
@@ -513,7 +508,7 @@ public class SpinnerLayout extends RelativeLayout {
     }
 
     /**
-     * 检测父容器是否是FrameLayout
+     * 检测父容器是否是RelativeLayout
      */
     private void checkParentLayoutType() {
         ViewParent parent = getParent();
@@ -521,7 +516,6 @@ public class SpinnerLayout extends RelativeLayout {
             // todo
         }
     }
-
 
     /**
      * 下拉时，配置筛选条单元

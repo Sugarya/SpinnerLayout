@@ -33,6 +33,7 @@ class SpinnerDateFooter : BaseSpinnerFooter<DateFooterProperty> {
     constructor(context: Context, title: String) : super(context) {
         baseFooterViewProperty = DateFooterProperty(
                 title,
+                "请选择...",
                 null,
                 null,
                 null,
@@ -78,6 +79,9 @@ class SpinnerDateFooter : BaseSpinnerFooter<DateFooterProperty> {
             textSelectedColorValue
         }
 
+        val hint = typedArray.getString(R.styleable.SpinnerDateFooter_hint)
+
+
         val unitIconDrawable = typedArray.getDrawable(R.styleable.SpinnerDateFooter_iconDate)
         val unitIconSelectedDrawable = typedArray.getDrawable(R.styleable.SpinnerDateFooter_iconSelectedDate)
 
@@ -101,6 +105,7 @@ class SpinnerDateFooter : BaseSpinnerFooter<DateFooterProperty> {
 
         baseFooterViewProperty = DateFooterProperty(
                 text,
+                hint,
                 textSize,
                 textColor,
                 textSelectedColor,
@@ -118,11 +123,13 @@ class SpinnerDateFooter : BaseSpinnerFooter<DateFooterProperty> {
         if (background == null) {
             setBackgroundColor(resources.getColor(android.R.color.white))
         }
-
         setupFooterHeight(resources.getDimension(R.dimen.footer_date_height).toInt())
 
         val inflateView = LayoutInflater.from(context).inflate(R.layout.filter_footer_date, this, false)
         addView(inflateView)
+
+        tvFooterStartTime.text = baseFooterViewProperty.hint
+        tvFooterEndTime.text = baseFooterViewProperty.hint
 
         containerFooterStartTime.setOnClickListener {
             val timePickerView = TimePickerBuilder(context) { date: Date?, v: View? ->
@@ -130,6 +137,7 @@ class SpinnerDateFooter : BaseSpinnerFooter<DateFooterProperty> {
                 date?.let {
                     mStartTime = it.time
                     tvFooterStartTime.text = formatDate(it)
+                    ivFooterStartTimeCancel.visibility = View.VISIBLE
                 }
             }.build()
             timePickerView.show()
@@ -141,6 +149,7 @@ class SpinnerDateFooter : BaseSpinnerFooter<DateFooterProperty> {
                 date?.let {
                     mEndTime = it.time
                     tvFooterEndTime.text = formatDate(it)
+                    ivFooterEndTimeCancel.visibility = View.VISIBLE
                 }
             }.build()
             timePickerView.show()
@@ -148,6 +157,20 @@ class SpinnerDateFooter : BaseSpinnerFooter<DateFooterProperty> {
 
         tvFooterDateConfirm.setOnClickListener {
             mOnConfirmClickListener?.onConfirmClick(mStartTime, mEndTime)
+        }
+
+        ivFooterStartTimeCancel.setOnClickListener {
+            tvFooterStartTime.text = baseFooterViewProperty.hint
+            it.visibility = View.GONE
+            mStartTime = 0
+            tvFooterDateConfirm.isEnabled = mStartTime > 0 && mEndTime > 0
+        }
+
+        ivFooterEndTimeCancel.setOnClickListener {
+            tvFooterEndTime.text = baseFooterViewProperty.hint
+            it.visibility = View.GONE
+            mEndTime = 0
+            tvFooterDateConfirm.isEnabled = mStartTime > 0 && mEndTime > 0
         }
     }
 
@@ -177,8 +200,7 @@ class SpinnerDateFooter : BaseSpinnerFooter<DateFooterProperty> {
 
     private fun parseDate(sourceDate: Long): String{
         val format = SimpleDateFormat("yyyy-MM-dd", Locale.CHINA)
-        val result = format.format(Date(sourceDate))
-        return result
+        return format.format(Date(sourceDate))
     }
 
 }

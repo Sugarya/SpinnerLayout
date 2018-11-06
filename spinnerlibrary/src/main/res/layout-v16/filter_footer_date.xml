@@ -11,8 +11,8 @@
         android:id="@+id/containerFooterStartTime"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:paddingLeft="32dp"
-        android:paddingRight="32dp"
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp"
         >
 
         <TextView
@@ -25,17 +25,36 @@
             android:textSize="14sp"
             />
 
-        <TextView
-            android:id="@+id/tvFooterStartTime"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:orientation="horizontal"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:gravity="center"
-            android:text="请选择..."
-            android:textColor="@color/font_gray"
-            android:textSize="14sp"
-            />
+            android:gravity="center_vertical"
+            >
+
+            <TextView
+                android:id="@+id/tvFooterStartTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text=""
+                android:textColor="@color/font_gray"
+                android:textSize="14sp"
+                />
+
+            <ImageView
+                android:id="@+id/ivFooterStartTimeCancel"
+                android:layout_width="17dp"
+                android:layout_height="17dp"
+                android:src="@drawable/ic_date_close"
+                android:padding="3dp"
+                android:visibility="gone"
+                android:layout_marginLeft="2dp"
+                />
+
+        </LinearLayout>
 
     </RelativeLayout>
 
@@ -49,8 +68,8 @@
         android:id="@+id/containerFooterEndTime"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:paddingLeft="32dp"
-        android:paddingRight="32dp"
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp"
         >
 
         <TextView
@@ -63,17 +82,36 @@
             android:textSize="14sp"
             />
 
-        <TextView
-            android:id="@+id/tvFooterEndTime"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:orientation="horizontal"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:gravity="center"
-            android:text="请选择..."
-            android:textColor="@color/font_gray"
-            android:textSize="14sp"
-            />
+            android:gravity="center_vertical"
+            >
+
+            <TextView
+                android:id="@+id/tvFooterEndTime"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text=""
+                android:textColor="@color/font_gray"
+                android:textSize="14sp"
+                />
+
+            <ImageView
+                android:id="@+id/ivFooterEndTimeCancel"
+                android:layout_width="17dp"
+                android:layout_height="17dp"
+                android:src="@drawable/ic_date_close"
+                android:padding="3dp"
+                android:layout_marginLeft="2dp"
+                android:visibility="gone"
+                />
+
+        </LinearLayout>
 
     </RelativeLayout>
 

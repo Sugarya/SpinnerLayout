@@ -76,7 +76,7 @@
 
         <attr name="touchOutsideCanceledDate" format="boolean"/>
         <attr name="backSurfaceAvailableDate" format="boolean"/>
-
+        <attr name="hint" format="string"/>
 
         <attr name="footerModeDate" format="enum">
             <enum name="translate" value="0"/>
