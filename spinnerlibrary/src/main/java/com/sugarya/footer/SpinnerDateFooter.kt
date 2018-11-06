@@ -1,9 +1,11 @@
 package com.sugarya.footer
 
 import android.content.Context
+import android.text.TextUtils
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
+import com.sugarya.SpinnerConfig
 import com.sugarya.footer.base.BaseSpinnerFooter
 import com.sugarya.footer.interfaces.FooterMode
 import com.sugarya.footer.model.DateFooterProperty
@@ -24,7 +26,6 @@ class SpinnerDateFooter : BaseSpinnerFooter<DateFooterProperty> {
     private var mStartTime: Long = -1
     private var mEndTime: Long = -1
 
-
     var mOnConfirmClickListener: OnConfirmClickListener? = null
 
 
@@ -33,7 +34,7 @@ class SpinnerDateFooter : BaseSpinnerFooter<DateFooterProperty> {
     constructor(context: Context, title: String) : super(context) {
         baseFooterViewProperty = DateFooterProperty(
                 title,
-                "请选择...",
+                SpinnerConfig.DEFAULT_SPINNER_DATE_FOOTER_HINT,
                 null,
                 null,
                 null,
@@ -79,8 +80,10 @@ class SpinnerDateFooter : BaseSpinnerFooter<DateFooterProperty> {
             textSelectedColorValue
         }
 
-        val hint = typedArray.getString(R.styleable.SpinnerDateFooter_hint)
-
+        var hint = typedArray.getString(R.styleable.SpinnerDateFooter_hint)
+        if(TextUtils.isEmpty(hint)){
+            hint = SpinnerConfig.DEFAULT_SPINNER_DATE_FOOTER_HINT
+        }
 
         val unitIconDrawable = typedArray.getDrawable(R.styleable.SpinnerDateFooter_iconDate)
         val unitIconSelectedDrawable = typedArray.getDrawable(R.styleable.SpinnerDateFooter_iconSelectedDate)

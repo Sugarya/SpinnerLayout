@@ -384,7 +384,7 @@ public class SpinnerLayout extends RelativeLayout {
         final TextView titleView = new TextView(context);
         LinearLayout.LayoutParams titleViewLayoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         titleViewLayoutParams.gravity = Gravity.CENTER;
-        titleViewLayoutParams.leftMargin = dip2px(SpinnerConfig.DEFAULT_SPINNER_UNIT_TEXT_PADDING_LEFT);
+        titleViewLayoutParams.leftMargin = dip2px(SpinnerConfig.DEFAULT_SPINNER_UNIT_TEXT_MARGIN_LEFT);
         titleView.setLayoutParams(titleViewLayoutParams);
         int textColor = baseFooterPropertyWrapper.getTextColor();
         titleView.setTextColor(textColor);

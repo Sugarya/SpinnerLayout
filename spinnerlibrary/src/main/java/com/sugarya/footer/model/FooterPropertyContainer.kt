@@ -66,7 +66,7 @@ class GridFooterProperty(
 
 class DateFooterProperty(
         text: String,
-        val hint: String,
+        var hint: String,
         textSize: Float?,
         textColor: Int?,
         textSelectedColor: Int?,

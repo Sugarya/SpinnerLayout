@@ -82,7 +82,6 @@
             android:layout_height="wrap_content"
             android:background="@color/bg_light_gray_footer"
             app:textDate="选择日期"
-            app:hint="选择..."
             app:textSizeDate="@dimen/font_small"
             app:textColorDate="@color/red"
             app:iconSelectedDate="@drawable/ic_item_selected"
