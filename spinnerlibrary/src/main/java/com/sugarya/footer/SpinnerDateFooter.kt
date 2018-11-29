@@ -27,7 +27,7 @@ class SpinnerDateFooter : BaseSpinnerFooter<DateFooterProperty> {
     private var mEndTime: Long = -1
 
     var mOnConfirmClickListener: OnConfirmClickListener? = null
-
+    var mOnCancelClickListener: OnCancelClickListener? = null
 
     override val baseFooterViewProperty: DateFooterProperty
 
@@ -167,6 +167,8 @@ class SpinnerDateFooter : BaseSpinnerFooter<DateFooterProperty> {
             it.visibility = View.GONE
             mStartTime = 0
             tvFooterDateConfirm.isEnabled = mStartTime > 0 && mEndTime > 0
+
+            mOnCancelClickListener?.onCancelStartDate()
         }
 
         ivFooterEndTimeCancel.setOnClickListener {
@@ -174,6 +176,8 @@ class SpinnerDateFooter : BaseSpinnerFooter<DateFooterProperty> {
             it.visibility = View.GONE
             mEndTime = 0
             tvFooterDateConfirm.isEnabled = mStartTime > 0 && mEndTime > 0
+
+            mOnCancelClickListener?.onCancelEndDate()
         }
     }
 
@@ -190,6 +194,13 @@ class SpinnerDateFooter : BaseSpinnerFooter<DateFooterProperty> {
 
     interface OnConfirmClickListener {
         fun onConfirmClick(startTime: Long, endTime: Long)
+    }
+
+    interface OnCancelClickListener{
+
+        fun onCancelStartDate()
+
+        fun onCancelEndDate()
     }
 
     fun setupDefaultDate(startTime: Long, endTime: Long){
